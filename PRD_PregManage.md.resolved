@@ -1,0 +1,266 @@
+# 🤰 PregManage — Product Requirements Document (PRD)
+
+> **Project**: Pregnancy Management System  
+> **Version**: v0.1 (Draft)  
+> **Date**: March 2, 2026  
+> **Status**: 🟡 Awaiting User Review  
+
+---
+
+## 1. Overview
+
+**PregManage** is a web-based pregnancy management system designed for Anganwadi centers. It enables **Anganwadi workers** to register pregnant women, track their health status through periodic questionnaires, and manage patient records — all under the supervision of an **Admin**.
+
+---
+
+## 2. Users & Roles
+
+| Role | Count | Description |
+|------|-------|-------------|
+| **Admin** | 1+ | Superuser who manages the system — creates/manages Anganwadi worker accounts. Full system access. |
+| **Anganwadi Worker** | 25 | Field workers who register patients, conduct health questionnaires, and manage their assigned patients. |
+| **Patient (Pregnant Woman)** | Many | End beneficiaries — do NOT have login access. Their data is entered by Anganwadi workers. |
+
+---
+
+## 3. Authentication System
+
+### 3.1 Admin Authentication
+- Separate login page/portal for Admin
+- Admin credentials (details TBD — to be discussed later)
+- Admin can:
+  - Create Anganwadi worker accounts (username + password)
+  - Manage (edit/delete) worker accounts
+  - *(More admin capabilities to be added later)*
+
+### 3.2 Anganwadi Worker Authentication
+- Dedicated login page for Anganwadi workers
+- Each of the 25 workers has unique credentials (created by Admin)
+- Upon successful login → redirected to the **Patient Selection Screen**
+
+---
+
+## 4. Application Flow
+
+```mermaid
+flowchart TD
+    A[Landing Page] --> B{Select Role}
+    B -->|Admin| C[Admin Login]
+    B -->|Anganwadi Worker| D[Worker Login]
+    
+    C --> E[Admin Dashboard]
+    E --> F[Create/Manage Workers]
+    
+    D --> G[Patient Selection Screen]
+    G --> H{New or Existing Patient?}
+    
+    H -->|New Patient| I[Patient Registration Form]
+    I --> J[Upload / Capture Photo]
+    J --> K[Save Registration]
+    K --> L[Pregnancy Questionnaire]
+    
+    H -->|Existing Patient| M[Search / Select Patient]
+    M --> L
+    
+    L --> N[Submit Questionnaire]
+    N --> O[Confirmation / Summary]
+```
+
+---
+
+## 5. Screens & Features
+
+### 5.1 🔐 Landing / Login Page
+- Clean, professional landing page
+- Two distinct entry points:
+  - **Admin Login** button/card
+  - **Anganwadi Worker Login** button/card
+- Each redirects to its respective login form
+
+### 5.2 🔑 Admin Login Page
+- Username & Password fields
+- Login button
+- Error handling for invalid credentials
+- *(Admin dashboard features to be detailed later)*
+
+### 5.3 🔑 Anganwadi Worker Login Page
+- Username & Password fields
+- Login button
+- Error handling for invalid credentials
+- On success → redirect to **Patient Selection Screen**
+
+### 5.4 📋 Patient Selection Screen (Post Worker Login)
+After a worker logs in, they see a screen with two clear options:
+
+| Option | Action |
+|--------|--------|
+| **Register New Patient** | Opens the patient registration form |
+| **Already Registered Patient** | Opens a search/select screen to find existing patient, then redirects to questionnaire |
+
+### 5.5 📝 New Patient Registration Form
+Collects personal information / bio data of the pregnant woman:
+
+| Field | Type | Required |
+|-------|------|----------|
+| Full Name | Text | ✅ |
+| Age | Number | ✅ |
+| Husband's Name | Text | ✅ |
+| Phone Number | Tel | ✅ |
+| Address | Textarea | ✅ |
+| Aadhaar Number | Text | ✅ |
+| LMP (Last Menstrual Period) Date | Date | ✅ |
+| Expected Delivery Date (EDD) | Date (auto-calculated or manual) | ✅ |
+| Blood Group | Dropdown | ✅ |
+| Gravida (No. of pregnancies) | Number | ✅ |
+| Para (No. of deliveries) | Number | ✅ |
+| **Photo** | Upload file / Capture via camera | ✅ |
+
+> [!NOTE]
+> The fields above are a suggested set based on standard Anganwadi records. Please review and let me know if any fields should be added, removed, or modified.
+
+**After successful registration → auto-redirect to Pregnancy Questionnaire**
+
+### 5.6 📸 Photo Upload / Capture
+- Two options for the patient photo:
+  - **Upload**: Select an image file from device
+  - **Capture**: Open device camera and take a photo directly
+- Preview of the photo before saving
+- Photo is stored and associated with the patient record
+
+### 5.7 ❓ Pregnancy Health Questionnaire
+A simple **Yes/No** questionnaire with **10 questions** related to pregnancy health. Displayed after registration (new patient) or after selecting an existing patient.
+
+| # | Question | Response |
+|---|----------|----------|
+| 1 | Are you experiencing any bleeding or spotting? | Yes / No |
+| 2 | Do you have severe headaches or blurred vision? | Yes / No |
+| 3 | Are you experiencing swelling in hands, feet, or face? | Yes / No |
+| 4 | Do you have persistent nausea or vomiting? | Yes / No |
+| 5 | Are you feeling reduced or no fetal movement? | Yes / No |
+| 6 | Do you have any abdominal pain or cramping? | Yes / No |
+| 7 | Are you experiencing fever or chills? | Yes / No |
+| 8 | Do you have difficulty breathing or chest pain? | Yes / No |
+| 9 | Have you been taking your iron/folic acid supplements regularly? | Yes / No |
+| 10 | Have you attended your last scheduled antenatal checkup? | Yes / No |
+
+> [!NOTE]
+> These are suggested pregnancy-related questions. Please review and modify as needed. Questions can be customized to match your specific Anganwadi program requirements.
+
+- Each question has a **Yes** and **No** toggle/button
+- Submit button at the bottom
+- On submit → show confirmation/summary page
+
+### 5.8 ✅ Confirmation / Summary Page
+- Shows a summary of the submitted questionnaire
+- Indicates any "red flag" answers (e.g., bleeding, reduced fetal movement)
+- Option to go back to patient selection or log out
+
+---
+
+## 6. Tech Stack (Proposed)
+
+| Layer | Technology |
+|-------|-----------|
+| **Frontend** | HTML, CSS, JavaScript (Vanilla — premium, modern UI) |
+| **Backend** | Node.js with Express.js |
+| **Database** | MongoDB (or SQLite for simpler setup) |
+| **Authentication** | Session-based or JWT |
+| **Photo Storage** | Local filesystem or cloud (e.g., Cloudinary) |
+| **Deployment** | TBD |
+
+> [!IMPORTANT]
+> Please confirm your preferred tech stack. If you have any preferences (e.g., React, Python/Flask, MySQL, Firebase, etc.), let me know and I'll adjust accordingly.
+
+---
+
+## 7. Data Model (High-Level)
+
+```mermaid
+erDiagram
+    ADMIN {
+        string id PK
+        string username
+        string password_hash
+        string role
+    }
+    
+    ANGANWADI_WORKER {
+        string id PK
+        string name
+        string username
+        string password_hash
+        string created_by FK
+        datetime created_at
+    }
+    
+    PATIENT {
+        string id PK
+        string full_name
+        int age
+        string husband_name
+        string phone
+        string address
+        string aadhaar
+        date lmp_date
+        date edd
+        string blood_group
+        int gravida
+        int para
+        string photo_url
+        string worker_id FK
+        datetime registered_at
+    }
+    
+    QUESTIONNAIRE {
+        string id PK
+        string patient_id FK
+        string worker_id FK
+        boolean q1_bleeding
+        boolean q2_headache
+        boolean q3_swelling
+        boolean q4_nausea
+        boolean q5_fetal_movement
+        boolean q6_abdominal_pain
+        boolean q7_fever
+        boolean q8_breathing
+        boolean q9_supplements
+        boolean q10_checkup
+        datetime submitted_at
+    }
+    
+    ADMIN ||--o{ ANGANWADI_WORKER : creates
+    ANGANWADI_WORKER ||--o{ PATIENT : registers
+    PATIENT ||--o{ QUESTIONNAIRE : has
+    ANGANWADI_WORKER ||--o{ QUESTIONNAIRE : submits
+```
+
+---
+
+## 8. Pending / Future Items
+> *To be added by the user in subsequent discussions*
+
+- [ ] Admin dashboard features (full scope)
+- [ ] Patient history / past questionnaire records
+- [ ] Reports & analytics
+- [ ] Notifications / alerts for high-risk patients
+- [ ] Multi-language support (e.g., Kannada, Hindi)
+- [ ] Offline mode for field workers
+- [ ] Export data (PDF/Excel)
+- [ ] Any additional features
+
+---
+
+## 9. Open Questions
+
+1. **Tech stack preference?** — Do you have any preference for frontend framework (React, vanilla JS) or backend (Node.js, Python, etc.)?
+2. **Registration fields** — Are the suggested bio data fields correct? Any additions or removals?
+3. **Questionnaire questions** — Are the 10 suggested questions appropriate? Should any be changed?
+4. **Patient search** — For "Already Registered" flow, how should the worker find a patient? By name, phone number, or a list?
+5. **Data persistence** — Should this be a full-stack web app with a database, or a simpler frontend-only prototype to start?
+6. **Deployment** — Where will this be hosted? Local server, cloud, etc.?
+7. **Admin features** — Beyond creating workers, what other admin capabilities are needed?
+
+---
+
+> [!TIP]
+> Review this PRD carefully. Once you're happy with the scope and have added your additional points, I'll begin building the application step by step! 🚀

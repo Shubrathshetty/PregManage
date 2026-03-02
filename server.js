@@ -35,7 +35,7 @@ app.get('/', (req, res) => {
 });
 
 // Catch-all: serve index.html for SPA-style navigation
-app.get('*', (req, res) => {
+app.get('{*path}', (req, res) => {
     // If it's an API route that wasn't matched, return 404
     if (req.path.startsWith('/api/')) {
         return res.status(404).json({ success: false, message: 'API endpoint not found.' });
