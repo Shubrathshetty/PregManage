@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Health Questionnaire - PregManage">
+    <title>Health Questionnaire — PregManage</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <div class="logo-icon">🤰</div>
+                <span>PregManage</span>
+            </div>
+            <div class="navbar-user">
+                <div class="navbar-user-info">
+                    <div class="navbar-user-name" id="user-name">Worker</div>
+                    <div class="navbar-user-role">Anganwadi Worker</div>
+                </div>
+                <button class="btn btn-ghost btn-sm" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="container dashboard-content fade-in">
+            <div style="margin-bottom: 24px;">
+                <a href="/worker-dashboard.html" class="btn btn-ghost" style="padding-left: 0;">← Back to Dashboard</a>
+            </div>
+
+            <div class="page-header">
+                <h1 class="page-title">Pregnancy Health Questionnaire</h1>
+                <p class="page-subtitle">Patient: <strong id="patient-name-display">—</strong></p>
+            </div>
+
+            <div style="max-width: 800px;">
+                <div class="card-flat"
+                    style="background: var(--primary-50); border-color: var(--primary-200); margin-bottom: 28px; padding: 16px 20px;">
+                    <p style="font-size: 0.875rem; color: var(--primary-800);">
+                        📋 Please answer all 10 questions below by selecting <strong>Yes</strong> or <strong>No</strong>
+                        for each. This helps assess the patient's current health status.
+                    </p>
+                </div>
+
+                <form id="questionnaire-form">
+                    <!-- Question 1 -->
+                    <div class="question-card fade-in" style="animation-delay: 0.05s;">
+                        <div class="question-number">1</div>
+                        <div class="question-text">Are you experiencing any <strong>bleeding or spotting</strong>?</div>
+                        <div class="toggle-group" data-question="q1_bleeding">
+                            <button type="button" class="toggle-btn" data-value="true"
+                                onclick="toggleAnswer(this)">Yes</button>
+                            <button type="button" class="toggle-btn" data-value="false"
+                                onclick="toggleAnswer(this)">No</button>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="question-card fade-in" style="animation-delay: 0.1s;">
+                        <div class="question-number">2</div>
+                        <div class="question-text">Do you have <strong>severe headaches or blurred vision</strong>?
+                        </div>
+                        <div class="toggle-group" data-question="q2_headache_vision">
+                            <button type="button" class="toggle-btn" data-value="true"
+                                onclick="toggleAnswer(this)">Yes</button>
+                            <button type="button" class="toggle-btn" data-value="false"
+                                onclick="toggleAnswer(this)">No</button>
+                        </div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="question-card fade-in" style="animation-delay: 0.15s;">
+                        <div class="question-number">3</div>
+                        <div class="question-text">Are you experiencing <strong>swelling in hands, feet, or
+                                face</strong>?</div>
+                        <div class="toggle-group" data-question="q3_swelling">
+                            <button type="button" class="toggle-btn" data-value="true"
+                                onclick="toggleAnswer(this)">Yes</button>
+                            <button type="button" class="toggle-btn" data-value="false"
+                                onclick="toggleAnswer(this)">No</button>
+                        </div>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="question-card fade-in" style="animation-delay: 0.2s;">
+                        <div class="question-number">4</div>
+                        <div class="question-text">Do you have <strong>persistent nausea or vomiting</strong>?</div>
+                        <div class="toggle-group" data-question="q4_nausea_vomiting">
+                            <button type="button" class="toggle-btn" data-value="true"
+                                onclick="toggleAnswer(this)">Yes</button>
+                            <button type="button" class="toggle-btn" data-value="false"
+                                onclick="toggleAnswer(this)">No</button>
+                        </div>
+                    </div>
+
+                    <!-- Question 5 -->
+                    <div class="question-card fade-in" style="animation-delay: 0.25s;">
+                        <div class="question-number">5</div>
+                        <div class="question-text">Are you feeling <strong>reduced or no fetal movement</strong>?</div>
+                        <div class="toggle-group" data-question="q5_fetal_movement">
+                            <button type="button" class="toggle-btn" data-value="true"
+                                onclick="toggleAnswer(this)">Yes</button>
+                            <button type="button" class="toggle-btn" data-value="false"
+                                onclick="toggleAnswer(this)">No</button>
+                        </div>
+                    </div>
+
+                    <!-- Question 6 -->
+                    <div class="question-card fade-in" style="animation-delay: 0.3s;">
+                        <div class="question-number">6</div>
+                        <div class="question-text">Do you have any <strong>abdominal pain or cramping</strong>?</div>
+                        <div class="toggle-group" data-question="q6_abdominal_pain">
+                            <button type="button" class="toggle-btn" data-value="true"
+                                onclick="toggleAnswer(this)">Yes</button>
+                            <button type="button" class="toggle-btn" data-value="false"
+                                onclick="toggleAnswer(this)">No</button>
+                        </div>
+                    </div>
+
+                    <!-- Question 7 -->
+                    <div class="question-card fade-in" style="animation-delay: 0.35s;">
+                        <div class="question-number">7</div>
+                        <div class="question-text">Are you experiencing <strong>fever or chills</strong>?</div>
+                        <div class="toggle-group" data-question="q7_fever_chills">
+                            <button type="button" class="toggle-btn" data-value="true"
+                                onclick="toggleAnswer(this)">Yes</button>
+                            <button type="button" class="toggle-btn" data-value="false"
+                                onclick="toggleAnswer(this)">No</button>
+                        </div>
+                    </div>
+
+                    <!-- Question 8 -->
+                    <div class="question-card fade-in" style="animation-delay: 0.4s;">
+                        <div class="question-number">8</div>
+                        <div class="question-text">Do you have <strong>difficulty breathing or chest pain</strong>?
+                        </div>
+                        <div class="toggle-group" data-question="q8_breathing_chest">
+                            <button type="button" class="toggle-btn" data-value="true"
+                                onclick="toggleAnswer(this)">Yes</button>
+                            <button type="button" class="toggle-btn" data-value="false"
+                                onclick="toggleAnswer(this)">No</button>
+                        </div>
+                    </div>
+
+                    <!-- Question 9 -->
+                    <div class="question-card fade-in" style="animation-delay: 0.45s;">
+                        <div class="question-number">9</div>
+                        <div class="question-text">Have you been taking your <strong>iron/folic acid
+                                supplements</strong> regularly?</div>
+                        <div class="toggle-group" data-question="q9_supplements">
+                            <button type="button" class="toggle-btn" data-value="true"
+                                onclick="toggleAnswer(this)">Yes</button>
+                            <button type="button" class="toggle-btn" data-value="false"
+                                onclick="toggleAnswer(this)">No</button>
+                        </div>
+                    </div>
+
+                    <!-- Question 10 -->
+                    <div class="question-card fade-in" style="animation-delay: 0.5s;">
+                        <div class="question-number">10</div>
+                        <div class="question-text">Have you attended your <strong>last scheduled antenatal
+                                checkup</strong>?</div>
+                        <div class="toggle-group" data-question="q10_checkup">
+                            <button type="button" class="toggle-btn" data-value="true"
+                                onclick="toggleAnswer(this)">Yes</button>
+                            <button type="button" class="toggle-btn" data-value="false"
+                                onclick="toggleAnswer(this)">No</button>
+                        </div>
+                    </div>
+
+                    <div id="form-error"
+                        style="color: var(--danger); font-size: 0.875rem; text-align: center; margin: 20px 0; display: none;">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg btn-full" id="submit-btn"
+                        style="margin-top: 24px;">
+                        Submit Questionnaire
+                    </button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+        const token = localStorage.getItem('token');
+        const urlParams = new URLSearchParams(window.location.search);
+        const patientId = urlParams.get('patientId');
+        const patientName = decodeURIComponent(urlParams.get('patientName') || '');
+
+        // Validate params
+        if (!patientId) {
+            alert('No patient selected. Redirecting...');
+            window.location.href = '/worker-dashboard.html';
+        }
+
+        document.getElementById('patient-name-display').textContent = patientName || 'Unknown';
+
+        // Auth check
+        (async () => {
+            if (!token) { window.location.href = '/worker-login.html'; return; }
+            try {
+                const res = await fetch('/api/auth/verify', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (!data.success || data.user.role !== 'worker') {
+                    localStorage.clear();
+                    window.location.href = '/worker-login.html';
+                    return;
+                }
+                document.getElementById('user-name').textContent = data.user.name;
+            } catch (e) {
+                localStorage.clear();
+                window.location.href = '/worker-login.html';
+            }
+        })();
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/';
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<span class="toast-message">${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        // Toggle answer
+        const answers = {};
+
+        function toggleAnswer(btn) {
+            const group = btn.parentElement;
+            const question = group.dataset.question;
+            const value = btn.dataset.value === 'true';
+
+            // Remove active from siblings
+            group.querySelectorAll('.toggle-btn').forEach(b => {
+                b.classList.remove('active-yes', 'active-no');
+            });
+
+            // Set active
+            if (value) {
+                btn.classList.add('active-yes');
+            } else {
+                btn.classList.add('active-no');
+            }
+
+            answers[question] = value;
+        }
+
+        // Submit
+        document.getElementById('questionnaire-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formError = document.getElementById('form-error');
+
+            // Validate all 10 questions answered
+            const requiredQuestions = [
+                'q1_bleeding', 'q2_headache_vision', 'q3_swelling',
+                'q4_nausea_vomiting', 'q5_fetal_movement', 'q6_abdominal_pain',
+                'q7_fever_chills', 'q8_breathing_chest', 'q9_supplements', 'q10_checkup'
+            ];
+
+            const unanswered = requiredQuestions.filter(q => answers[q] === undefined);
+            if (unanswered.length > 0) {
+                formError.textContent = `Please answer all questions. ${unanswered.length} question(s) remaining.`;
+                formError.style.display = 'block';
+
+                // Highlight unanswered questions
+                unanswered.forEach(q => {
+                    const group = document.querySelector(`[data-question="${q}"]`);
+                    if (group) {
+                        group.closest('.question-card').style.border = '2px solid var(--danger)';
+                        setTimeout(() => {
+                            group.closest('.question-card').style.border = '';
+                        }, 3000);
+                    }
+                });
+                return;
+            }
+
+            formError.style.display = 'none';
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<div class="spinner"></div> Submitting...';
+
+            try {
+                const res = await fetch('/api/questionnaires', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        patientId,
+                        answers
+                    })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    showToast('Questionnaire submitted successfully!');
+                    // Store for summary page
+                    localStorage.setItem('lastQuestionnaire', JSON.stringify({
+                        patientName,
+                        patientId,
+                        answers,
+                        submittedAt: new Date().toISOString()
+                    }));
+                    setTimeout(() => {
+                        window.location.href = '/summary.html';
+                    }, 1000);
+                } else {
+                    showToast(data.message, 'error');
+                }
+            } catch (error) {
+                showToast('Server error. Please try again.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Submit Questionnaire';
+            }
+        });
+    </script>
+</body>
+
+</html>

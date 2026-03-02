@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Search Patient - PregManage">
+    <title>Search Patient — PregManage</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <div class="logo-icon">🤰</div>
+                <span>PregManage</span>
+            </div>
+            <div class="navbar-user">
+                <div class="navbar-user-info">
+                    <div class="navbar-user-name" id="user-name">Worker</div>
+                    <div class="navbar-user-role">Anganwadi Worker</div>
+                </div>
+                <button class="btn btn-ghost btn-sm" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="container dashboard-content fade-in">
+            <div style="margin-bottom: 24px;">
+                <a href="/worker-dashboard.html" class="btn btn-ghost" style="padding-left: 0;">← Back to Dashboard</a>
+            </div>
+
+            <div class="page-header">
+                <h1 class="page-title">Search Patient</h1>
+                <p class="page-subtitle">Search by name, phone number, or Aadhaar number to find an existing patient</p>
+            </div>
+
+            <div style="max-width: 700px; margin: 0 auto;">
+                <!-- Search Bar -->
+                <div class="search-bar">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="search-input" placeholder="Search by name, phone, or Aadhaar number..."
+                        autofocus>
+                </div>
+
+                <!-- Patient List -->
+                <div id="patient-list-container">
+                    <div class="empty-state" id="initial-state">
+                        <div class="empty-state-icon">🔍</div>
+                        <h3 class="empty-state-title">Search for a patient</h3>
+                        <p class="empty-state-desc">Start typing to search your registered patients by name, phone, or
+                            Aadhaar</p>
+                    </div>
+
+                    <div class="empty-state hidden" id="no-results">
+                        <div class="empty-state-icon">😕</div>
+                        <h3 class="empty-state-title">No patients found</h3>
+                        <p class="empty-state-desc">Try a different search term or register a new patient</p>
+                        <a href="/patient-register.html" class="btn btn-primary btn-sm"
+                            style="margin-top: 16px;">Register New Patient</a>
+                    </div>
+
+                    <div class="patient-list hidden" id="patient-list"></div>
+
+                    <div class="hidden" id="loading-state" style="text-align: center; padding: 40px;">
+                        <div class="spinner spinner-lg" style="margin: 0 auto;"></div>
+                        <p class="loading-text" style="margin-top: 12px;">Searching...</p>
+                    </div>
+                </div>
+
+                <!-- All Patients Section -->
+                <div style="margin-top: 40px; border-top: 1px solid var(--gray-200); padding-top: 32px;">
+                    <h2 style="font-size: 1.125rem; font-weight: 700; margin-bottom: 16px; color: var(--gray-700);">All
+                        Registered Patients</h2>
+                    <div class="patient-list" id="all-patients-list"></div>
+                    <div class="empty-state hidden" id="no-patients">
+                        <div class="empty-state-icon">📋</div>
+                        <h3 class="empty-state-title">No patients registered yet</h3>
+                        <p class="empty-state-desc">Register your first patient to get started</p>
+                        <a href="/patient-register.html" class="btn btn-primary btn-sm"
+                            style="margin-top: 16px;">Register New Patient</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+        const token = localStorage.getItem('token');
+        let searchTimeout;
+
+        // Auth check
+        (async () => {
+            if (!token) { window.location.href = '/worker-login.html'; return; }
+            try {
+                const res = await fetch('/api/auth/verify', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (!data.success || data.user.role !== 'worker') {
+                    localStorage.clear();
+                    window.location.href = '/worker-login.html';
+                    return;
+                }
+                document.getElementById('user-name').textContent = data.user.name;
+                loadAllPatients();
+            } catch (e) {
+                localStorage.clear();
+                window.location.href = '/worker-login.html';
+            }
+        })();
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/';
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<span class="toast-message">${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        // Search with debounce
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            const query = e.target.value.trim();
+
+            if (!query) {
+                document.getElementById('initial-state').classList.remove('hidden');
+                document.getElementById('no-results').classList.add('hidden');
+                document.getElementById('patient-list').classList.add('hidden');
+                document.getElementById('loading-state').classList.add('hidden');
+                return;
+            }
+
+            document.getElementById('initial-state').classList.add('hidden');
+            document.getElementById('no-results').classList.add('hidden');
+            document.getElementById('patient-list').classList.add('hidden');
+            document.getElementById('loading-state').classList.remove('hidden');
+
+            searchTimeout = setTimeout(() => searchPatients(query), 400);
+        });
+
+        async function searchPatients(query) {
+            try {
+                const res = await fetch(`/api/patients/search?query=${encodeURIComponent(query)}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+
+                document.getElementById('loading-state').classList.add('hidden');
+
+                if (data.success && data.patients.length > 0) {
+                    renderPatientList(data.patients, 'patient-list');
+                    document.getElementById('patient-list').classList.remove('hidden');
+                    document.getElementById('no-results').classList.add('hidden');
+                } else {
+                    document.getElementById('patient-list').classList.add('hidden');
+                    document.getElementById('no-results').classList.remove('hidden');
+                }
+            } catch (error) {
+                document.getElementById('loading-state').classList.add('hidden');
+                showToast('Search failed', 'error');
+            }
+        }
+
+        async function loadAllPatients() {
+            try {
+                const res = await fetch('/api/patients', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+
+                if (data.success && data.patients.length > 0) {
+                    renderPatientList(data.patients, 'all-patients-list');
+                    document.getElementById('no-patients').classList.add('hidden');
+                } else {
+                    document.getElementById('all-patients-list').classList.add('hidden');
+                    document.getElementById('no-patients').classList.remove('hidden');
+                }
+            } catch (error) {
+                showToast('Failed to load patients', 'error');
+            }
+        }
+
+        function renderPatientList(patients, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = patients.map(p => {
+                const initial = p.fullName.charAt(0).toUpperCase();
+                const photoHtml = p.photo
+                    ? `<img src="${p.photo}" alt="${p.fullName}" class="patient-avatar">`
+                    : `<div class="patient-avatar">${initial}</div>`;
+
+                return `
+                    <div class="patient-card" onclick="selectPatient('${p._id}', '${encodeURIComponent(p.fullName)}')">
+                        ${photoHtml}
+                        <div class="patient-info">
+                            <div class="patient-name">${p.fullName}</div>
+                            <div class="patient-meta">📞 ${p.phone} · Aadhaar: ${p.aadhaar.slice(-4).padStart(p.aadhaar.length, '•')}</div>
+                        </div>
+                        <div class="patient-arrow">→</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function selectPatient(id, name) {
+            window.location.href = `/questionnaire.html?patientId=${id}&patientName=${name}`;
+        }
+    </script>
+</body>
+
+</html>

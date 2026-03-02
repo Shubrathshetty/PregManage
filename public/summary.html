@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Questionnaire Summary - PregManage">
+    <title>Summary — PregManage</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <div class="logo-icon">🤰</div>
+                <span>PregManage</span>
+            </div>
+            <div class="navbar-user">
+                <div class="navbar-user-info">
+                    <div class="navbar-user-name" id="user-name">Worker</div>
+                    <div class="navbar-user-role">Anganwadi Worker</div>
+                </div>
+                <button class="btn btn-ghost btn-sm" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="container dashboard-content fade-in">
+            <div class="page-header text-center">
+                <div style="font-size: 3.5rem; margin-bottom: 16px;" id="status-icon">✅</div>
+                <h1 class="page-title" id="status-title">Questionnaire Submitted</h1>
+                <p class="page-subtitle" id="status-subtitle">Successfully recorded health assessment</p>
+            </div>
+
+            <div style="max-width: 650px; margin: 0 auto;">
+                <!-- Patient Info -->
+                <div class="summary-card fade-in" style="animation-delay: 0.1s;">
+                    <div class="summary-header">
+                        <div class="summary-header-icon" style="background: var(--primary-50);">👤</div>
+                        <div>
+                            <h3 style="font-size: 1rem; font-weight: 700;" id="summary-patient-name">—</h3>
+                            <p style="font-size: 0.8rem; color: var(--gray-400);" id="summary-date">—</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questionnaire Results -->
+                <div class="summary-card fade-in" style="animation-delay: 0.2s;">
+                    <div class="summary-header">
+                        <div class="summary-header-icon" style="background: var(--primary-50);">📋</div>
+                        <h3 style="font-size: 1rem; font-weight: 700;">Health Assessment Results</h3>
+                    </div>
+                    <div class="summary-body" id="summary-results"></div>
+                </div>
+
+                <!-- Red Flags Alert -->
+                <div class="summary-card fade-in hidden" id="red-flags-card"
+                    style="animation-delay: 0.3s; border-color: var(--accent-400);">
+                    <div class="summary-header" style="background: #fef2f2;">
+                        <div class="summary-header-icon danger">⚠️</div>
+                        <div>
+                            <h3 style="font-size: 1rem; font-weight: 700; color: var(--danger);">Red Flags Detected</h3>
+                            <p style="font-size: 0.8rem; color: var(--gray-500);">The following concerns require medical
+                                attention</p>
+                        </div>
+                    </div>
+                    <div class="summary-body" id="red-flags-list"></div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex gap-md justify-center fade-in" style="margin-top: 32px; animation-delay: 0.4s;">
+                    <a href="/worker-dashboard.html" class="btn btn-primary btn-lg">Back to Dashboard</a>
+                    <a href="/patient-search.html" class="btn btn-secondary btn-lg">Another Patient</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+
+        // Auth check
+        (async () => {
+            if (!token) { window.location.href = '/worker-login.html'; return; }
+            try {
+                const res = await fetch('/api/auth/verify', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (!data.success || data.user.role !== 'worker') {
+                    localStorage.clear();
+                    window.location.href = '/worker-login.html';
+                    return;
+                }
+                document.getElementById('user-name').textContent = data.user.name;
+            } catch (e) {
+                localStorage.clear();
+                window.location.href = '/worker-login.html';
+            }
+        })();
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/';
+        }
+
+        // Question labels
+        const questionLabels = {
+            q1_bleeding: 'Bleeding or spotting',
+            q2_headache_vision: 'Severe headaches or blurred vision',
+            q3_swelling: 'Swelling in hands, feet, or face',
+            q4_nausea_vomiting: 'Persistent nausea or vomiting',
+            q5_fetal_movement: 'Reduced or no fetal movement',
+            q6_abdominal_pain: 'Abdominal pain or cramping',
+            q7_fever_chills: 'Fever or chills',
+            q8_breathing_chest: 'Difficulty breathing or chest pain',
+            q9_supplements: 'Taking iron/folic acid supplements regularly',
+            q10_checkup: 'Attended last scheduled antenatal checkup'
+        };
+
+        // Red flag questions (answering "Yes" is concerning for Q1-Q8, answering "No" is concerning for Q9-Q10)
+        const redFlagQuestions = {
+            q1_bleeding: true,       // Yes = flag
+            q2_headache_vision: true,
+            q3_swelling: true,
+            q4_nausea_vomiting: true,
+            q5_fetal_movement: true,
+            q6_abdominal_pain: true,
+            q7_fever_chills: true,
+            q8_breathing_chest: true,
+            q9_supplements: false,   // No = flag (they should be taking supplements)
+            q10_checkup: false       // No = flag (they should attend checkup)
+        };
+
+        // Load summary data
+        const lastQ = localStorage.getItem('lastQuestionnaire');
+        if (!lastQ) {
+            window.location.href = '/worker-dashboard.html';
+        } else {
+            const qData = JSON.parse(lastQ);
+            document.getElementById('summary-patient-name').textContent = qData.patientName || 'Patient';
+            document.getElementById('summary-date').textContent = 'Submitted on ' + new Date(qData.submittedAt).toLocaleString('en-IN', {
+                dateStyle: 'long',
+                timeStyle: 'short'
+            });
+
+            const resultsContainer = document.getElementById('summary-results');
+            const redFlagsList = document.getElementById('red-flags-list');
+            const redFlagsCard = document.getElementById('red-flags-card');
+            let redFlags = [];
+
+            Object.entries(qData.answers).forEach(([key, value]) => {
+                const label = questionLabels[key] || key;
+                const isFlag = redFlagQuestions[key] === value;
+
+                resultsContainer.innerHTML += `
+                    <div class="summary-row">
+                        <span class="summary-label">${label}</span>
+                        <span class="summary-value ${isFlag ? 'flag' : 'safe'}">
+                            ${value ? 'Yes' : 'No'} ${isFlag ? '⚠️' : '✓'}
+                        </span>
+                    </div>
+                `;
+
+                if (isFlag) {
+                    redFlags.push(label);
+                }
+            });
+
+            if (redFlags.length > 0) {
+                redFlagsCard.classList.remove('hidden');
+                document.getElementById('status-icon').textContent = '⚠️';
+                document.getElementById('status-title').textContent = 'Attention Required';
+                document.getElementById('status-subtitle').textContent = `${redFlags.length} concern(s) detected — please refer to medical professional`;
+
+                redFlagsList.innerHTML = redFlags.map(f => `
+                    <div class="summary-row">
+                        <span class="summary-label" style="color: var(--danger);">⚠️ ${f}</span>
+                    </div>
+                `).join('');
+            }
+
+            // Clean up
+            localStorage.removeItem('lastQuestionnaire');
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Worker Dashboard - PregManage">
+    <title>Worker Dashboard — PregManage</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <div class="logo-icon">🤰</div>
+                <span>PregManage</span>
+            </div>
+            <div class="navbar-user">
+                <div class="navbar-user-info">
+                    <div class="navbar-user-name" id="user-name">Worker</div>
+                    <div class="navbar-user-role">Anganwadi Worker</div>
+                </div>
+                <button class="btn btn-ghost btn-sm" id="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="container dashboard-content">
+            <div class="page-header text-center fade-in">
+                <h1 class="page-title">Patient Management</h1>
+                <p class="page-subtitle">Register a new patient or manage existing patients</p>
+            </div>
+
+            <div class="selection-grid fade-in" style="animation-delay: 0.15s;">
+                <a href="/patient-register.html" class="selection-card" id="new-patient-card">
+                    <div class="selection-card-icon">📝</div>
+                    <h2 class="selection-card-title">New Registration</h2>
+                    <p class="selection-card-desc">Register a new pregnant woman with personal information and photo</p>
+                </a>
+
+                <a href="/patient-search.html" class="selection-card" id="existing-patient-card">
+                    <div class="selection-card-icon">🔍</div>
+                    <h2 class="selection-card-title">Already Registered</h2>
+                    <p class="selection-card-desc">Search for an existing patient and fill in the health questionnaire
+                    </p>
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+
+        // Auth check
+        (async () => {
+            if (!token) { window.location.href = '/worker-login.html'; return; }
+            try {
+                const res = await fetch('/api/auth/verify', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (!data.success || data.user.role !== 'worker') {
+                    localStorage.clear();
+                    window.location.href = '/worker-login.html';
+                    return;
+                }
+                document.getElementById('user-name').textContent = data.user.name;
+            } catch (e) {
+                localStorage.clear();
+                window.location.href = '/worker-login.html';
+            }
+        })();
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/';
+        }
+    </script>
+</body>
+
+</html>

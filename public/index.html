@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PregManage - Pregnancy Management System for Anganwadi Workers">
+    <title>PregManage — Pregnancy Management System</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="bg-animated"></div>
+    <div class="page-center">
+        <div class="landing-container fade-in">
+            <div class="landing-logo">🤰</div>
+            <h1 class="landing-title">PregManage</h1>
+            <p class="landing-subtitle">Comprehensive pregnancy management system for Anganwadi centers. Choose your role to continue.</p>
+
+            <div class="role-cards">
+                <a href="/admin-login.html" class="role-card fade-in stagger-1" id="admin-login-card">
+                    <div class="role-card-icon">🛡️</div>
+                    <h2 class="role-card-title">Administrator</h2>
+                    <p class="role-card-desc">Manage Anganwadi workers, oversee system operations</p>
+                </a>
+
+                <a href="/worker-login.html" class="role-card fade-in stagger-2" id="worker-login-card">
+                    <div class="role-card-icon">👩‍⚕️</div>
+                    <h2 class="role-card-title">Anganwadi Worker</h2>
+                    <p class="role-card-desc">Register patients, conduct health questionnaires</p>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Redirect if already logged in
+        (async () => {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) return;
+                const res = await fetch('/api/auth/verify', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    if (data.user.role === 'admin') window.location.href = '/admin-dashboard.html';
+                    else if (data.user.role === 'worker') window.location.href = '/worker-dashboard.html';
+                }
+            } catch (e) {}
+        })();
+    </script>
+</body>
+</html>

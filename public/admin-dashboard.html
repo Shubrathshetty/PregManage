@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Admin Dashboard - PregManage">
+    <title>Admin Dashboard — PregManage</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <div class="logo-icon">🤰</div>
+                <span>PregManage</span>
+            </div>
+            <div class="navbar-user">
+                <div class="navbar-user-info">
+                    <div class="navbar-user-name" id="user-name">Administrator</div>
+                    <div class="navbar-user-role">Admin Panel</div>
+                </div>
+                <button class="btn btn-ghost btn-sm" id="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="container dashboard-content fade-in">
+            <div class="page-header">
+                <h1 class="page-title">Admin Dashboard</h1>
+                <p class="page-subtitle">Manage Anganwadi workers and monitor the system</p>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-value" id="total-workers">0</div>
+                    <div class="stat-card-label">Total Workers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-value" id="active-workers">0</div>
+                    <div class="stat-card-label">Active Workers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-value" id="inactive-workers">0</div>
+                    <div class="stat-card-label">Inactive Workers</div>
+                </div>
+            </div>
+
+            <!-- Workers Table -->
+            <div class="table-container">
+                <div class="table-header">
+                    <h2 class="table-title">Anganwadi Workers</h2>
+                    <button class="btn btn-primary btn-sm" id="add-worker-btn" onclick="openAddModal()">
+                        + Add Worker
+                    </button>
+                </div>
+                <div id="workers-table-body">
+                    <div class="empty-state" id="empty-state">
+                        <div class="empty-state-icon">👩‍⚕️</div>
+                        <h3 class="empty-state-title">No workers yet</h3>
+                        <p class="empty-state-desc">Click "Add Worker" to create your first Anganwadi worker account.
+                        </p>
+                    </div>
+                    <table id="workers-table" class="hidden">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Username</th>
+                                <th>Phone</th>
+                                <th>Area</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="workers-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Worker Modal -->
+    <div class="modal-overlay" id="worker-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">Add New Worker</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="worker-form">
+                    <input type="hidden" id="worker-id">
+                    <div class="form-group">
+                        <label class="form-label" for="worker-name">Full Name <span class="required">*</span></label>
+                        <input type="text" id="worker-name" class="form-input" placeholder="Enter full name" required>
+                    </div>
+                    <div class="form-group" id="username-group">
+                        <label class="form-label" for="worker-username">Username <span class="required">*</span></label>
+                        <input type="text" id="worker-username" class="form-input" placeholder="Enter username"
+                            required>
+                    </div>
+                    <div class="form-group" id="password-group">
+                        <label class="form-label" for="worker-password">Password <span class="required">*</span></label>
+                        <input type="password" id="worker-password" class="form-input" placeholder="Enter password"
+                            required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="worker-phone">Phone</label>
+                            <input type="tel" id="worker-phone" class="form-input" placeholder="Phone number">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="worker-area">Area</label>
+                            <input type="text" id="worker-area" class="form-input" placeholder="Assigned area">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary btn-sm" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary btn-sm" id="modal-submit-btn" onclick="submitWorker()">Create
+                    Worker</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+        const API_BASE = '/api';
+        let token = localStorage.getItem('token');
+
+        // Auth check
+        (async () => {
+            if (!token) { window.location.href = '/admin-login.html'; return; }
+            try {
+                const res = await fetch(`${API_BASE}/auth/verify`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (!data.success || data.user.role !== 'admin') {
+                    localStorage.clear();
+                    window.location.href = '/admin-login.html';
+                    return;
+                }
+                document.getElementById('user-name').textContent = data.user.name;
+                loadWorkers();
+            } catch (e) {
+                localStorage.clear();
+                window.location.href = '/admin-login.html';
+            }
+        })();
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/';
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<span class="toast-message">${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        async function loadWorkers() {
+            try {
+                const res = await fetch(`${API_BASE}/admin/workers`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    renderWorkers(data.workers);
+                }
+            } catch (error) {
+                showToast('Failed to load workers', 'error');
+            }
+        }
+
+        function renderWorkers(workers) {
+            const tbody = document.getElementById('workers-tbody');
+            const table = document.getElementById('workers-table');
+            const emptyState = document.getElementById('empty-state');
+
+            // Stats
+            document.getElementById('total-workers').textContent = workers.length;
+            document.getElementById('active-workers').textContent = workers.filter(w => w.isActive).length;
+            document.getElementById('inactive-workers').textContent = workers.filter(w => !w.isActive).length;
+
+            if (workers.length === 0) {
+                table.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            table.classList.remove('hidden');
+
+            tbody.innerHTML = workers.map(w => `
+                <tr>
+                    <td style="font-weight: 600; color: var(--gray-800);">${w.name}</td>
+                    <td>${w.username}</td>
+                    <td>${w.phone || '—'}</td>
+                    <td>${w.area || '—'}</td>
+                    <td>
+                        <span class="badge ${w.isActive ? 'badge-success' : 'badge-danger'}">
+                            ${w.isActive ? 'Active' : 'Inactive'}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="flex gap-sm">
+                            <button class="btn btn-ghost btn-sm" onclick="editWorker('${w._id}')">Edit</button>
+                            <button class="btn btn-ghost btn-sm" style="color: var(--danger);" onclick="deleteWorker('${w._id}', '${w.name}')">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        let editingWorker = null;
+
+        function openAddModal() {
+            editingWorker = null;
+            document.getElementById('modal-title').textContent = 'Add New Worker';
+            document.getElementById('modal-submit-btn').textContent = 'Create Worker';
+            document.getElementById('worker-form').reset();
+            document.getElementById('username-group').style.display = 'block';
+            document.getElementById('password-group').querySelector('.form-label').innerHTML = 'Password <span class="required">*</span>';
+            document.getElementById('worker-password').required = true;
+            document.getElementById('worker-modal').classList.add('active');
+        }
+
+        async function editWorker(id) {
+            try {
+                const res = await fetch(`${API_BASE}/admin/workers/${id}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    editingWorker = data.worker;
+                    document.getElementById('modal-title').textContent = 'Edit Worker';
+                    document.getElementById('modal-submit-btn').textContent = 'Update Worker';
+                    document.getElementById('worker-name').value = data.worker.name;
+                    document.getElementById('worker-username').value = data.worker.username;
+                    document.getElementById('worker-phone').value = data.worker.phone || '';
+                    document.getElementById('worker-area').value = data.worker.area || '';
+                    document.getElementById('worker-password').value = '';
+                    document.getElementById('worker-password').required = false;
+                    document.getElementById('password-group').querySelector('.form-label').innerHTML = 'Password <span style="font-weight:400;color:var(--gray-400)">(leave blank to keep current)</span>';
+                    document.getElementById('username-group').style.display = 'none';
+                    document.getElementById('worker-modal').classList.add('active');
+                }
+            } catch (error) {
+                showToast('Failed to load worker', 'error');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('worker-modal').classList.remove('active');
+            editingWorker = null;
+        }
+
+        async function submitWorker() {
+            const name = document.getElementById('worker-name').value.trim();
+            const username = document.getElementById('worker-username').value.trim();
+            const password = document.getElementById('worker-password').value;
+            const phone = document.getElementById('worker-phone').value.trim();
+            const area = document.getElementById('worker-area').value.trim();
+
+            if (!name) { showToast('Name is required', 'error'); return; }
+
+            const btn = document.getElementById('modal-submit-btn');
+            btn.disabled = true;
+
+            try {
+                if (editingWorker) {
+                    const body = { name, phone, area };
+                    if (password) body.password = password;
+
+                    const res = await fetch(`${API_BASE}/admin/workers/${editingWorker._id}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(body)
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        showToast('Worker updated successfully!');
+                        closeModal();
+                        loadWorkers();
+                    } else {
+                        showToast(data.message, 'error');
+                    }
+                } else {
+                    if (!username || !password) { showToast('Username and password are required', 'error'); btn.disabled = false; return; }
+
+                    const res = await fetch(`${API_BASE}/admin/workers`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ name, username, password, phone, area })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        showToast('Worker created successfully!');
+                        closeModal();
+                        loadWorkers();
+                    } else {
+                        showToast(data.message, 'error');
+                    }
+                }
+            } catch (error) {
+                showToast('Server error. Try again.', 'error');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        async function deleteWorker(id, name) {
+            if (!confirm(`Are you sure you want to delete worker "${name}"?`)) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/admin/workers/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast('Worker deleted successfully!');
+                    loadWorkers();
+                } else {
+                    showToast(data.message, 'error');
+                }
+            } catch (error) {
+                showToast('Failed to delete worker', 'error');
+            }
+        }
+
+        // Close modal on backdrop click
+        document.getElementById('worker-modal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeModal();
+        });
+    </script>
+</body>
+
+</html>

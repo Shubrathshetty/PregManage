@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="New Patient Registration - PregManage">
+    <title>Patient Registration — PregManage</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <div class="logo-icon">🤰</div>
+                <span>PregManage</span>
+            </div>
+            <div class="navbar-user">
+                <div class="navbar-user-info">
+                    <div class="navbar-user-name" id="user-name">Worker</div>
+                    <div class="navbar-user-role">Anganwadi Worker</div>
+                </div>
+                <button class="btn btn-ghost btn-sm" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="container dashboard-content fade-in">
+            <div style="margin-bottom: 24px;">
+                <a href="/worker-dashboard.html" class="btn btn-ghost" style="padding-left: 0;">← Back to Dashboard</a>
+            </div>
+
+            <div class="page-header">
+                <h1 class="page-title">New Patient Registration</h1>
+                <p class="page-subtitle">Register a new pregnant woman by filling in the details below</p>
+            </div>
+
+            <div class="card" style="max-width: 800px;">
+                <form id="register-form">
+                    <!-- Photo Upload -->
+                    <div class="form-group" style="margin-bottom: 28px;">
+                        <label class="form-label">Patient Photo <span class="required">*</span></label>
+                        <div class="photo-upload-area" id="photo-upload-area"
+                            onclick="document.getElementById('photo-input').click()">
+                            <div id="photo-placeholder">
+                                <div class="photo-upload-icon">📷</div>
+                                <p class="photo-upload-text">Click to upload or capture a photo</p>
+                                <p class="photo-upload-hint">JPG, PNG, WEBP — Max 5MB</p>
+                            </div>
+                            <img id="photo-preview" class="photo-preview hidden" alt="Patient photo preview">
+                        </div>
+                        <input type="file" id="photo-input" accept="image/jpeg,image/png,image/webp"
+                            capture="environment" class="hidden">
+                        <div class="photo-actions" id="photo-actions" class="hidden">
+                            <button type="button" class="btn btn-secondary btn-sm"
+                                onclick="document.getElementById('photo-input').click()">Change Photo</button>
+                            <button type="button" class="btn btn-ghost btn-sm" onclick="removePhoto()">Remove</button>
+                        </div>
+                    </div>
+
+                    <!-- Personal Info -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="fullName">Full Name <span class="required">*</span></label>
+                            <input type="text" id="fullName" class="form-input" placeholder="Enter full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="age">Age <span class="required">*</span></label>
+                            <input type="number" id="age" class="form-input" placeholder="Age" min="14" max="55"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="husbandName">Husband's Name <span
+                                    class="required">*</span></label>
+                            <input type="text" id="husbandName" class="form-input" placeholder="Enter husband's name"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="phone">Phone Number <span class="required">*</span></label>
+                            <input type="tel" id="phone" class="form-input" placeholder="10-digit number"
+                                pattern="[0-9]{10}" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="address">Address <span class="required">*</span></label>
+                        <textarea id="address" class="form-textarea" placeholder="Enter full address"
+                            required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="aadhaar">Aadhaar Number <span class="required">*</span></label>
+                        <input type="text" id="aadhaar" class="form-input" placeholder="12-digit Aadhaar number"
+                            pattern="[0-9]{12}" maxlength="12" required>
+                        <p class="form-hint">Enter 12-digit Aadhaar number without spaces</p>
+                    </div>
+
+                    <!-- Medical Info -->
+                    <div style="border-top: 1px solid var(--gray-100); margin: 28px 0; padding-top: 28px;">
+                        <h2 style="font-size: 1.125rem; margin-bottom: 20px; color: var(--gray-700);">Medical
+                            Information</h2>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="lmpDate">Last Menstrual Period (LMP) <span
+                                    class="required">*</span></label>
+                            <input type="date" id="lmpDate" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edd">Expected Delivery Date (EDD) <span
+                                    class="required">*</span></label>
+                            <input type="date" id="edd" class="form-input" required>
+                            <p class="form-hint" id="edd-hint"></p>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="bloodGroup">Blood Group <span
+                                    class="required">*</span></label>
+                            <select id="bloodGroup" class="form-select" required>
+                                <option value="">Select blood group</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="gravida">Gravida (No. of Pregnancies) <span
+                                    class="required">*</span></label>
+                            <input type="number" id="gravida" class="form-input" placeholder="e.g., 1" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="para">Para (No. of Deliveries) <span
+                                    class="required">*</span></label>
+                            <input type="number" id="para" class="form-input" placeholder="e.g., 0" min="0" required>
+                        </div>
+                    </div>
+
+                    <div id="form-error" class="form-error" style="text-align: center; margin-bottom: 16px;"></div>
+
+                    <button type="submit" class="btn btn-primary btn-lg btn-full" id="submit-btn">
+                        Register Patient
+                    </button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+        const token = localStorage.getItem('token');
+
+        // Auth check
+        (async () => {
+            if (!token) { window.location.href = '/worker-login.html'; return; }
+            try {
+                const res = await fetch('/api/auth/verify', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (!data.success || data.user.role !== 'worker') {
+                    localStorage.clear();
+                    window.location.href = '/worker-login.html';
+                    return;
+                }
+                document.getElementById('user-name').textContent = data.user.name;
+            } catch (e) {
+                localStorage.clear();
+                window.location.href = '/worker-login.html';
+            }
+        })();
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/';
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<span class="toast-message">${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        // Photo upload
+        const photoInput = document.getElementById('photo-input');
+        const photoPreview = document.getElementById('photo-preview');
+        const photoPlaceholder = document.getElementById('photo-placeholder');
+        const photoActions = document.getElementById('photo-actions');
+        const uploadArea = document.getElementById('photo-upload-area');
+
+        photoInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast('Photo must be less than 5MB', 'error');
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    photoPreview.src = ev.target.result;
+                    photoPreview.classList.remove('hidden');
+                    photoPlaceholder.classList.add('hidden');
+                    photoActions.classList.remove('hidden');
+                    uploadArea.classList.add('has-photo');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function removePhoto() {
+            photoInput.value = '';
+            photoPreview.classList.add('hidden');
+            photoPlaceholder.classList.remove('hidden');
+            photoActions.classList.add('hidden');
+            uploadArea.classList.remove('has-photo');
+        }
+
+        // Auto-calculate EDD from LMP (Naegele's rule: LMP + 280 days)
+        document.getElementById('lmpDate').addEventListener('change', (e) => {
+            const lmp = new Date(e.target.value);
+            if (!isNaN(lmp)) {
+                const edd = new Date(lmp);
+                edd.setDate(edd.getDate() + 280);
+                document.getElementById('edd').value = edd.toISOString().split('T')[0];
+                document.getElementById('edd-hint').textContent = 'Auto-calculated using Naegele\'s rule (LMP + 280 days)';
+            }
+        });
+
+        // Form submission
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formError = document.getElementById('form-error');
+            formError.style.display = 'none';
+
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<div class="spinner"></div> Registering...';
+
+            const formData = new FormData();
+            formData.append('fullName', document.getElementById('fullName').value.trim());
+            formData.append('age', document.getElementById('age').value);
+            formData.append('husbandName', document.getElementById('husbandName').value.trim());
+            formData.append('phone', document.getElementById('phone').value.trim());
+            formData.append('address', document.getElementById('address').value.trim());
+            formData.append('aadhaar', document.getElementById('aadhaar').value.trim());
+            formData.append('lmpDate', document.getElementById('lmpDate').value);
+            formData.append('edd', document.getElementById('edd').value);
+            formData.append('bloodGroup', document.getElementById('bloodGroup').value);
+            formData.append('gravida', document.getElementById('gravida').value);
+            formData.append('para', document.getElementById('para').value);
+
+            const photoFile = photoInput.files[0];
+            if (photoFile) {
+                formData.append('photo', photoFile);
+            }
+
+            try {
+                const res = await fetch('/api/patients', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    showToast('Patient registered successfully! Redirecting to questionnaire...');
+                    // Store patient ID and redirect to questionnaire
+                    setTimeout(() => {
+                        window.location.href = `/questionnaire.html?patientId=${data.patient._id}&patientName=${encodeURIComponent(data.patient.fullName)}`;
+                    }, 1500);
+                } else {
+                    formError.textContent = data.message;
+                    formError.style.display = 'block';
+                    showToast(data.message, 'error');
+                }
+            } catch (error) {
+                formError.textContent = 'Server error. Please try again.';
+                formError.style.display = 'block';
+                showToast('Server error', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Register Patient';
+            }
+        });
+    </script>
+</body>
+
+</html>
