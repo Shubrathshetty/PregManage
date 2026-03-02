@@ -53,6 +53,15 @@ const questionnaireSchema = new mongoose.Schema({
             required: true
         }
     },
+    doctorConsultation: {
+        type: Boolean,
+        default: null
+    },
+    consultationType: {
+        type: String,
+        enum: ['hospital', 'home', null],
+        default: null
+    },
     submittedAt: {
         type: Date,
         default: Date.now

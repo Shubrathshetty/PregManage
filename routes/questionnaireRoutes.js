@@ -68,4 +68,33 @@ router.get('/:id', verifyToken, requireWorker, async (req, res) => {
     }
 });
 
+// Update doctor consultation for a questionnaire
+router.put('/:id/consultation', verifyToken, requireWorker, async (req, res) => {
+    try {
+        const { doctorConsultation, consultationType } = req.body;
+
+        const questionnaire = await Questionnaire.findOne({
+            _id: req.params.id,
+            submittedBy: req.user.id
+        });
+
+        if (!questionnaire) {
+            return res.status(404).json({ success: false, message: 'Questionnaire not found.' });
+        }
+
+        questionnaire.doctorConsultation = doctorConsultation;
+        if (doctorConsultation && consultationType) {
+            questionnaire.consultationType = consultationType;
+        } else {
+            questionnaire.consultationType = null;
+        }
+
+        await questionnaire.save();
+        res.json({ success: true, message: 'Consultation updated successfully.', questionnaire });
+    } catch (error) {
+        console.error('Update consultation error:', error);
+        res.status(500).json({ success: false, message: 'Server error.' });
+    }
+});
+
 module.exports = router;

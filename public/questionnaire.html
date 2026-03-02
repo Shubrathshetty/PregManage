@@ -312,6 +312,7 @@
                     showToast('Questionnaire submitted successfully!');
                     // Store for summary page
                     localStorage.setItem('lastQuestionnaire', JSON.stringify({
+                        questionnaireId: data.questionnaire._id,
                         patientName,
                         patientId,
                         answers,

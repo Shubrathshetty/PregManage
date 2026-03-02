@@ -7,6 +7,189 @@
     <meta name="description" content="Questionnaire Summary - PregManage">
     <title>Summary — PregManage</title>
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        /* Consultation Step Styles */
+        .consultation-section {
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .consultation-card {
+            background: white;
+            border: 2px solid var(--gray-100);
+            border-radius: var(--radius-lg);
+            padding: 40px 32px;
+            text-align: center;
+            transition: all var(--transition-base);
+        }
+
+        .consultation-card-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        .consultation-card h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: var(--gray-800);
+        }
+
+        .consultation-card p {
+            font-size: 0.938rem;
+            color: var(--gray-500);
+            margin-bottom: 32px;
+        }
+
+        .consultation-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        .consultation-option {
+            padding: 28px 20px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            background: var(--gray-50);
+        }
+
+        .consultation-option:hover {
+            border-color: var(--primary-300);
+            background: var(--primary-50);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .consultation-option.selected {
+            border-color: var(--primary-500);
+            background: var(--primary-50);
+            box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.12);
+        }
+
+        .consultation-option-icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .consultation-option-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--gray-800);
+            margin-bottom: 4px;
+        }
+
+        .consultation-option-desc {
+            font-size: 0.8rem;
+            color: var(--gray-400);
+        }
+
+        .consultation-option.yes-option.selected {
+            border-color: var(--primary-500);
+            background: #dcfce7;
+        }
+
+        .consultation-option.no-option.selected {
+            border-color: var(--gray-400);
+            background: var(--gray-100);
+        }
+
+        /* Service Type Styles */
+        .service-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .service-option {
+            padding: 36px 24px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            background: white;
+            text-align: center;
+        }
+
+        .service-option:hover {
+            border-color: var(--primary-300);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .service-option.selected {
+            border-color: var(--primary-500);
+            background: var(--primary-50);
+            box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.12);
+        }
+
+        .service-option-icon {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+        }
+
+        .service-option-title {
+            font-weight: 700;
+            font-size: 1.125rem;
+            color: var(--gray-800);
+            margin-bottom: 6px;
+        }
+
+        .service-option-desc {
+            font-size: 0.813rem;
+            color: var(--gray-400);
+            line-height: 1.4;
+        }
+
+        /* Step indicator */
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 32px;
+        }
+
+        .step-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--gray-200);
+            transition: all var(--transition-base);
+        }
+
+        .step-dot.active {
+            background: var(--primary-500);
+            width: 32px;
+            border-radius: 5px;
+        }
+
+        .step-dot.completed {
+            background: var(--primary-300);
+        }
+
+        /* Slide animation */
+        .step-content {
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -27,59 +210,171 @@
         </nav>
 
         <!-- Main Content -->
-        <main class="container dashboard-content fade-in">
-            <div class="page-header text-center">
-                <div style="font-size: 3.5rem; margin-bottom: 16px;" id="status-icon">✅</div>
-                <h1 class="page-title" id="status-title">Questionnaire Submitted</h1>
-                <p class="page-subtitle" id="status-subtitle">Successfully recorded health assessment</p>
+        <main class="container dashboard-content">
+
+            <!-- ====== STEP 1: Questionnaire Results ====== -->
+            <div id="step-results" class="step-content fade-in">
+                <div class="page-header text-center">
+                    <div style="font-size: 3.5rem; margin-bottom: 16px;" id="status-icon">✅</div>
+                    <h1 class="page-title" id="status-title">Questionnaire Submitted</h1>
+                    <p class="page-subtitle" id="status-subtitle">Successfully recorded health assessment</p>
+                </div>
+
+                <div style="max-width: 650px; margin: 0 auto;">
+                    <!-- Patient Info -->
+                    <div class="summary-card fade-in" style="animation-delay: 0.1s;">
+                        <div class="summary-header">
+                            <div class="summary-header-icon" style="background: var(--primary-50);">👤</div>
+                            <div>
+                                <h3 style="font-size: 1rem; font-weight: 700;" id="summary-patient-name">—</h3>
+                                <p style="font-size: 0.8rem; color: var(--gray-400);" id="summary-date">—</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Questionnaire Results -->
+                    <div class="summary-card fade-in" style="animation-delay: 0.2s;">
+                        <div class="summary-header">
+                            <div class="summary-header-icon" style="background: var(--primary-50);">📋</div>
+                            <h3 style="font-size: 1rem; font-weight: 700;">Health Assessment Results</h3>
+                        </div>
+                        <div class="summary-body" id="summary-results"></div>
+                    </div>
+
+                    <!-- Red Flags Alert -->
+                    <div class="summary-card fade-in hidden" id="red-flags-card"
+                        style="animation-delay: 0.3s; border-color: var(--accent-400);">
+                        <div class="summary-header" style="background: #fef2f2;">
+                            <div class="summary-header-icon danger">⚠️</div>
+                            <div>
+                                <h3 style="font-size: 1rem; font-weight: 700; color: var(--danger);">Red Flags Detected
+                                </h3>
+                                <p style="font-size: 0.8rem; color: var(--gray-500);">The following concerns require
+                                    medical attention</p>
+                            </div>
+                        </div>
+                        <div class="summary-body" id="red-flags-list"></div>
+                    </div>
+
+                    <!-- Continue to Consultation Button -->
+                    <div class="text-center fade-in" style="margin-top: 32px; animation-delay: 0.4s;">
+                        <button class="btn btn-primary btn-lg" onclick="showConsultationStep()" id="continue-btn">
+                            Continue →
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            <div style="max-width: 650px; margin: 0 auto;">
-                <!-- Patient Info -->
-                <div class="summary-card fade-in" style="animation-delay: 0.1s;">
-                    <div class="summary-header">
-                        <div class="summary-header-icon" style="background: var(--primary-50);">👤</div>
-                        <div>
-                            <h3 style="font-size: 1rem; font-weight: 700;" id="summary-patient-name">—</h3>
-                            <p style="font-size: 0.8rem; color: var(--gray-400);" id="summary-date">—</p>
+            <!-- ====== STEP 2: Doctor Consultation Question ====== -->
+            <div id="step-consultation" class="hidden">
+                <div class="consultation-section step-content">
+                    <div class="step-indicator">
+                        <div class="step-dot completed"></div>
+                        <div class="step-dot active"></div>
+                        <div class="step-dot"></div>
+                    </div>
+
+                    <div class="consultation-card">
+                        <div class="consultation-card-icon">👨‍⚕️</div>
+                        <h2>Is Doctor Consultation Required?</h2>
+                        <p>Based on the health assessment, does the patient need a doctor consultation?</p>
+
+                        <div class="consultation-options">
+                            <div class="consultation-option yes-option" onclick="selectConsultation(true)"
+                                id="consult-yes">
+                                <div class="consultation-option-icon">✅</div>
+                                <div class="consultation-option-title">Yes</div>
+                                <div class="consultation-option-desc">Doctor consultation is needed</div>
+                            </div>
+                            <div class="consultation-option no-option" onclick="selectConsultation(false)"
+                                id="consult-no">
+                                <div class="consultation-option-icon">❌</div>
+                                <div class="consultation-option-title">No</div>
+                                <div class="consultation-option-desc">No consultation needed</div>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Questionnaire Results -->
-                <div class="summary-card fade-in" style="animation-delay: 0.2s;">
-                    <div class="summary-header">
-                        <div class="summary-header-icon" style="background: var(--primary-50);">📋</div>
-                        <h3 style="font-size: 1rem; font-weight: 700;">Health Assessment Results</h3>
+            <!-- ====== STEP 3: Service Type Selection ====== -->
+            <div id="step-service-type" class="hidden">
+                <div class="consultation-section step-content">
+                    <div class="step-indicator">
+                        <div class="step-dot completed"></div>
+                        <div class="step-dot completed"></div>
+                        <div class="step-dot active"></div>
                     </div>
-                    <div class="summary-body" id="summary-results"></div>
-                </div>
 
-                <!-- Red Flags Alert -->
-                <div class="summary-card fade-in hidden" id="red-flags-card"
-                    style="animation-delay: 0.3s; border-color: var(--accent-400);">
-                    <div class="summary-header" style="background: #fef2f2;">
-                        <div class="summary-header-icon danger">⚠️</div>
-                        <div>
-                            <h3 style="font-size: 1rem; font-weight: 700; color: var(--danger);">Red Flags Detected</h3>
-                            <p style="font-size: 0.8rem; color: var(--gray-500);">The following concerns require medical
-                                attention</p>
+                    <div class="consultation-card">
+                        <div class="consultation-card-icon">🏥</div>
+                        <h2>Select Service Type</h2>
+                        <p>Where does the patient prefer to receive the doctor consultation?</p>
+
+                        <div class="service-options">
+                            <div class="service-option" onclick="selectServiceType('hospital')" id="service-hospital">
+                                <div class="service-option-icon">🏥</div>
+                                <div class="service-option-title">Hospital Visit</div>
+                                <div class="service-option-desc">Patient will visit the hospital for consultation</div>
+                            </div>
+                            <div class="service-option" onclick="selectServiceType('home')" id="service-home">
+                                <div class="service-option-icon">🏠</div>
+                                <div class="service-option-title">Home Service</div>
+                                <div class="service-option-desc">Doctor will visit the patient at home</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="summary-body" id="red-flags-list"></div>
-                </div>
-
-                <!-- Actions -->
-                <div class="flex gap-md justify-center fade-in" style="margin-top: 32px; animation-delay: 0.4s;">
-                    <a href="/worker-dashboard.html" class="btn btn-primary btn-lg">Back to Dashboard</a>
-                    <a href="/patient-search.html" class="btn btn-secondary btn-lg">Another Patient</a>
                 </div>
             </div>
+
+            <!-- ====== STEP 4: Final Confirmation ====== -->
+            <div id="step-final" class="hidden">
+                <div class="consultation-section step-content">
+                    <div class="page-header text-center">
+                        <div style="font-size: 3.5rem; margin-bottom: 16px;">🎉</div>
+                        <h1 class="page-title">Assessment Complete!</h1>
+                        <p class="page-subtitle" id="final-subtitle">All records have been saved successfully</p>
+                    </div>
+
+                    <!-- Final Summary -->
+                    <div class="summary-card fade-in" style="animation-delay: 0.1s;">
+                        <div class="summary-header">
+                            <div class="summary-header-icon" style="background: var(--primary-50);">📝</div>
+                            <h3 style="font-size: 1rem; font-weight: 700;">Consultation Decision</h3>
+                        </div>
+                        <div class="summary-body">
+                            <div class="summary-row">
+                                <span class="summary-label">Patient</span>
+                                <span class="summary-value" id="final-patient-name">—</span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="summary-label">Doctor Consultation</span>
+                                <span class="summary-value" id="final-consultation">—</span>
+                            </div>
+                            <div class="summary-row" id="final-service-row" style="display: none;">
+                                <span class="summary-label">Service Type</span>
+                                <span class="summary-value" id="final-service-type">—</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Next Actions -->
+                    <div class="flex gap-md justify-center fade-in" style="margin-top: 32px; animation-delay: 0.3s;">
+                        <a href="/worker-dashboard.html" class="btn btn-primary btn-lg">Back to Dashboard</a>
+                        <a href="/patient-search.html" class="btn btn-secondary btn-lg">Another Patient</a>
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
 
+    <div class="toast-container" id="toast-container"></div>
+
     <script>
         const token = localStorage.getItem('token');
+        let questionnaireId = null;
+        let qData = null;
 
         // Auth check
         (async () => {
@@ -106,7 +401,16 @@
             window.location.href = '/';
         }
 
-        // Question labels
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<span class="toast-message">${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 4000);
+        }
+
+        // ---- Question labels & red flag logic ----
         const questionLabels = {
             q1_bleeding: 'Bleeding or spotting',
             q2_headache_vision: 'Severe headaches or blurred vision',
@@ -120,9 +424,8 @@
             q10_checkup: 'Attended last scheduled antenatal checkup'
         };
 
-        // Red flag questions (answering "Yes" is concerning for Q1-Q8, answering "No" is concerning for Q9-Q10)
         const redFlagQuestions = {
-            q1_bleeding: true,       // Yes = flag
+            q1_bleeding: true,
             q2_headache_vision: true,
             q3_swelling: true,
             q4_nausea_vomiting: true,
@@ -130,16 +433,18 @@
             q6_abdominal_pain: true,
             q7_fever_chills: true,
             q8_breathing_chest: true,
-            q9_supplements: false,   // No = flag (they should be taking supplements)
-            q10_checkup: false       // No = flag (they should attend checkup)
+            q9_supplements: false,
+            q10_checkup: false
         };
 
-        // Load summary data
+        // ---- Load questionnaire data ----
         const lastQ = localStorage.getItem('lastQuestionnaire');
         if (!lastQ) {
             window.location.href = '/worker-dashboard.html';
         } else {
-            const qData = JSON.parse(lastQ);
+            qData = JSON.parse(lastQ);
+            questionnaireId = qData.questionnaireId;
+
             document.getElementById('summary-patient-name').textContent = qData.patientName || 'Patient';
             document.getElementById('summary-date').textContent = 'Submitted on ' + new Date(qData.submittedAt).toLocaleString('en-IN', {
                 dateStyle: 'long',
@@ -182,8 +487,96 @@
                 `).join('');
             }
 
-            // Clean up
+            // Clean up localStorage (but keep data in memory)
             localStorage.removeItem('lastQuestionnaire');
+        }
+
+        // ---- Step Navigation ----
+        function showConsultationStep() {
+            document.getElementById('step-results').classList.add('hidden');
+            document.getElementById('step-consultation').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        async function selectConsultation(needsDoctor) {
+            // Visual selection
+            document.getElementById('consult-yes').classList.remove('selected');
+            document.getElementById('consult-no').classList.remove('selected');
+
+            if (needsDoctor) {
+                document.getElementById('consult-yes').classList.add('selected');
+            } else {
+                document.getElementById('consult-no').classList.add('selected');
+            }
+
+            // Brief delay for visual feedback
+            await new Promise(r => setTimeout(r, 400));
+
+            if (needsDoctor) {
+                // Show service type selection
+                document.getElementById('step-consultation').classList.add('hidden');
+                document.getElementById('step-service-type').classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                // No consultation needed — save and go to final
+                await saveConsultation(false, null);
+                showFinalStep(false, null);
+            }
+        }
+
+        async function selectServiceType(type) {
+            // Visual selection
+            document.getElementById('service-hospital').classList.remove('selected');
+            document.getElementById('service-home').classList.remove('selected');
+            document.getElementById(`service-${type}`).classList.add('selected');
+
+            // Brief delay for visual feedback
+            await new Promise(r => setTimeout(r, 400));
+
+            // Save and go to final
+            await saveConsultation(true, type);
+            showFinalStep(true, type);
+        }
+
+        async function saveConsultation(doctorConsultation, consultationType) {
+            if (!questionnaireId) return;
+
+            try {
+                await fetch(`/api/questionnaires/${questionnaireId}/consultation`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ doctorConsultation, consultationType })
+                });
+            } catch (error) {
+                console.error('Save consultation error:', error);
+            }
+        }
+
+        function showFinalStep(doctorNeeded, serviceType) {
+            document.getElementById('step-consultation').classList.add('hidden');
+            document.getElementById('step-service-type').classList.add('hidden');
+            document.getElementById('step-final').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Populate final summary
+            document.getElementById('final-patient-name').textContent = qData.patientName || 'Patient';
+
+            if (doctorNeeded) {
+                document.getElementById('final-consultation').innerHTML = '<span class="badge badge-warning">Yes — Required</span>';
+                document.getElementById('final-service-row').style.display = '';
+                document.getElementById('final-service-type').innerHTML = serviceType === 'hospital'
+                    ? '<span class="badge badge-info">🏥 Hospital Visit</span>'
+                    : '<span class="badge badge-info">🏠 Home Service</span>';
+                document.getElementById('final-subtitle').textContent = 'Doctor consultation has been recorded. All records saved.';
+            } else {
+                document.getElementById('final-consultation').innerHTML = '<span class="badge badge-success">No — Not Required</span>';
+                document.getElementById('final-subtitle').textContent = 'No consultation needed. All records saved successfully.';
+            }
+
+            showToast('Assessment complete! Records saved.', 'success');
         }
     </script>
 </body>
