@@ -56,7 +56,7 @@
                 </div>
             </div>
 
-            <!-- Workers Table (View 1) -->
+            <!-- Workers Table -->
             <div class="table-container" id="workers-view">
                 <div class="table-header">
                     <h2 class="table-title">Anganwadi Workers</h2>
@@ -87,13 +87,10 @@
                 </div>
             </div>
 
-            <!-- Hospital Visits Table (View 2) -->
-            <div class="table-container hidden" id="visits-view">
+            <!-- Hospital Visits Table -->
+            <div class="table-container" id="visits-view" style="margin-top: 32px;">
                 <div class="table-header">
                     <h2 class="table-title">Scheduled Hospital Visits</h2>
-                    <button class="btn btn-secondary btn-sm" onclick="toggleView('workers')">
-                        &larr; Back to Workers
-                    </button>
                 </div>
                 <div id="visits-table-body">
                     <div class="empty-state hidden" id="visits-empty-state">
@@ -260,13 +257,11 @@
         }
 
         function toggleView(view) {
-            if (view === 'visits') {
-                document.getElementById('workers-view').classList.add('hidden');
-                document.getElementById('visits-view').classList.remove('hidden');
-            } else {
-                document.getElementById('visits-view').classList.add('hidden');
-                document.getElementById('workers-view').classList.remove('hidden');
-            }
+            // Disabled: Now tables are displayed persistently.
+            window.scrollTo({
+                top: document.getElementById('visits-view').offsetTop - 50,
+                behavior: 'smooth'
+            });
         }
 
         async function loadVisits() {
