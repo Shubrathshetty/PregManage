@@ -47,10 +47,17 @@
                     <div class="stat-card-value" id="inactive-workers">0</div>
                     <div class="stat-card-label">Inactive Workers</div>
                 </div>
+                <div class="stat-card"
+                    style="cursor: pointer; border: 2px solid var(--primary-200); background: var(--primary-50);"
+                    onclick="toggleView('visits')">
+                    <div class="stat-card-value" id="hospital-visits-count" style="color: var(--primary-700);">0</div>
+                    <div class="stat-card-label" style="font-weight: 600;">🏥 Scheduled Hospital Visits</div>
+                    <div style="font-size: 0.75rem; color: var(--primary-600); margin-top: 4px;">Click to view</div>
+                </div>
             </div>
 
-            <!-- Workers Table -->
-            <div class="table-container">
+            <!-- Workers Table (View 1) -->
+            <div class="table-container" id="workers-view">
                 <div class="table-header">
                     <h2 class="table-title">Anganwadi Workers</h2>
                     <button class="btn btn-primary btn-sm" id="add-worker-btn" onclick="openAddModal()">
@@ -76,6 +83,36 @@
                             </tr>
                         </thead>
                         <tbody id="workers-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Hospital Visits Table (View 2) -->
+            <div class="table-container hidden" id="visits-view">
+                <div class="table-header">
+                    <h2 class="table-title">Scheduled Hospital Visits</h2>
+                    <button class="btn btn-secondary btn-sm" onclick="toggleView('workers')">
+                        &larr; Back to Workers
+                    </button>
+                </div>
+                <div id="visits-table-body">
+                    <div class="empty-state hidden" id="visits-empty-state">
+                        <div class="empty-state-icon">🩺</div>
+                        <h3 class="empty-state-title">No hospital visits scheduled</h3>
+                        <p class="empty-state-desc">When Anganwadi workers schedule hospital visits, they will appear
+                            here.</p>
+                    </div>
+                    <table id="visits-table" class="hidden">
+                        <thead>
+                            <tr>
+                                <th>Patient Name</th>
+                                <th>Schedule Date & Time</th>
+                                <th>Hospital Name</th>
+                                <th>Location</th>
+                                <th>Referred By</th>
+                            </tr>
+                        </thead>
+                        <tbody id="visits-tbody"></tbody>
                     </table>
                 </div>
             </div>
@@ -147,6 +184,7 @@
                 }
                 document.getElementById('user-name').textContent = data.user.name;
                 loadWorkers();
+                loadVisits();
             } catch (e) {
                 localStorage.clear();
                 window.location.href = '/admin-login.html';
@@ -219,6 +257,71 @@
                     </td>
                 </tr>
             `).join('');
+        }
+
+        function toggleView(view) {
+            if (view === 'visits') {
+                document.getElementById('workers-view').classList.add('hidden');
+                document.getElementById('visits-view').classList.remove('hidden');
+            } else {
+                document.getElementById('visits-view').classList.add('hidden');
+                document.getElementById('workers-view').classList.remove('hidden');
+            }
+        }
+
+        async function loadVisits() {
+            try {
+                const res = await fetch(`${API_BASE}/admin/hospital-visits`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    renderVisits(data.visits);
+                }
+            } catch (error) {
+                console.error('Failed to load visits', error);
+            }
+        }
+
+        function renderVisits(visits) {
+            const tbody = document.getElementById('visits-tbody');
+            const table = document.getElementById('visits-table');
+            const emptyState = document.getElementById('visits-empty-state');
+
+            // Update stats card
+            document.getElementById('hospital-visits-count').textContent = visits.length;
+
+            if (visits.length === 0) {
+                table.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            table.classList.remove('hidden');
+
+            tbody.innerHTML = visits.map(v => {
+                const details = v.hospitalVisitDetails || {};
+                const hDate = details.date ? new Date(details.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+                const hTime = details.time ? details.time : '—';
+
+                return `
+                <tr>
+                    <td>
+                        <div style="font-weight: 600; color: var(--gray-800);">${v.patient ? v.patient.fullName : 'Unknown'}</div>
+                        <div style="font-size: 0.8rem; color: var(--gray-500);">${v.patient ? v.patient.phone : ''}</div>
+                    </td>
+                    <td>
+                        <div><span class="badge badge-warning">${hDate} at ${hTime}</span></div>
+                    </td>
+                    <td style="font-weight: 500;">${details.hospitalName || '—'}</td>
+                    <td>${details.location || '—'}</td>
+                    <td>
+                        <div>${v.submittedBy ? v.submittedBy.name : '—'}</div>
+                        <div style="font-size: 0.8rem; color: var(--gray-500);">${v.submittedBy ? v.submittedBy.area : ''}</div>
+                    </td>
+                </tr>
+            `}).join('');
         }
 
         let editingWorker = null;

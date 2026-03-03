@@ -62,6 +62,12 @@ const questionnaireSchema = new mongoose.Schema({
         enum: ['hospital', 'home', null],
         default: null
     },
+    hospitalVisitDetails: {
+        date: { type: Date, default: null },
+        time: { type: String, default: null },
+        hospitalName: { type: String, default: null },
+        location: { type: String, default: null }
+    },
     submittedAt: {
         type: Date,
         default: Date.now

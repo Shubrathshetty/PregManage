@@ -146,12 +146,21 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label" for="fullName">Full Name <span class="required">*</span></label>
-                            <input type="text" id="fullName" class="form-input" placeholder="Enter full name" required>
+                            <input type="text" id="fullName" class="form-input"
+                                placeholder="Enter full name as per Aadhaar" required minlength="3">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="dob">Date of Birth <span class="required">*</span></label>
+                            <input type="date" id="dob" class="form-input" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="age">Age <span class="required">*</span></label>
-                            <input type="number" id="age" class="form-input" placeholder="Age" min="14" max="55"
-                                required>
+                            <label class="form-label" for="age">Age (Auto-calculated)</label>
+                            <input type="number" id="age" class="form-input" placeholder="—" readonly
+                                style="background: var(--gray-50); cursor: not-allowed;">
+                            <p class="form-hint" id="age-hint"></p>
                         </div>
                     </div>
 
@@ -160,26 +169,97 @@
                             <label class="form-label" for="husbandName">Husband's Name <span
                                     class="required">*</span></label>
                             <input type="text" id="husbandName" class="form-input" placeholder="Enter husband's name"
-                                required>
+                                required minlength="3">
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="phone">Phone Number <span class="required">*</span></label>
-                            <input type="tel" id="phone" class="form-input" placeholder="10-digit number"
-                                pattern="[0-9]{10}" required>
+                            <input type="tel" id="phone" class="form-input" placeholder="e.g., 9876543210"
+                                maxlength="10" required>
+                            <p class="form-hint" id="phone-hint">Must be a valid 10-digit Indian mobile number (starts
+                                with 6-9)</p>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label" for="address">Address <span class="required">*</span></label>
-                        <textarea id="address" class="form-textarea" placeholder="Enter full address"
-                            required></textarea>
+                    <!-- Structured Address -->
+                    <div style="border-top: 1px solid var(--gray-100); margin: 28px 0; padding-top: 28px;">
+                        <h2 style="font-size: 1.125rem; margin-bottom: 20px; color: var(--gray-700);">Address Details
+                        </h2>
                     </div>
 
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="addressVillage">Village / Town / City <span
+                                    class="required">*</span></label>
+                            <input type="text" id="addressVillage" class="form-input" placeholder="e.g., Mangalore"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="addressDistrict">District <span
+                                    class="required">*</span></label>
+                            <input type="text" id="addressDistrict" class="form-input"
+                                placeholder="e.g., Dakshina Kannada" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="addressState">State <span class="required">*</span></label>
+                            <select id="addressState" class="form-select" required>
+                                <option value="">Select State</option>
+                                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                <option value="Assam">Assam</option>
+                                <option value="Bihar">Bihar</option>
+                                <option value="Chhattisgarh">Chhattisgarh</option>
+                                <option value="Goa">Goa</option>
+                                <option value="Gujarat">Gujarat</option>
+                                <option value="Haryana">Haryana</option>
+                                <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                <option value="Jharkhand">Jharkhand</option>
+                                <option value="Karnataka">Karnataka</option>
+                                <option value="Kerala">Kerala</option>
+                                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                <option value="Maharashtra">Maharashtra</option>
+                                <option value="Manipur">Manipur</option>
+                                <option value="Meghalaya">Meghalaya</option>
+                                <option value="Mizoram">Mizoram</option>
+                                <option value="Nagaland">Nagaland</option>
+                                <option value="Odisha">Odisha</option>
+                                <option value="Punjab">Punjab</option>
+                                <option value="Rajasthan">Rajasthan</option>
+                                <option value="Sikkim">Sikkim</option>
+                                <option value="Tamil Nadu">Tamil Nadu</option>
+                                <option value="Telangana">Telangana</option>
+                                <option value="Tripura">Tripura</option>
+                                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                <option value="Uttarakhand">Uttarakhand</option>
+                                <option value="West Bengal">West Bengal</option>
+                                <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                                <option value="Chandigarh">Chandigarh</option>
+                                <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and
+                                    Daman and Diu</option>
+                                <option value="Delhi">Delhi</option>
+                                <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                                <option value="Ladakh">Ladakh</option>
+                                <option value="Lakshadweep">Lakshadweep</option>
+                                <option value="Puducherry">Puducherry</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="addressPincode">Pincode <span
+                                    class="required">*</span></label>
+                            <input type="text" id="addressPincode" class="form-input" placeholder="e.g., 575001"
+                                maxlength="6" required>
+                            <p class="form-hint" id="pincode-hint">6-digit postal code</p>
+                        </div>
+                    </div>
+
+                    <!-- Aadhaar -->
                     <div class="form-group">
                         <label class="form-label" for="aadhaar">Aadhaar Number <span class="required">*</span></label>
-                        <input type="text" id="aadhaar" class="form-input" placeholder="12-digit Aadhaar number"
-                            pattern="[0-9]{12}" maxlength="12" required>
-                        <p class="form-hint">Enter 12-digit Aadhaar number without spaces</p>
+                        <input type="text" id="aadhaar" class="form-input" placeholder="e.g., 2345 6789 0123"
+                            maxlength="14" required>
+                        <p class="form-hint" id="aadhaar-hint">12-digit Aadhaar number (cannot start with 0 or 1)</p>
                     </div>
 
                     <!-- Medical Info -->
@@ -322,13 +402,8 @@
 
                 video.onloadedmetadata = () => {
                     cameraLoading.classList.add('hidden');
-                    // Show switch camera button if device has multiple cameras
-                    navigator.mediaDevices.enumerateDevices().then(devices => {
-                        const videoInputs = devices.filter(d => d.kind === 'videoinput');
-                        if (videoInputs.length > 1) {
-                            switchCameraBtn.classList.remove('hidden');
-                        }
-                    });
+                    // Always show switch button, since many users expect a toggle option
+                    switchCameraBtn.classList.remove('hidden');
                 };
 
                 cameraStatus.textContent = 'Position the patient and click Capture';
@@ -405,6 +480,11 @@
         // Switch front/back camera
         function switchCamera() {
             facingMode = facingMode === 'environment' ? 'user' : 'environment';
+            if (facingMode === 'environment') {
+                showToast('Attempting to use Back Camera...', 'success');
+            } else {
+                showToast('Attempting to use Front Camera...', 'success');
+            }
             startCamera();
         }
 
@@ -415,6 +495,91 @@
         window.addEventListener('beforeunload', () => {
             if (currentStream) {
                 currentStream.getTracks().forEach(t => t.stop());
+            }
+        });
+
+        // ---- DOB → Auto-calculate Age ----
+        document.getElementById('dob').addEventListener('change', (e) => {
+            const dob = new Date(e.target.value);
+            if (!isNaN(dob)) {
+                const today = new Date();
+                let age = today.getFullYear() - dob.getFullYear();
+                const monthDiff = today.getMonth() - dob.getMonth();
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+                    age--;
+                }
+                document.getElementById('age').value = age;
+                document.getElementById('age-hint').textContent = `${age} years old (auto-calculated)`;
+                document.getElementById('age-hint').style.color = 'var(--primary-600)';
+            }
+        });
+
+        // ---- Real-time Phone Validation ----
+        document.getElementById('phone').addEventListener('input', (e) => {
+            // Only allow digits
+            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
+            const val = e.target.value;
+            const hint = document.getElementById('phone-hint');
+            if (val.length === 0) {
+                hint.textContent = 'Must be a valid 10-digit Indian mobile number (starts with 6-9)';
+                hint.style.color = '';
+            } else if (val.length < 10) {
+                hint.textContent = `${10 - val.length} more digits needed`;
+                hint.style.color = 'var(--warning)';
+            } else if (!/^[6-9]/.test(val)) {
+                hint.textContent = '❌ Must start with 6, 7, 8, or 9';
+                hint.style.color = 'var(--danger)';
+            } else {
+                hint.textContent = '✅ Valid phone number';
+                hint.style.color = 'var(--primary-600)';
+            }
+        });
+
+        // ---- Real-time Aadhaar Validation + Auto-format (XXXX XXXX XXXX) ----
+        document.getElementById('aadhaar').addEventListener('input', (e) => {
+            // Remove non-digits and limit to 12 digits
+            let raw = e.target.value.replace(/\D/g, '').slice(0, 12);
+            // Auto-format with spaces
+            let formatted = '';
+            for (let i = 0; i < raw.length; i++) {
+                if (i > 0 && i % 4 === 0) formatted += ' ';
+                formatted += raw[i];
+            }
+            e.target.value = formatted;
+
+            const hint = document.getElementById('aadhaar-hint');
+            if (raw.length === 0) {
+                hint.textContent = '12-digit Aadhaar number (cannot start with 0 or 1)';
+                hint.style.color = '';
+            } else if (raw.length < 12) {
+                hint.textContent = `${12 - raw.length} more digits needed`;
+                hint.style.color = 'var(--warning)';
+            } else if (/^[01]/.test(raw)) {
+                hint.textContent = '❌ Aadhaar cannot start with 0 or 1';
+                hint.style.color = 'var(--danger)';
+            } else {
+                hint.textContent = '✅ Valid Aadhaar number';
+                hint.style.color = 'var(--primary-600)';
+            }
+        });
+
+        // ---- Real-time Pincode Validation ----
+        document.getElementById('addressPincode').addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6);
+            const val = e.target.value;
+            const hint = document.getElementById('pincode-hint');
+            if (val.length === 0) {
+                hint.textContent = '6-digit postal code';
+                hint.style.color = '';
+            } else if (val.length < 6) {
+                hint.textContent = `${6 - val.length} more digits needed`;
+                hint.style.color = 'var(--warning)';
+            } else if (/^[0]/.test(val)) {
+                hint.textContent = '❌ Pincode cannot start with 0';
+                hint.style.color = 'var(--danger)';
+            } else {
+                hint.textContent = '✅ Valid pincode';
+                hint.style.color = 'var(--primary-600)';
             }
         });
 
@@ -435,17 +600,52 @@
             const formError = document.getElementById('form-error');
             formError.style.display = 'none';
 
+            const phone = document.getElementById('phone').value.trim();
+            const aadhaarRaw = document.getElementById('aadhaar').value.replace(/\s/g, '');
+            const pincode = document.getElementById('addressPincode').value.trim();
+            const age = document.getElementById('age').value;
+
+            // Client-side validation
+            if (!age) {
+                formError.textContent = 'Please enter a valid Date of Birth to auto-calculate age.';
+                formError.style.display = 'block';
+                showToast('Please enter Date of Birth', 'error');
+                return;
+            }
+            if (!/^[6-9]\d{9}$/.test(phone)) {
+                formError.textContent = 'Phone number must be a valid 10-digit Indian mobile number (starts with 6-9).';
+                formError.style.display = 'block';
+                showToast('Invalid phone number', 'error');
+                return;
+            }
+            if (!/^[2-9]\d{11}$/.test(aadhaarRaw)) {
+                formError.textContent = 'Aadhaar must be a valid 12-digit number (cannot start with 0 or 1).';
+                formError.style.display = 'block';
+                showToast('Invalid Aadhaar number', 'error');
+                return;
+            }
+            if (!/^[1-9]\d{5}$/.test(pincode)) {
+                formError.textContent = 'Pincode must be a valid 6-digit code.';
+                formError.style.display = 'block';
+                showToast('Invalid pincode', 'error');
+                return;
+            }
+
             const submitBtn = document.getElementById('submit-btn');
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<div class="spinner"></div> Registering...';
 
             const formData = new FormData();
             formData.append('fullName', document.getElementById('fullName').value.trim());
-            formData.append('age', document.getElementById('age').value);
+            formData.append('dateOfBirth', document.getElementById('dob').value);
+            formData.append('age', age);
             formData.append('husbandName', document.getElementById('husbandName').value.trim());
-            formData.append('phone', document.getElementById('phone').value.trim());
-            formData.append('address', document.getElementById('address').value.trim());
-            formData.append('aadhaar', document.getElementById('aadhaar').value.trim());
+            formData.append('phone', phone);
+            formData.append('addressVillage', document.getElementById('addressVillage').value.trim());
+            formData.append('addressDistrict', document.getElementById('addressDistrict').value.trim());
+            formData.append('addressState', document.getElementById('addressState').value);
+            formData.append('addressPincode', pincode);
+            formData.append('aadhaar', aadhaarRaw);
             formData.append('lmpDate', document.getElementById('lmpDate').value);
             formData.append('edd', document.getElementById('edd').value);
             formData.append('bloodGroup', document.getElementById('bloodGroup').value);

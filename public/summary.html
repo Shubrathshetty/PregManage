@@ -304,6 +304,7 @@
                         <div class="step-dot completed"></div>
                         <div class="step-dot completed"></div>
                         <div class="step-dot active"></div>
+                        <div class="step-dot"></div>
                     </div>
 
                     <div class="consultation-card">
@@ -323,6 +324,56 @@
                                 <div class="service-option-desc">Doctor will visit the patient at home</div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== STEP 3.5: Hospital Details Form ====== -->
+            <div id="step-hospital-form" class="hidden">
+                <div class="consultation-section step-content">
+                    <div class="step-indicator">
+                        <div class="step-dot completed"></div>
+                        <div class="step-dot completed"></div>
+                        <div class="step-dot completed"></div>
+                        <div class="step-dot active"></div>
+                    </div>
+
+                    <div class="consultation-card" style="text-align: left; padding: 32px;">
+                        <div style="text-align: center; margin-bottom: 24px;">
+                            <div class="consultation-card-icon">📅</div>
+                            <h2>Schedule Hospital Visit</h2>
+                            <p>Please enter the details for the hospital appointment</p>
+                        </div>
+
+                        <form id="hospital-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Appointment Date <span class="required">*</span></label>
+                                    <input type="date" id="h-date" class="form-input" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Time <span class="required">*</span></label>
+                                    <input type="time" id="h-time" class="form-input" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Hospital Name <span class="required">*</span></label>
+                                <input type="text" id="h-name" class="form-input" placeholder="e.g., City Gen Hospital"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Location / Address <span class="required">*</span></label>
+                                <textarea id="h-location" class="form-textarea" placeholder="Enter full address"
+                                    required style="height: 80px;"></textarea>
+                            </div>
+
+                            <div class="flex gap-md" style="margin-top: 24px;">
+                                <button type="button" class="btn btn-secondary btn-full"
+                                    onclick="document.getElementById('step-hospital-form').classList.add('hidden'); document.getElementById('step-service-type').classList.remove('hidden');">Back</button>
+                                <button type="submit" class="btn btn-primary btn-full" id="h-submit-btn">Schedule
+                                    Visit</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -533,22 +584,55 @@
             // Brief delay for visual feedback
             await new Promise(r => setTimeout(r, 400));
 
-            // Save and go to final
-            await saveConsultation(true, type);
-            showFinalStep(true, type);
+            if (type === 'hospital') {
+                document.getElementById('step-service-type').classList.add('hidden');
+                document.getElementById('step-hospital-form').classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                // Home service - Save and go to final immediately
+                await saveConsultation(true, 'home');
+                showFinalStep(true, 'home');
+            }
         }
 
-        async function saveConsultation(doctorConsultation, consultationType) {
+        // Handle hospital form submission
+        document.getElementById('hospital-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('h-submit-btn');
+            btn.innerHTML = '<div class="spinner"></div> Saving...';
+            btn.disabled = true;
+
+            const hospitalData = {
+                date: document.getElementById('h-date').value,
+                time: document.getElementById('h-time').value,
+                hospitalName: document.getElementById('h-name').value.trim(),
+                location: document.getElementById('h-location').value.trim()
+            };
+
+            await saveConsultation(true, 'hospital', hospitalData);
+            btn.innerHTML = 'Schedule Visit';
+            btn.disabled = false;
+
+            document.getElementById('step-hospital-form').classList.add('hidden');
+            showFinalStep(true, 'hospital');
+        });
+
+        async function saveConsultation(doctorConsultation, consultationType, hospitalVisitDetails = null) {
             if (!questionnaireId) return;
 
             try {
+                const bodyPayload = { doctorConsultation, consultationType };
+                if (hospitalVisitDetails) {
+                    bodyPayload.hospitalVisitDetails = hospitalVisitDetails;
+                }
+
                 await fetch(`/api/questionnaires/${questionnaireId}/consultation`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({ doctorConsultation, consultationType })
+                    body: JSON.stringify(bodyPayload)
                 });
             } catch (error) {
                 console.error('Save consultation error:', error);

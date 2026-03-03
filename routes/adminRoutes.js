@@ -1,5 +1,7 @@
 const express = require('express');
 const Worker = require('../models/Worker');
+const Questionnaire = require('../models/Questionnaire');
+const Patient = require('../models/Patient');
 const { verifyToken, requireAdmin } = require('../middleware/auth');
 
 const router = express.Router();
@@ -103,6 +105,21 @@ router.delete('/workers/:id', verifyToken, requireAdmin, async (req, res) => {
         res.json({ success: true, message: 'Worker deleted successfully.' });
     } catch (error) {
         console.error('Delete worker error:', error);
+        res.status(500).json({ success: false, message: 'Server error.' });
+    }
+});
+
+// Get all hospital visits
+router.get('/hospital-visits', verifyToken, requireAdmin, async (req, res) => {
+    try {
+        const visits = await Questionnaire.find({ consultationType: 'hospital' })
+            .populate('patient', 'fullName phone address')
+            .populate('submittedBy', 'name area')
+            .sort({ 'hospitalVisitDetails.date': 1, submittedAt: -1 });
+
+        res.json({ success: true, visits });
+    } catch (error) {
+        console.error('Get hospital visits error:', error);
         res.status(500).json({ success: false, message: 'Server error.' });
     }
 });

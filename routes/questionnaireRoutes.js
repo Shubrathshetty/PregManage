@@ -71,7 +71,7 @@ router.get('/:id', verifyToken, requireWorker, async (req, res) => {
 // Update doctor consultation for a questionnaire
 router.put('/:id/consultation', verifyToken, requireWorker, async (req, res) => {
     try {
-        const { doctorConsultation, consultationType } = req.body;
+        const { doctorConsultation, consultationType, hospitalVisitDetails } = req.body;
 
         const questionnaire = await Questionnaire.findOne({
             _id: req.params.id,
@@ -85,8 +85,12 @@ router.put('/:id/consultation', verifyToken, requireWorker, async (req, res) => 
         questionnaire.doctorConsultation = doctorConsultation;
         if (doctorConsultation && consultationType) {
             questionnaire.consultationType = consultationType;
+            if (consultationType === 'hospital' && hospitalVisitDetails) {
+                questionnaire.hospitalVisitDetails = hospitalVisitDetails;
+            }
         } else {
             questionnaire.consultationType = null;
+            questionnaire.hospitalVisitDetails = { date: null, time: null, hospitalName: null, location: null };
         }
 
         await questionnaire.save();
