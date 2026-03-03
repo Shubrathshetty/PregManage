@@ -39,26 +39,108 @@
 
             <div class="card" style="max-width: 800px;">
                 <form id="register-form">
-                    <!-- Photo Upload -->
+                    <!-- Camera Capture -->
                     <div class="form-group" style="margin-bottom: 28px;">
                         <label class="form-label">Patient Photo <span class="required">*</span></label>
-                        <div class="photo-upload-area" id="photo-upload-area"
-                            onclick="document.getElementById('photo-input').click()">
-                            <div id="photo-placeholder">
-                                <div class="photo-upload-icon">📷</div>
-                                <p class="photo-upload-text">Click to upload or capture a photo</p>
-                                <p class="photo-upload-hint">JPG, PNG, WEBP — Max 5MB</p>
+                        <div class="camera-container" id="camera-container">
+                            <!-- Camera Feed -->
+                            <div id="camera-feed-wrapper" class="camera-feed-wrapper">
+                                <video id="camera-feed" autoplay playsinline></video>
+                                <div id="camera-loading" class="camera-loading">
+                                    <div class="spinner"></div>
+                                    <p>Starting camera...</p>
+                                </div>
                             </div>
-                            <img id="photo-preview" class="photo-preview hidden" alt="Patient photo preview">
-                        </div>
-                        <input type="file" id="photo-input" accept="image/jpeg,image/png,image/webp"
-                            capture="environment" class="hidden">
-                        <div class="photo-actions" id="photo-actions" class="hidden">
-                            <button type="button" class="btn btn-secondary btn-sm"
-                                onclick="document.getElementById('photo-input').click()">Change Photo</button>
-                            <button type="button" class="btn btn-ghost btn-sm" onclick="removePhoto()">Remove</button>
+
+                            <!-- Captured Photo Preview (hidden initially) -->
+                            <div id="captured-preview-wrapper" class="camera-feed-wrapper hidden">
+                                <img id="captured-preview" alt="Captured photo">
+                            </div>
+
+                            <!-- Hidden Canvas for capture -->
+                            <canvas id="capture-canvas" class="hidden"></canvas>
+
+                            <!-- Camera Controls -->
+                            <div class="camera-controls">
+                                <button type="button" class="btn btn-primary" id="capture-btn" onclick="capturePhoto()">
+                                    📸 Capture Photo
+                                </button>
+                                <button type="button" class="btn btn-secondary hidden" id="retake-btn"
+                                    onclick="retakePhoto()">
+                                    🔄 Retake
+                                </button>
+                                <button type="button" class="btn btn-ghost hidden" id="switch-camera-btn"
+                                    onclick="switchCamera()">
+                                    🔄 Switch Camera
+                                </button>
+                            </div>
+
+                            <p class="form-hint" style="text-align: center; margin-top: 8px;" id="camera-status">
+                                Position the patient and click Capture
+                            </p>
                         </div>
                     </div>
+
+                    <style>
+                        .camera-container {
+                            border: 2px dashed var(--gray-200);
+                            border-radius: var(--radius-lg);
+                            padding: 16px;
+                            background: var(--gray-50);
+                            transition: all var(--transition-base);
+                        }
+
+                        .camera-container.has-photo {
+                            border-color: var(--primary-300);
+                            background: var(--primary-50);
+                        }
+
+                        .camera-feed-wrapper {
+                            position: relative;
+                            width: 100%;
+                            max-width: 400px;
+                            margin: 0 auto;
+                            border-radius: var(--radius-md);
+                            overflow: hidden;
+                            background: #000;
+                            aspect-ratio: 4/3;
+                        }
+
+                        .camera-feed-wrapper video,
+                        .camera-feed-wrapper img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                            display: block;
+                        }
+
+                        .camera-loading {
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            right: 0;
+                            bottom: 0;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+                            background: rgba(0, 0, 0, 0.7);
+                            color: white;
+                            gap: 12px;
+                        }
+
+                        .camera-loading.hidden {
+                            display: none;
+                        }
+
+                        .camera-controls {
+                            display: flex;
+                            justify-content: center;
+                            gap: 12px;
+                            margin-top: 16px;
+                            flex-wrap: wrap;
+                        }
+                    </style>
 
                     <!-- Personal Info -->
                     <div class="form-row">
@@ -200,39 +282,141 @@
             setTimeout(() => toast.remove(), 4000);
         }
 
-        // Photo upload
-        const photoInput = document.getElementById('photo-input');
-        const photoPreview = document.getElementById('photo-preview');
-        const photoPlaceholder = document.getElementById('photo-placeholder');
-        const photoActions = document.getElementById('photo-actions');
-        const uploadArea = document.getElementById('photo-upload-area');
+        // ---- Camera Capture ----
+        const video = document.getElementById('camera-feed');
+        const canvas = document.getElementById('capture-canvas');
+        const capturedPreview = document.getElementById('captured-preview');
+        const cameraFeedWrapper = document.getElementById('camera-feed-wrapper');
+        const capturedPreviewWrapper = document.getElementById('captured-preview-wrapper');
+        const captureBtn = document.getElementById('capture-btn');
+        const retakeBtn = document.getElementById('retake-btn');
+        const switchCameraBtn = document.getElementById('switch-camera-btn');
+        const cameraLoading = document.getElementById('camera-loading');
+        const cameraContainer = document.getElementById('camera-container');
+        const cameraStatus = document.getElementById('camera-status');
 
-        photoInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                if (file.size > 5 * 1024 * 1024) {
-                    showToast('Photo must be less than 5MB', 'error');
-                    return;
+        let currentStream = null;
+        let capturedBlob = null;
+        let facingMode = 'environment'; // 'user' = front, 'environment' = back
+
+        // Start camera on page load
+        async function startCamera() {
+            try {
+                // Stop any existing stream
+                if (currentStream) {
+                    currentStream.getTracks().forEach(t => t.stop());
                 }
-                const reader = new FileReader();
-                reader.onload = (ev) => {
-                    photoPreview.src = ev.target.result;
-                    photoPreview.classList.remove('hidden');
-                    photoPlaceholder.classList.add('hidden');
-                    photoActions.classList.remove('hidden');
-                    uploadArea.classList.add('has-photo');
+
+                cameraLoading.classList.remove('hidden');
+
+                const constraints = {
+                    video: {
+                        facingMode: facingMode,
+                        width: { ideal: 640 },
+                        height: { ideal: 480 }
+                    }
                 };
-                reader.readAsDataURL(file);
+
+                currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+                video.srcObject = currentStream;
+
+                video.onloadedmetadata = () => {
+                    cameraLoading.classList.add('hidden');
+                    // Show switch camera button if device has multiple cameras
+                    navigator.mediaDevices.enumerateDevices().then(devices => {
+                        const videoInputs = devices.filter(d => d.kind === 'videoinput');
+                        if (videoInputs.length > 1) {
+                            switchCameraBtn.classList.remove('hidden');
+                        }
+                    });
+                };
+
+                cameraStatus.textContent = 'Position the patient and click Capture';
+            } catch (error) {
+                console.error('Camera error:', error);
+                cameraLoading.classList.add('hidden');
+                cameraStatus.innerHTML = '⚠️ Camera access denied or not available.<br>Please allow camera permissions in your browser settings.';
+                cameraStatus.style.color = 'var(--danger)';
+            }
+        }
+
+        // Capture photo from video feed
+        function capturePhoto() {
+            if (!currentStream) {
+                showToast('Camera not available', 'error');
+                return;
+            }
+
+            // Set canvas size to video dimensions
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            // Draw current frame to canvas
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0);
+
+            // Convert canvas to blob
+            canvas.toBlob((blob) => {
+                capturedBlob = blob;
+
+                // Show preview
+                capturedPreview.src = URL.createObjectURL(blob);
+                cameraFeedWrapper.classList.add('hidden');
+                capturedPreviewWrapper.classList.remove('hidden');
+
+                // Toggle buttons
+                captureBtn.classList.add('hidden');
+                retakeBtn.classList.remove('hidden');
+                switchCameraBtn.classList.add('hidden');
+
+                // Update status
+                cameraContainer.classList.add('has-photo');
+                cameraStatus.textContent = '✅ Photo captured! You can retake if needed.';
+                cameraStatus.style.color = 'var(--primary-700)';
+
+                // Stop camera to save battery
+                currentStream.getTracks().forEach(t => t.stop());
+
+                showToast('Photo captured!');
+            }, 'image/jpeg', 0.85);
+        }
+
+        // Retake photo
+        function retakePhoto() {
+            capturedBlob = null;
+
+            // Hide preview, show camera
+            capturedPreviewWrapper.classList.add('hidden');
+            cameraFeedWrapper.classList.remove('hidden');
+
+            // Toggle buttons
+            captureBtn.classList.remove('hidden');
+            retakeBtn.classList.add('hidden');
+
+            // Update status
+            cameraContainer.classList.remove('has-photo');
+            cameraStatus.textContent = 'Position the patient and click Capture';
+            cameraStatus.style.color = '';
+
+            // Restart camera
+            startCamera();
+        }
+
+        // Switch front/back camera
+        function switchCamera() {
+            facingMode = facingMode === 'environment' ? 'user' : 'environment';
+            startCamera();
+        }
+
+        // Start camera when page loads
+        startCamera();
+
+        // Cleanup camera on page leave
+        window.addEventListener('beforeunload', () => {
+            if (currentStream) {
+                currentStream.getTracks().forEach(t => t.stop());
             }
         });
-
-        function removePhoto() {
-            photoInput.value = '';
-            photoPreview.classList.add('hidden');
-            photoPlaceholder.classList.remove('hidden');
-            photoActions.classList.add('hidden');
-            uploadArea.classList.remove('has-photo');
-        }
 
         // Auto-calculate EDD from LMP (Naegele's rule: LMP + 280 days)
         document.getElementById('lmpDate').addEventListener('change', (e) => {
@@ -268,9 +452,9 @@
             formData.append('gravida', document.getElementById('gravida').value);
             formData.append('para', document.getElementById('para').value);
 
-            const photoFile = photoInput.files[0];
-            if (photoFile) {
-                formData.append('photo', photoFile);
+            // Attach captured photo blob
+            if (capturedBlob) {
+                formData.append('photo', capturedBlob, 'patient-photo.jpg');
             }
 
             try {
