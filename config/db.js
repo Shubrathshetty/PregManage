@@ -1,4 +1,9 @@
 const mongoose = require('mongoose');
+const dns = require('dns');
+
+// Use Google DNS to resolve MongoDB Atlas hostnames
+// (bypasses restrictive network/corporate DNS that may block Atlas)
+dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 const connectDB = async () => {
     try {
@@ -11,3 +16,4 @@ const connectDB = async () => {
 };
 
 module.exports = connectDB;
+
