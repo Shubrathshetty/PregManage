@@ -2,8 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="description" content="PregManage - Pregnancy Management System for Anganwadi Workers">
+    <meta name="theme-color" content="#1e3a5f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>PregManage — Pregnancy Management System</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
@@ -13,19 +16,24 @@
         <div class="landing-container fade-in">
             <div class="landing-logo">🤰</div>
             <h1 class="landing-title">PregManage</h1>
-            <p class="landing-subtitle">Comprehensive pregnancy management system for Anganwadi centers. Choose your role to continue.</p>
+            <p class="landing-subtitle">Comprehensive pregnancy management system for Anganwadi centers</p>
+            <div class="govt-tagline">Ministry of Women & Child Development</div>
 
             <div class="role-cards">
                 <a href="/admin-login.html" class="role-card fade-in stagger-1" id="admin-login-card">
                     <div class="role-card-icon">🛡️</div>
-                    <h2 class="role-card-title">Administrator</h2>
-                    <p class="role-card-desc">Manage Anganwadi workers, oversee system operations</p>
+                    <div>
+                        <h2 class="role-card-title">Administrator</h2>
+                        <p class="role-card-desc">Manage workers & oversee system operations</p>
+                    </div>
                 </a>
 
                 <a href="/worker-login.html" class="role-card fade-in stagger-2" id="worker-login-card">
                     <div class="role-card-icon">👩‍⚕️</div>
-                    <h2 class="role-card-title">Anganwadi Worker</h2>
-                    <p class="role-card-desc">Register patients, conduct health questionnaires</p>
+                    <div>
+                        <h2 class="role-card-title">Anganwadi Worker</h2>
+                        <p class="role-card-desc">Register patients & conduct health assessments</p>
+                    </div>
                 </a>
             </div>
         </div>
