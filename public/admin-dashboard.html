@@ -3,14 +3,23 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="description" content="Admin Dashboard - PregManage">
+    <meta name="theme-color" content="#1e3a5f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Admin Dashboard — PregManage</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
     <div class="page-wrapper">
+        <!-- App Status Bar -->
+        <div class="app-status-bar">
+            <div class="strip-saffron"></div>
+            <div class="strip-white"></div>
+            <div class="strip-green"></div>
+        </div>
+
         <!-- Navbar -->
         <nav class="navbar">
             <div class="navbar-brand">
@@ -28,9 +37,10 @@
 
         <!-- Main Content -->
         <main class="container dashboard-content fade-in">
-            <div class="page-header">
-                <h1 class="page-title">Admin Dashboard</h1>
-                <p class="page-subtitle">Manage Anganwadi workers and monitor the system</p>
+            <!-- Welcome Card -->
+            <div class="welcome-card fade-in">
+                <div class="welcome-card-role">System Administrator</div>
+                <div class="welcome-card-name">Admin Dashboard 🛡️</div>
             </div>
 
             <!-- Stats -->
@@ -40,19 +50,19 @@
                     <div class="stat-card-label">Total Workers</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-card-value" id="active-workers">0</div>
+                    <div class="stat-card-value" id="active-workers" style="color: var(--green-500);">0</div>
                     <div class="stat-card-label">Active Workers</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-card-value" id="inactive-workers">0</div>
+                    <div class="stat-card-value" id="inactive-workers" style="color: var(--danger);">0</div>
                     <div class="stat-card-label">Inactive Workers</div>
                 </div>
                 <div class="stat-card"
-                    style="cursor: pointer; border: 2px solid var(--primary-200); background: var(--primary-50);"
+                    style="cursor: pointer; border: 1.5px solid var(--saffron-200); background: var(--saffron-50);"
                     onclick="toggleView('visits')">
-                    <div class="stat-card-value" id="hospital-visits-count" style="color: var(--primary-700);">0</div>
-                    <div class="stat-card-label" style="font-weight: 600;">🏥 Scheduled Hospital Visits</div>
-                    <div style="font-size: 0.75rem; color: var(--primary-600); margin-top: 4px;">Click to view</div>
+                    <div class="stat-card-value" id="hospital-visits-count" style="color: var(--saffron-600);">0</div>
+                    <div class="stat-card-label" style="font-weight: 600;">🏥 Hospital Visits</div>
+                    <div style="font-size: 0.65rem; color: var(--saffron-500); margin-top: 2px;">Tap to view</div>
                 </div>
             </div>
 
@@ -61,23 +71,20 @@
                 <div class="table-header">
                     <h2 class="table-title">Anganwadi Workers</h2>
                     <button class="btn btn-primary btn-sm" id="add-worker-btn" onclick="openAddModal()">
-                        + Add Worker
+                        + Add
                     </button>
                 </div>
                 <div id="workers-table-body">
                     <div class="empty-state" id="empty-state">
                         <div class="empty-state-icon">👩‍⚕️</div>
                         <h3 class="empty-state-title">No workers yet</h3>
-                        <p class="empty-state-desc">Click "Add Worker" to create your first Anganwadi worker account.
-                        </p>
+                        <p class="empty-state-desc">Tap "Add" to create your first Anganwadi worker account.</p>
                     </div>
                     <table id="workers-table" class="hidden">
                         <thead>
                             <tr>
                                 <th>Name</th>
                                 <th>Username</th>
-                                <th>Phone</th>
-                                <th>Area</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -88,25 +95,23 @@
             </div>
 
             <!-- Hospital Visits Table -->
-            <div class="table-container" id="visits-view" style="margin-top: 32px;">
+            <div class="table-container" id="visits-view" style="margin-top: 20px;">
                 <div class="table-header">
-                    <h2 class="table-title">Scheduled Hospital Visits</h2>
+                    <h2 class="table-title">Hospital Visits</h2>
                 </div>
                 <div id="visits-table-body">
                     <div class="empty-state hidden" id="visits-empty-state">
                         <div class="empty-state-icon">🩺</div>
-                        <h3 class="empty-state-title">No hospital visits scheduled</h3>
-                        <p class="empty-state-desc">When Anganwadi workers schedule hospital visits, they will appear
-                            here.</p>
+                        <h3 class="empty-state-title">No visits scheduled</h3>
+                        <p class="empty-state-desc">When workers schedule hospital visits, they will appear here.</p>
                     </div>
                     <table id="visits-table" class="hidden">
                         <thead>
                             <tr>
-                                <th>Patient Name</th>
-                                <th>Schedule Date & Time</th>
-                                <th>Hospital Name</th>
-                                <th>Location</th>
-                                <th>Referred By</th>
+                                <th>Patient</th>
+                                <th>Schedule</th>
+                                <th>Hospital</th>
+                                <th>By</th>
                             </tr>
                         </thead>
                         <tbody id="visits-tbody"></tbody>
@@ -237,10 +242,11 @@
 
             tbody.innerHTML = workers.map(w => `
                 <tr>
-                    <td style="font-weight: 600; color: var(--gray-800);">${w.name}</td>
-                    <td>${w.username}</td>
-                    <td>${w.phone || '—'}</td>
-                    <td>${w.area || '—'}</td>
+                    <td>
+                        <div style="font-weight: 600; color: var(--gray-800); font-size: 0.8rem;">${w.name}</div>
+                        <div style="font-size: 0.65rem; color: var(--gray-400);">${w.area || '—'}</div>
+                    </td>
+                    <td style="font-size: 0.75rem;">${w.username}</td>
                     <td>
                         <span class="badge ${w.isActive ? 'badge-success' : 'badge-danger'}">
                             ${w.isActive ? 'Active' : 'Inactive'}
@@ -248,8 +254,8 @@
                     </td>
                     <td>
                         <div class="flex gap-sm">
-                            <button class="btn btn-ghost btn-sm" onclick="editWorker('${w._id}')">Edit</button>
-                            <button class="btn btn-ghost btn-sm" style="color: var(--danger);" onclick="deleteWorker('${w._id}', '${w.name}')">Delete</button>
+                            <button class="btn btn-ghost btn-sm" style="padding: 4px 8px; min-height: 28px; font-size: 0.7rem;" onclick="editWorker('${w._id}')">Edit</button>
+                            <button class="btn btn-ghost btn-sm" style="padding: 4px 8px; min-height: 28px; font-size: 0.7rem; color: var(--danger);" onclick="deleteWorker('${w._id}', '${w.name}')">Del</button>
                         </div>
                     </td>
                 </tr>
@@ -257,7 +263,6 @@
         }
 
         function toggleView(view) {
-            // Disabled: Now tables are displayed persistently.
             window.scrollTo({
                 top: document.getElementById('visits-view').offsetTop - 50,
                 behavior: 'smooth'
@@ -283,7 +288,6 @@
             const table = document.getElementById('visits-table');
             const emptyState = document.getElementById('visits-empty-state');
 
-            // Update stats card
             document.getElementById('hospital-visits-count').textContent = visits.length;
 
             if (visits.length === 0) {
@@ -297,24 +301,19 @@
 
             tbody.innerHTML = visits.map(v => {
                 const details = v.hospitalVisitDetails || {};
-                const hDate = details.date ? new Date(details.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
-                const hTime = details.time ? details.time : '—';
+                const hDate = details.date ? new Date(details.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : '—';
+                const hTime = details.time ? details.time : '';
 
                 return `
                 <tr>
                     <td>
-                        <div style="font-weight: 600; color: var(--gray-800);">${v.patient ? v.patient.fullName : 'Unknown'}</div>
-                        <div style="font-size: 0.8rem; color: var(--gray-500);">${v.patient ? v.patient.phone : ''}</div>
+                        <div style="font-weight: 600; color: var(--gray-800); font-size: 0.78rem;">${v.patient ? v.patient.fullName : 'Unknown'}</div>
                     </td>
                     <td>
-                        <div><span class="badge badge-warning">${hDate} at ${hTime}</span></div>
+                        <span class="badge badge-warning" style="font-size: 0.65rem;">${hDate} ${hTime}</span>
                     </td>
-                    <td style="font-weight: 500;">${details.hospitalName || '—'}</td>
-                    <td>${details.location || '—'}</td>
-                    <td>
-                        <div>${v.submittedBy ? v.submittedBy.name : '—'}</div>
-                        <div style="font-size: 0.8rem; color: var(--gray-500);">${v.submittedBy ? v.submittedBy.area : ''}</div>
-                    </td>
+                    <td style="font-size: 0.75rem;">${details.hospitalName || '—'}</td>
+                    <td style="font-size: 0.7rem;">${v.submittedBy ? v.submittedBy.name : '—'}</td>
                 </tr>
             `}).join('');
         }
@@ -348,7 +347,7 @@
                     document.getElementById('worker-area').value = data.worker.area || '';
                     document.getElementById('worker-password').value = '';
                     document.getElementById('worker-password').required = false;
-                    document.getElementById('password-group').querySelector('.form-label').innerHTML = 'Password <span style="font-weight:400;color:var(--gray-400)">(leave blank to keep current)</span>';
+                    document.getElementById('password-group').querySelector('.form-label').innerHTML = 'Password <span style="font-weight:400;color:var(--gray-400);font-size:0.7rem">(leave blank to keep)</span>';
                     document.getElementById('username-group').style.display = 'none';
                     document.getElementById('worker-modal').classList.add('active');
                 }

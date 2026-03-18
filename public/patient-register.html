@@ -3,14 +3,23 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="description" content="New Patient Registration - PregManage">
+    <meta name="theme-color" content="#1e3a5f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Patient Registration — PregManage</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
     <div class="page-wrapper">
+        <!-- App Status Bar -->
+        <div class="app-status-bar">
+            <div class="strip-saffron"></div>
+            <div class="strip-white"></div>
+            <div class="strip-green"></div>
+        </div>
+
         <!-- Navbar -->
         <nav class="navbar">
             <div class="navbar-brand">
@@ -28,19 +37,17 @@
 
         <!-- Main Content -->
         <main class="container dashboard-content fade-in">
-            <div style="margin-bottom: 24px;">
-                <a href="/worker-dashboard.html" class="btn btn-ghost" style="padding-left: 0;">← Back to Dashboard</a>
-            </div>
+            <a href="/worker-dashboard.html" class="app-back-btn">← Back to Dashboard</a>
 
             <div class="page-header">
                 <h1 class="page-title">New Patient Registration</h1>
-                <p class="page-subtitle">Register a new pregnant woman by filling in the details below</p>
+                <p class="page-subtitle">Fill in the details below to register</p>
             </div>
 
-            <div class="card" style="max-width: 800px;">
+            <div class="card" style="padding: 16px;">
                 <form id="register-form">
                     <!-- Camera Capture -->
-                    <div class="form-group" style="margin-bottom: 28px;">
+                    <div class="form-group" style="margin-bottom: 20px;">
                         <label class="form-label">Patient Photo <span class="required">*</span></label>
                         <div class="camera-container" id="camera-container">
                             <!-- Camera Feed -->
@@ -62,93 +69,35 @@
 
                             <!-- Camera Controls -->
                             <div class="camera-controls">
-                                <button type="button" class="btn btn-primary" id="capture-btn" onclick="capturePhoto()">
-                                    📸 Capture Photo
+                                <button type="button" class="btn btn-primary btn-sm" id="capture-btn" onclick="capturePhoto()">
+                                    📸 Capture
                                 </button>
-                                <button type="button" class="btn btn-secondary hidden" id="retake-btn"
+                                <button type="button" class="btn btn-secondary btn-sm hidden" id="retake-btn"
                                     onclick="retakePhoto()">
                                     🔄 Retake
                                 </button>
-                                <button type="button" class="btn btn-ghost hidden" id="switch-camera-btn"
+                                <button type="button" class="btn btn-ghost btn-sm hidden" id="switch-camera-btn"
                                     onclick="switchCamera()">
-                                    🔄 Switch Camera
+                                    🔄 Switch
                                 </button>
                             </div>
 
-                            <p class="form-hint" style="text-align: center; margin-top: 8px;" id="camera-status">
-                                Position the patient and click Capture
+                            <p class="form-hint" style="text-align: center; margin-top: 6px;" id="camera-status">
+                                Position the patient and tap Capture
                             </p>
                         </div>
                     </div>
 
-                    <style>
-                        .camera-container {
-                            border: 2px dashed var(--gray-200);
-                            border-radius: var(--radius-lg);
-                            padding: 16px;
-                            background: var(--gray-50);
-                            transition: all var(--transition-base);
-                        }
-
-                        .camera-container.has-photo {
-                            border-color: var(--primary-300);
-                            background: var(--primary-50);
-                        }
-
-                        .camera-feed-wrapper {
-                            position: relative;
-                            width: 100%;
-                            max-width: 400px;
-                            margin: 0 auto;
-                            border-radius: var(--radius-md);
-                            overflow: hidden;
-                            background: #000;
-                            aspect-ratio: 4/3;
-                        }
-
-                        .camera-feed-wrapper video,
-                        .camera-feed-wrapper img {
-                            width: 100%;
-                            height: 100%;
-                            object-fit: cover;
-                            display: block;
-                        }
-
-                        .camera-loading {
-                            position: absolute;
-                            top: 0;
-                            left: 0;
-                            right: 0;
-                            bottom: 0;
-                            display: flex;
-                            flex-direction: column;
-                            align-items: center;
-                            justify-content: center;
-                            background: rgba(0, 0, 0, 0.7);
-                            color: white;
-                            gap: 12px;
-                        }
-
-                        .camera-loading.hidden {
-                            display: none;
-                        }
-
-                        .camera-controls {
-                            display: flex;
-                            justify-content: center;
-                            gap: 12px;
-                            margin-top: 16px;
-                            flex-wrap: wrap;
-                        }
-                    </style>
-
                     <!-- Personal Info -->
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label" for="fullName">Full Name <span class="required">*</span></label>
-                            <input type="text" id="fullName" class="form-input"
-                                placeholder="Enter full name as per Aadhaar" required minlength="3">
-                        </div>
+                    <div class="section-divider">
+                        <span class="section-divider-icon">👤</span>
+                        <h2>Personal Information</h2>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="fullName">Full Name <span class="required">*</span></label>
+                        <input type="text" id="fullName" class="form-input"
+                            placeholder="Enter full name as per Aadhaar" required minlength="3">
                     </div>
 
                     <div class="form-row">
@@ -157,45 +106,40 @@
                             <input type="date" id="dob" class="form-input" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="age">Age (Auto-calculated)</label>
+                            <label class="form-label" for="age">Age (Auto)</label>
                             <input type="number" id="age" class="form-input" placeholder="—" readonly
-                                style="background: var(--gray-50); cursor: not-allowed;">
+                                style="background: var(--gray-100); cursor: not-allowed;">
                             <p class="form-hint" id="age-hint"></p>
                         </div>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label" for="husbandName">Husband's Name <span
-                                    class="required">*</span></label>
-                            <input type="text" id="husbandName" class="form-input" placeholder="Enter husband's name"
-                                required minlength="3">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="phone">Phone Number <span class="required">*</span></label>
-                            <input type="tel" id="phone" class="form-input" placeholder="e.g., 9876543210"
-                                maxlength="10" required>
-                            <p class="form-hint" id="phone-hint">Must be a valid 10-digit Indian mobile number (starts
-                                with 6-9)</p>
-                        </div>
+                    <div class="form-group">
+                        <label class="form-label" for="husbandName">Husband's Name <span class="required">*</span></label>
+                        <input type="text" id="husbandName" class="form-input" placeholder="Enter husband's name"
+                            required minlength="3">
                     </div>
 
-                    <!-- Structured Address -->
-                    <div style="border-top: 1px solid var(--gray-100); margin: 28px 0; padding-top: 28px;">
-                        <h2 style="font-size: 1.125rem; margin-bottom: 20px; color: var(--gray-700);">Address Details
-                        </h2>
+                    <div class="form-group">
+                        <label class="form-label" for="phone">Phone Number <span class="required">*</span></label>
+                        <input type="tel" id="phone" class="form-input" placeholder="e.g., 9876543210"
+                            maxlength="10" required>
+                        <p class="form-hint" id="phone-hint">10-digit Indian mobile number (starts with 6-9)</p>
+                    </div>
+
+                    <!-- Address Details -->
+                    <div class="section-divider">
+                        <span class="section-divider-icon">📍</span>
+                        <h2>Address Details</h2>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label" for="addressVillage">Village / Town / City <span
-                                    class="required">*</span></label>
+                            <label class="form-label" for="addressVillage">Village/Town <span class="required">*</span></label>
                             <input type="text" id="addressVillage" class="form-input" placeholder="e.g., Mangalore"
                                 required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="addressDistrict">District <span
-                                    class="required">*</span></label>
+                            <label class="form-label" for="addressDistrict">District <span class="required">*</span></label>
                             <input type="text" id="addressDistrict" class="form-input"
                                 placeholder="e.g., Dakshina Kannada" required>
                         </div>
@@ -236,8 +180,7 @@
                                 <option value="West Bengal">West Bengal</option>
                                 <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
                                 <option value="Chandigarh">Chandigarh</option>
-                                <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and
-                                    Daman and Diu</option>
+                                <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
                                 <option value="Delhi">Delhi</option>
                                 <option value="Jammu and Kashmir">Jammu and Kashmir</option>
                                 <option value="Ladakh">Ladakh</option>
@@ -246,8 +189,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="addressPincode">Pincode <span
-                                    class="required">*</span></label>
+                            <label class="form-label" for="addressPincode">Pincode <span class="required">*</span></label>
                             <input type="text" id="addressPincode" class="form-input" placeholder="e.g., 575001"
                                 maxlength="6" required>
                             <p class="form-hint" id="pincode-hint">6-digit postal code</p>
@@ -263,57 +205,52 @@
                     </div>
 
                     <!-- Medical Info -->
-                    <div style="border-top: 1px solid var(--gray-100); margin: 28px 0; padding-top: 28px;">
-                        <h2 style="font-size: 1.125rem; margin-bottom: 20px; color: var(--gray-700);">Medical
-                            Information</h2>
+                    <div class="section-divider">
+                        <span class="section-divider-icon">🏥</span>
+                        <h2>Medical Information</h2>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label" for="lmpDate">Last Menstrual Period (LMP) <span
-                                    class="required">*</span></label>
+                            <label class="form-label" for="lmpDate">LMP Date <span class="required">*</span></label>
                             <input type="date" id="lmpDate" class="form-input" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="edd">Expected Delivery Date (EDD) <span
-                                    class="required">*</span></label>
+                            <label class="form-label" for="edd">EDD <span class="required">*</span></label>
                             <input type="date" id="edd" class="form-input" required>
                             <p class="form-hint" id="edd-hint"></p>
                         </div>
                     </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label" for="bloodGroup">Blood Group <span
-                                    class="required">*</span></label>
-                            <select id="bloodGroup" class="form-select" required>
-                                <option value="">Select blood group</option>
-                                <option value="A+">A+</option>
-                                <option value="A-">A-</option>
-                                <option value="B+">B+</option>
-                                <option value="B-">B-</option>
-                                <option value="AB+">AB+</option>
-                                <option value="AB-">AB-</option>
-                                <option value="O+">O+</option>
-                                <option value="O-">O-</option>
-                            </select>
-                        </div>
+                    <div class="form-group">
+                        <label class="form-label" for="bloodGroup">Blood Group <span class="required">*</span></label>
+                        <select id="bloodGroup" class="form-select" required>
+                            <option value="">Select blood group</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                        </select>
                     </div>
 
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label" for="gravida">Gravida (No. of Pregnancies) <span
-                                    class="required">*</span></label>
+                            <label class="form-label" for="gravida">Gravida <span class="required">*</span></label>
                             <input type="number" id="gravida" class="form-input" placeholder="e.g., 1" min="1" required>
+                            <p class="form-hint">No. of Pregnancies</p>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="para">Para (No. of Deliveries) <span
-                                    class="required">*</span></label>
+                            <label class="form-label" for="para">Para <span class="required">*</span></label>
                             <input type="number" id="para" class="form-input" placeholder="e.g., 0" min="0" required>
+                            <p class="form-hint">No. of Deliveries</p>
                         </div>
                     </div>
 
-                    <div id="form-error" class="form-error" style="text-align: center; margin-bottom: 16px;"></div>
+                    <div id="form-error" class="form-error" style="text-align: center; margin-bottom: 12px;"></div>
 
                     <button type="submit" class="btn btn-primary btn-lg btn-full" id="submit-btn">
                         Register Patient
@@ -377,12 +314,10 @@
 
         let currentStream = null;
         let capturedBlob = null;
-        let facingMode = 'environment'; // 'user' = front, 'environment' = back
+        let facingMode = 'environment';
 
-        // Start camera on page load
         async function startCamera() {
             try {
-                // Stop any existing stream
                 if (currentStream) {
                     currentStream.getTracks().forEach(t => t.stop());
                 }
@@ -402,82 +337,67 @@
 
                 video.onloadedmetadata = () => {
                     cameraLoading.classList.add('hidden');
-                    // Always show switch button, since many users expect a toggle option
                     switchCameraBtn.classList.remove('hidden');
                 };
 
-                cameraStatus.textContent = 'Position the patient and click Capture';
+                cameraStatus.textContent = 'Position the patient and tap Capture';
             } catch (error) {
                 console.error('Camera error:', error);
                 cameraLoading.classList.add('hidden');
-                cameraStatus.innerHTML = '⚠️ Camera access denied or not available.<br>Please allow camera permissions in your browser settings.';
+                cameraStatus.innerHTML = '⚠️ Camera access denied.<br>Please allow camera permissions.';
                 cameraStatus.style.color = 'var(--danger)';
             }
         }
 
-        // Capture photo from video feed
         function capturePhoto() {
             if (!currentStream) {
                 showToast('Camera not available', 'error');
                 return;
             }
 
-            // Set canvas size to video dimensions
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
 
-            // Draw current frame to canvas
             const ctx = canvas.getContext('2d');
             ctx.drawImage(video, 0, 0);
 
-            // Convert canvas to blob
             canvas.toBlob((blob) => {
                 capturedBlob = blob;
 
-                // Show preview
                 capturedPreview.src = URL.createObjectURL(blob);
                 cameraFeedWrapper.classList.add('hidden');
                 capturedPreviewWrapper.classList.remove('hidden');
 
-                // Toggle buttons
                 captureBtn.classList.add('hidden');
                 retakeBtn.classList.remove('hidden');
                 switchCameraBtn.classList.add('hidden');
 
-                // Update status
                 cameraContainer.classList.add('has-photo');
                 cameraStatus.textContent = '✅ Photo captured! You can retake if needed.';
-                cameraStatus.style.color = 'var(--primary-700)';
+                cameraStatus.style.color = 'var(--green-500)';
 
-                // Stop camera to save battery
                 currentStream.getTracks().forEach(t => t.stop());
 
                 showToast('Photo captured!');
             }, 'image/jpeg', 0.85);
         }
 
-        // Retake photo
         function retakePhoto() {
             capturedBlob = null;
 
-            // Hide preview, show camera
             capturedPreviewWrapper.classList.add('hidden');
             cameraFeedWrapper.classList.remove('hidden');
 
-            // Toggle buttons
             captureBtn.classList.remove('hidden');
             retakeBtn.classList.add('hidden');
 
-            // Update status
             cameraContainer.classList.remove('has-photo');
-            cameraStatus.textContent = 'Position the patient and click Capture';
+            cameraStatus.textContent = 'Position the patient and tap Capture';
             cameraStatus.style.color = '';
 
-            // Restart camera
             startCamera();
         }
 
-        // Switch front/back camera
         function switchCamera() {
             facingMode = facingMode === 'environment' ? 'user' : 'environment';
             if (facingMode === 'environment') {
@@ -488,10 +408,8 @@
             startCamera();
         }
 
-        // Start camera when page loads
         startCamera();
 
-        // Cleanup camera on page leave
         window.addEventListener('beforeunload', () => {
             if (currentStream) {
                 currentStream.getTracks().forEach(t => t.stop());
@@ -509,19 +427,18 @@
                     age--;
                 }
                 document.getElementById('age').value = age;
-                document.getElementById('age-hint').textContent = `${age} years old (auto-calculated)`;
-                document.getElementById('age-hint').style.color = 'var(--primary-600)';
+                document.getElementById('age-hint').textContent = `${age} years old`;
+                document.getElementById('age-hint').style.color = 'var(--green-500)';
             }
         });
 
         // ---- Real-time Phone Validation ----
         document.getElementById('phone').addEventListener('input', (e) => {
-            // Only allow digits
             e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
             const val = e.target.value;
             const hint = document.getElementById('phone-hint');
             if (val.length === 0) {
-                hint.textContent = 'Must be a valid 10-digit Indian mobile number (starts with 6-9)';
+                hint.textContent = '10-digit Indian mobile number (starts with 6-9)';
                 hint.style.color = '';
             } else if (val.length < 10) {
                 hint.textContent = `${10 - val.length} more digits needed`;
@@ -531,15 +448,13 @@
                 hint.style.color = 'var(--danger)';
             } else {
                 hint.textContent = '✅ Valid phone number';
-                hint.style.color = 'var(--primary-600)';
+                hint.style.color = 'var(--green-500)';
             }
         });
 
-        // ---- Real-time Aadhaar Validation + Auto-format (XXXX XXXX XXXX) ----
+        // ---- Real-time Aadhaar Validation + Auto-format ----
         document.getElementById('aadhaar').addEventListener('input', (e) => {
-            // Remove non-digits and limit to 12 digits
             let raw = e.target.value.replace(/\D/g, '').slice(0, 12);
-            // Auto-format with spaces
             let formatted = '';
             for (let i = 0; i < raw.length; i++) {
                 if (i > 0 && i % 4 === 0) formatted += ' ';
@@ -559,7 +474,7 @@
                 hint.style.color = 'var(--danger)';
             } else {
                 hint.textContent = '✅ Valid Aadhaar number';
-                hint.style.color = 'var(--primary-600)';
+                hint.style.color = 'var(--green-500)';
             }
         });
 
@@ -579,18 +494,18 @@
                 hint.style.color = 'var(--danger)';
             } else {
                 hint.textContent = '✅ Valid pincode';
-                hint.style.color = 'var(--primary-600)';
+                hint.style.color = 'var(--green-500)';
             }
         });
 
-        // Auto-calculate EDD from LMP (Naegele's rule: LMP + 280 days)
+        // Auto-calculate EDD from LMP
         document.getElementById('lmpDate').addEventListener('change', (e) => {
             const lmp = new Date(e.target.value);
             if (!isNaN(lmp)) {
                 const edd = new Date(lmp);
                 edd.setDate(edd.getDate() + 280);
                 document.getElementById('edd').value = edd.toISOString().split('T')[0];
-                document.getElementById('edd-hint').textContent = 'Auto-calculated using Naegele\'s rule (LMP + 280 days)';
+                document.getElementById('edd-hint').textContent = 'Auto-calculated (LMP + 280 days)';
             }
         });
 
@@ -605,27 +520,26 @@
             const pincode = document.getElementById('addressPincode').value.trim();
             const age = document.getElementById('age').value;
 
-            // Client-side validation
             if (!age) {
-                formError.textContent = 'Please enter a valid Date of Birth to auto-calculate age.';
+                formError.textContent = 'Please enter a valid Date of Birth.';
                 formError.style.display = 'block';
                 showToast('Please enter Date of Birth', 'error');
                 return;
             }
             if (!/^[6-9]\d{9}$/.test(phone)) {
-                formError.textContent = 'Phone number must be a valid 10-digit Indian mobile number (starts with 6-9).';
+                formError.textContent = 'Invalid phone number.';
                 formError.style.display = 'block';
                 showToast('Invalid phone number', 'error');
                 return;
             }
             if (!/^[2-9]\d{11}$/.test(aadhaarRaw)) {
-                formError.textContent = 'Aadhaar must be a valid 12-digit number (cannot start with 0 or 1).';
+                formError.textContent = 'Invalid Aadhaar number.';
                 formError.style.display = 'block';
                 showToast('Invalid Aadhaar number', 'error');
                 return;
             }
             if (!/^[1-9]\d{5}$/.test(pincode)) {
-                formError.textContent = 'Pincode must be a valid 6-digit code.';
+                formError.textContent = 'Invalid pincode.';
                 formError.style.display = 'block';
                 showToast('Invalid pincode', 'error');
                 return;
@@ -652,7 +566,6 @@
             formData.append('gravida', document.getElementById('gravida').value);
             formData.append('para', document.getElementById('para').value);
 
-            // Attach captured photo blob
             if (capturedBlob) {
                 formData.append('photo', capturedBlob, 'patient-photo.jpg');
             }
@@ -667,8 +580,7 @@
                 const data = await res.json();
 
                 if (data.success) {
-                    showToast('Patient registered successfully! Redirecting to questionnaire...');
-                    // Store patient ID and redirect to questionnaire
+                    showToast('Patient registered! Redirecting...');
                     setTimeout(() => {
                         window.location.href = `/questionnaire.html?patientId=${data.patient._id}&patientName=${encodeURIComponent(data.patient.fullName)}`;
                     }, 1500);
