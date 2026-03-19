@@ -16,25 +16,25 @@ const seedAdmin = async () => {
         // Check if admin already exists
         const existingAdmin = await Admin.findOne({ username: 'admin' });
         if (existingAdmin) {
-            existingAdmin.password = 'Doc_admin@998';
+            existingAdmin.password = 'DOC_Admin@465';
             await existingAdmin.save();
             console.log('✅ Admin password updated successfully!');
             console.log('   Username: admin');
-            console.log('   Password: Doc_admin@998');
+            console.log('   Password: DOC_Admin@465');
             process.exit(0);
         }
 
         // Create default admin
         const admin = new Admin({
             username: 'admin',
-            password: 'Doc_admin@998',
+            password: 'DOC_Admin@465',
             name: 'System Administrator'
         });
 
         await admin.save();
         console.log('✅ Default admin account created successfully!');
         console.log('   Username: admin');
-        console.log('   Password: Doc_admin@998');
+        console.log('   Password: DOC_Admin@465');
         //console.log('   ⚠️  Please change the password after first login.');
 
         process.exit(0);

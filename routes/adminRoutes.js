@@ -124,4 +124,19 @@ router.get('/hospital-visits', verifyToken, requireAdmin, async (req, res) => {
     }
 });
 
+// Get all home visits
+router.get('/home-visits', verifyToken, requireAdmin, async (req, res) => {
+    try {
+        const visits = await Questionnaire.find({ consultationType: 'home' })
+            .populate('patient', 'fullName phone address')
+            .populate('submittedBy', 'name area')
+            .sort({ submittedAt: -1 });
+
+        res.json({ success: true, visits });
+    } catch (error) {
+        console.error('Get home visits error:', error);
+        res.status(500).json({ success: false, message: 'Server error.' });
+    }
+});
+
 module.exports = router;

@@ -49,20 +49,19 @@
                     <div class="stat-card-value" id="total-workers">0</div>
                     <div class="stat-card-label">Total Workers</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-card-value" id="active-workers" style="color: var(--green-500);">0</div>
-                    <div class="stat-card-label">Active Workers</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-card-value" id="inactive-workers" style="color: var(--danger);">0</div>
-                    <div class="stat-card-label">Inactive Workers</div>
-                </div>
                 <div class="stat-card"
                     style="cursor: pointer; border: 1.5px solid var(--saffron-200); background: var(--saffron-50);"
-                    onclick="toggleView('visits')">
+                    onclick="window.location.href='/hospital-visits.html'">
                     <div class="stat-card-value" id="hospital-visits-count" style="color: var(--saffron-600);">0</div>
                     <div class="stat-card-label" style="font-weight: 600;">🏥 Hospital Visits</div>
-                    <div style="font-size: 0.65rem; color: var(--saffron-500); margin-top: 2px;">Tap to view</div>
+                    <div style="font-size: 0.65rem; color: var(--saffron-500); margin-top: 2px;">View List →</div>
+                </div>
+                <div class="stat-card"
+                    style="cursor: pointer; border: 1.5px solid var(--primary-100); background: var(--primary-50);"
+                    onclick="window.location.href='/home-visits.html'">
+                    <div class="stat-card-value" id="home-visits-count" style="color: var(--primary-600);">0</div>
+                    <div class="stat-card-label" style="font-weight: 600;">🏠 Home Visits</div>
+                    <div style="font-size: 0.65rem; color: var(--primary-500); margin-top: 2px;">View List →</div>
                 </div>
             </div>
 
@@ -90,31 +89,6 @@
                             </tr>
                         </thead>
                         <tbody id="workers-tbody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Hospital Visits Table -->
-            <div class="table-container" id="visits-view" style="margin-top: 20px;">
-                <div class="table-header">
-                    <h2 class="table-title">Hospital Visits</h2>
-                </div>
-                <div id="visits-table-body">
-                    <div class="empty-state hidden" id="visits-empty-state">
-                        <div class="empty-state-icon">🩺</div>
-                        <h3 class="empty-state-title">No visits scheduled</h3>
-                        <p class="empty-state-desc">When workers schedule hospital visits, they will appear here.</p>
-                    </div>
-                    <table id="visits-table" class="hidden">
-                        <thead>
-                            <tr>
-                                <th>Patient</th>
-                                <th>Schedule</th>
-                                <th>Hospital</th>
-                                <th>By</th>
-                            </tr>
-                        </thead>
-                        <tbody id="visits-tbody"></tbody>
                     </table>
                 </div>
             </div>
@@ -186,7 +160,7 @@
                 }
                 document.getElementById('user-name').textContent = data.user.name;
                 loadWorkers();
-                loadVisits();
+                loadStats();
             } catch (e) {
                 localStorage.clear();
                 window.location.href = '/admin-login.html';
@@ -228,8 +202,6 @@
 
             // Stats
             document.getElementById('total-workers').textContent = workers.length;
-            document.getElementById('active-workers').textContent = workers.filter(w => w.isActive).length;
-            document.getElementById('inactive-workers').textContent = workers.filter(w => !w.isActive).length;
 
             if (workers.length === 0) {
                 table.classList.add('hidden');
@@ -262,60 +234,26 @@
             `).join('');
         }
 
-        function toggleView(view) {
-            window.scrollTo({
-                top: document.getElementById('visits-view').offsetTop - 50,
-                behavior: 'smooth'
-            });
-        }
-
-        async function loadVisits() {
+        async function loadStats() {
             try {
-                const res = await fetch(`${API_BASE}/admin/hospital-visits`, {
+                const resH = await fetch(`${API_BASE}/admin/hospital-visits`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
-                const data = await res.json();
-                if (data.success) {
-                    renderVisits(data.visits);
+                const dataH = await resH.json();
+                if (dataH.success) {
+                    document.getElementById('hospital-visits-count').textContent = dataH.visits.length;
+                }
+
+                const resV = await fetch(`${API_BASE}/admin/home-visits`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const dataV = await resV.json();
+                if (dataV.success) {
+                    document.getElementById('home-visits-count').textContent = dataV.visits.length;
                 }
             } catch (error) {
-                console.error('Failed to load visits', error);
+                console.error('Failed to load stats', error);
             }
-        }
-
-        function renderVisits(visits) {
-            const tbody = document.getElementById('visits-tbody');
-            const table = document.getElementById('visits-table');
-            const emptyState = document.getElementById('visits-empty-state');
-
-            document.getElementById('hospital-visits-count').textContent = visits.length;
-
-            if (visits.length === 0) {
-                table.classList.add('hidden');
-                emptyState.classList.remove('hidden');
-                return;
-            }
-
-            emptyState.classList.add('hidden');
-            table.classList.remove('hidden');
-
-            tbody.innerHTML = visits.map(v => {
-                const details = v.hospitalVisitDetails || {};
-                const hDate = details.date ? new Date(details.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : '—';
-                const hTime = details.time ? details.time : '';
-
-                return `
-                <tr>
-                    <td>
-                        <div style="font-weight: 600; color: var(--gray-800); font-size: 0.78rem;">${v.patient ? v.patient.fullName : 'Unknown'}</div>
-                    </td>
-                    <td>
-                        <span class="badge badge-warning" style="font-size: 0.65rem;">${hDate} ${hTime}</span>
-                    </td>
-                    <td style="font-size: 0.75rem;">${details.hospitalName || '—'}</td>
-                    <td style="font-size: 0.7rem;">${v.submittedBy ? v.submittedBy.name : '—'}</td>
-                </tr>
-            `}).join('');
         }
 
         let editingWorker = null;

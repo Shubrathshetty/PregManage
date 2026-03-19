@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="description" content="Home Visits - PregManage">
+    <meta name="theme-color" content="#1e3a5f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Home Visits — PregManage</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <!-- App Status Bar -->
+        <div class="app-status-bar">
+            <div class="strip-saffron"></div>
+            <div class="strip-white"></div>
+            <div class="strip-green"></div>
+        </div>
+
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <div class="logo-icon">🤰</div>
+                <span>PregManage</span>
+            </div>
+            <div class="navbar-user">
+                <div class="navbar-user-info">
+                    <div class="navbar-user-name" id="user-name">Administrator</div>
+                    <div class="navbar-user-role">Admin Panel</div>
+                </div>
+                <button class="btn btn-ghost btn-sm" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="container dashboard-content fade-in">
+            <a href="/admin-dashboard.html" class="app-back-btn">← Back to Dashboard</a>
+
+            <div class="page-header">
+                <h1 class="page-title">Home Visits</h1>
+                <p class="page-subtitle">Patients requiring follow-up home consultations</p>
+            </div>
+
+            <!-- Visits List -->
+            <div class="table-container">
+                <div id="visits-table-body">
+                    <div class="empty-state hidden" id="visits-empty-state">
+                        <div class="empty-state-icon">🏠</div>
+                        <h3 class="empty-state-title">No home visits scheduled</h3>
+                        <p class="empty-state-desc">When workers flag patients for home consultations, they will appear here.</p>
+                    </div>
+                    <table id="visits-table" class="hidden">
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Contact Information</th>
+                                <th>Reported By</th>
+                                <th>Date Reported</th>
+                            </tr>
+                        </thead>
+                        <tbody id="visits-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+        const token = localStorage.getItem('token');
+
+        // Auth check
+        (async () => {
+            if (!token) { window.location.href = '/admin-login.html'; return; }
+            try {
+                const res = await fetch('/api/auth/verify', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (!data.success || data.user.role !== 'admin') {
+                    localStorage.clear();
+                    window.location.href = '/admin-login.html';
+                    return;
+                }
+                document.getElementById('user-name').textContent = data.user.name;
+                loadVisits();
+            } catch (e) {
+                localStorage.clear();
+                window.location.href = '/admin-login.html';
+            }
+        })();
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/';
+        }
+
+        async function loadVisits() {
+            try {
+                const res = await fetch('/api/admin/home-visits', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    renderVisits(data.visits);
+                }
+            } catch (error) {
+                console.error('Failed to load visits', error);
+            }
+        }
+
+        function renderVisits(visits) {
+            const tbody = document.getElementById('visits-tbody');
+            const table = document.getElementById('visits-table');
+            const emptyState = document.getElementById('visits-empty-state');
+
+            if (visits.length === 0) {
+                table.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            table.classList.remove('hidden');
+
+            tbody.innerHTML = visits.map(v => {
+                const submittedAt = new Date(v.submittedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+                
+                return `
+                <tr>
+                    <td>
+                        <div style="font-weight: 600; color: var(--gray-800); font-size: 0.85rem;">${v.patient ? v.patient.fullName : 'Unknown'}</div>
+                    </td>
+                    <td>
+                        <div style="font-size: 0.75rem;">📞 ${v.patient ? v.patient.phone : '—'}</div>
+                        <div style="font-size: 0.65rem; color: var(--gray-400); max-width: 180px;">📍 ${v.patient && v.patient.address ? v.patient.address.village : '—'}</div>
+                    </td>
+                    <td>
+                        <div style="font-size: 0.8rem;">${v.submittedBy ? v.submittedBy.name : '—'}</div>
+                        <div style="font-size: 0.65rem; color: var(--gray-400);">${v.submittedBy ? (v.submittedBy.area || '') : ''}</div>
+                    </td>
+                    <td>
+                        <span class="badge badge-info" style="font-size: 0.7rem;">${submittedAt}</span>
+                    </td>
+                </tr>
+            `}).join('');
+        }
+    </script>
+</body>
+
+</html>
