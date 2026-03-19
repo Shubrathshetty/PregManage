@@ -1,12 +1,13 @@
 const mongoose = require('mongoose');
+const path = require('path');
 const dns = require('dns');
 const dotenv = require('dotenv');
 
 // Use Google DNS to resolve MongoDB Atlas hostnames
 dns.setServers(['8.8.8.8', '8.8.4.4']);
-const Admin = require('./models/Admin');
+const Admin = require('../backend/models/Admin');
 
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, '..', 'backend', '.env') });
 
 const seedAdmin = async () => {
     try {

@@ -11,14 +11,14 @@ echo    Username: admin
 echo    Password: DOC_Admin@465
 echo.
 echo ========================================================
-echo Starting the Node.js Server on port 3000...
+echo Starting the Node.js Server...
 echo The application will open in your browser automatically...
 echo.
 
 :: Automatically open the browser to the correct page after a 4 second delay
 start /b cmd /c "timeout /t 4 >nul && start http://localhost:3000"
 
-node server.js
+node backend/server.js
 
 if %errorlevel% neq 0 (
     echo.

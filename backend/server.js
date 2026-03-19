@@ -7,7 +7,7 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 
 // Load env vars
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 // Connect to database
 connectDB();
@@ -27,7 +27,7 @@ if (!fs.existsSync(uploadsDir)) {
 }
 
 // Serve static files
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '..', 'frontend')));
 app.use('/uploads', express.static(uploadsDir));
 
 // API Routes
@@ -38,7 +38,7 @@ app.use('/api/questionnaires', require('./routes/questionnaireRoutes'));
 
 // Serve frontend pages
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
 });
 
 // Catch-all: serve index.html for SPA-style navigation
@@ -48,10 +48,10 @@ app.get('{*path}', (req, res) => {
         return res.status(404).json({ success: false, message: 'API endpoint not found.' });
     }
     // Otherwise try to serve the file
-    const filePath = path.join(__dirname, 'public', req.path);
+    const filePath = path.join(__dirname, '..', 'frontend', req.path);
     res.sendFile(filePath, (err) => {
         if (err) {
-            res.sendFile(path.join(__dirname, 'public', 'index.html'));
+            res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
         }
     });
 });
