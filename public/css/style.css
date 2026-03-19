@@ -1698,22 +1698,27 @@ tbody tr:last-child td {
 .app-back-btn {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    background: none;
-    border: none;
-    color: var(--gray-500);
-    font-size: 0.85rem;
-    font-weight: 500;
-    padding: 8px 0;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--gray-100);
+    border: 1px solid var(--gray-200);
+    color: var(--gray-700);
+    font-size: 1.2rem;
+    font-weight: 700;
+    border-radius: 50%;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
     text-decoration: none;
-    font-family: var(--font-body);
-    margin-bottom: 8px;
+    margin-bottom: 12px;
+    transition: all var(--transition-base);
 }
 
-.app-back-btn:hover {
-    color: var(--primary-500);
+.app-back-btn:hover, .app-back-btn:active {
+    background: var(--primary-50);
+    border-color: var(--primary-200);
+    color: var(--primary-600);
+    transform: translateX(-2px);
 }
 
 /* ---- Welcome Card ---- */
