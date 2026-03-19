@@ -3,94 +3,93 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="description" content="Questionnaire Summary - PregManage">
+    <meta name="theme-color" content="#1e3a5f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Summary — PregManage</title>
     <link rel="stylesheet" href="/css/style.css">
     <style>
         /* Consultation Step Styles */
         .consultation-section {
-            max-width: 650px;
-            margin: 0 auto;
+            max-width: 100%;
         }
 
         .consultation-card {
             background: white;
-            border: 2px solid var(--gray-100);
+            border: 1.5px solid var(--gray-100);
             border-radius: var(--radius-lg);
-            padding: 40px 32px;
+            padding: 28px 20px;
             text-align: center;
-            transition: all var(--transition-base);
+            box-shadow: var(--shadow-card);
         }
 
         .consultation-card-icon {
-            font-size: 3rem;
-            margin-bottom: 16px;
+            font-size: 2.5rem;
+            margin-bottom: 12px;
         }
 
         .consultation-card h2 {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             font-weight: 800;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: var(--gray-800);
         }
 
         .consultation-card p {
-            font-size: 0.938rem;
+            font-size: 0.85rem;
             color: var(--gray-500);
-            margin-bottom: 32px;
+            margin-bottom: 24px;
         }
 
         .consultation-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            max-width: 420px;
-            margin: 0 auto;
+            gap: 12px;
         }
 
         .consultation-option {
-            padding: 28px 20px;
+            padding: 20px 16px;
             border: 2px solid var(--gray-200);
             border-radius: var(--radius-md);
             cursor: pointer;
             transition: all var(--transition-base);
             background: var(--gray-50);
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .consultation-option:hover {
+        .consultation-option:hover,
+        .consultation-option:active {
             border-color: var(--primary-300);
             background: var(--primary-50);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
         }
 
         .consultation-option.selected {
             border-color: var(--primary-500);
             background: var(--primary-50);
-            box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.12);
+            box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1);
         }
 
         .consultation-option-icon {
-            font-size: 2rem;
-            margin-bottom: 12px;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
         }
 
         .consultation-option-title {
             font-weight: 700;
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: var(--gray-800);
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .consultation-option-desc {
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             color: var(--gray-400);
         }
 
         .consultation-option.yes-option.selected {
-            border-color: var(--primary-500);
-            background: #dcfce7;
+            border-color: var(--green-500);
+            background: var(--green-50);
         }
 
         .consultation-option.no-option.selected {
@@ -102,47 +101,46 @@
         .service-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            max-width: 500px;
-            margin: 0 auto;
+            gap: 14px;
         }
 
         .service-option {
-            padding: 36px 24px;
+            padding: 24px 16px;
             border: 2px solid var(--gray-200);
             border-radius: var(--radius-lg);
             cursor: pointer;
             transition: all var(--transition-base);
             background: white;
             text-align: center;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .service-option:hover {
+        .service-option:hover,
+        .service-option:active {
             border-color: var(--primary-300);
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--shadow-md);
         }
 
         .service-option.selected {
             border-color: var(--primary-500);
             background: var(--primary-50);
-            box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.12);
+            box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1);
         }
 
         .service-option-icon {
-            font-size: 2.5rem;
-            margin-bottom: 16px;
+            font-size: 2rem;
+            margin-bottom: 10px;
         }
 
         .service-option-title {
             font-weight: 700;
-            font-size: 1.125rem;
+            font-size: 0.95rem;
             color: var(--gray-800);
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .service-option-desc {
-            font-size: 0.813rem;
+            font-size: 0.7rem;
             color: var(--gray-400);
             line-height: 1.4;
         }
@@ -151,13 +149,13 @@
         .step-indicator {
             display: flex;
             justify-content: center;
-            gap: 8px;
-            margin-bottom: 32px;
+            gap: 6px;
+            margin-bottom: 24px;
         }
 
         .step-dot {
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background: var(--gray-200);
             transition: all var(--transition-base);
@@ -165,8 +163,8 @@
 
         .step-dot.active {
             background: var(--primary-500);
-            width: 32px;
-            border-radius: 5px;
+            width: 28px;
+            border-radius: 4px;
         }
 
         .step-dot.completed {
@@ -175,15 +173,14 @@
 
         /* Slide animation */
         .step-content {
-            animation: slideUp 0.4s ease;
+            animation: slideUp 0.3s ease;
         }
 
         @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(16px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -194,6 +191,13 @@
 
 <body>
     <div class="page-wrapper">
+        <!-- App Status Bar -->
+        <div class="app-status-bar">
+            <div class="strip-saffron"></div>
+            <div class="strip-white"></div>
+            <div class="strip-green"></div>
+        </div>
+
         <!-- Navbar -->
         <nav class="navbar">
             <div class="navbar-brand">
@@ -215,53 +219,49 @@
             <!-- ====== STEP 1: Questionnaire Results ====== -->
             <div id="step-results" class="step-content fade-in">
                 <div class="page-header text-center">
-                    <div style="font-size: 3.5rem; margin-bottom: 16px;" id="status-icon">✅</div>
+                    <div style="font-size: 2.8rem; margin-bottom: 12px;" id="status-icon">✅</div>
                     <h1 class="page-title" id="status-title">Questionnaire Submitted</h1>
                     <p class="page-subtitle" id="status-subtitle">Successfully recorded health assessment</p>
                 </div>
 
-                <div style="max-width: 650px; margin: 0 auto;">
-                    <!-- Patient Info -->
-                    <div class="summary-card fade-in" style="animation-delay: 0.1s;">
-                        <div class="summary-header">
-                            <div class="summary-header-icon" style="background: var(--primary-50);">👤</div>
-                            <div>
-                                <h3 style="font-size: 1rem; font-weight: 700;" id="summary-patient-name">—</h3>
-                                <p style="font-size: 0.8rem; color: var(--gray-400);" id="summary-date">—</p>
-                            </div>
+                <!-- Patient Info -->
+                <div class="summary-card fade-in" style="animation-delay: 0.1s;">
+                    <div class="summary-header">
+                        <div class="summary-header-icon" style="background: var(--primary-50);">👤</div>
+                        <div>
+                            <h3 style="font-size: 0.9rem; font-weight: 700;" id="summary-patient-name">—</h3>
+                            <p style="font-size: 0.7rem; color: var(--gray-400);" id="summary-date">—</p>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Questionnaire Results -->
-                    <div class="summary-card fade-in" style="animation-delay: 0.2s;">
-                        <div class="summary-header">
-                            <div class="summary-header-icon" style="background: var(--primary-50);">📋</div>
-                            <h3 style="font-size: 1rem; font-weight: 700;">Health Assessment Results</h3>
+                <!-- Questionnaire Results -->
+                <div class="summary-card fade-in" style="animation-delay: 0.2s;">
+                    <div class="summary-header">
+                        <div class="summary-header-icon" style="background: var(--primary-50);">📋</div>
+                        <h3 style="font-size: 0.9rem; font-weight: 700;">Health Assessment Results</h3>
+                    </div>
+                    <div class="summary-body" id="summary-results"></div>
+                </div>
+
+                <!-- Red Flags Alert -->
+                <div class="summary-card fade-in hidden" id="red-flags-card"
+                    style="animation-delay: 0.3s; border-color: var(--danger);">
+                    <div class="summary-header" style="background: #fef2f2;">
+                        <div class="summary-header-icon danger">⚠️</div>
+                        <div>
+                            <h3 style="font-size: 0.9rem; font-weight: 700; color: var(--danger);">Red Flags Detected</h3>
+                            <p style="font-size: 0.7rem; color: var(--gray-500);">Requires medical attention</p>
                         </div>
-                        <div class="summary-body" id="summary-results"></div>
                     </div>
+                    <div class="summary-body" id="red-flags-list"></div>
+                </div>
 
-                    <!-- Red Flags Alert -->
-                    <div class="summary-card fade-in hidden" id="red-flags-card"
-                        style="animation-delay: 0.3s; border-color: var(--accent-400);">
-                        <div class="summary-header" style="background: #fef2f2;">
-                            <div class="summary-header-icon danger">⚠️</div>
-                            <div>
-                                <h3 style="font-size: 1rem; font-weight: 700; color: var(--danger);">Red Flags Detected
-                                </h3>
-                                <p style="font-size: 0.8rem; color: var(--gray-500);">The following concerns require
-                                    medical attention</p>
-                            </div>
-                        </div>
-                        <div class="summary-body" id="red-flags-list"></div>
-                    </div>
-
-                    <!-- Continue to Consultation Button -->
-                    <div class="text-center fade-in" style="margin-top: 32px; animation-delay: 0.4s;">
-                        <button class="btn btn-primary btn-lg" onclick="showConsultationStep()" id="continue-btn">
-                            Continue →
-                        </button>
-                    </div>
+                <!-- Continue Button -->
+                <div class="text-center fade-in" style="margin-top: 24px; animation-delay: 0.4s;">
+                    <button class="btn btn-primary btn-lg btn-full" onclick="showConsultationStep()" id="continue-btn">
+                        Continue →
+                    </button>
                 </div>
             </div>
 
@@ -276,21 +276,21 @@
 
                     <div class="consultation-card">
                         <div class="consultation-card-icon">👨‍⚕️</div>
-                        <h2>Is Doctor Consultation Required?</h2>
-                        <p>Based on the health assessment, does the patient need a doctor consultation?</p>
+                        <h2>Doctor Consultation Required?</h2>
+                        <p>Does the patient need a doctor consultation?</p>
 
                         <div class="consultation-options">
                             <div class="consultation-option yes-option" onclick="selectConsultation(true)"
                                 id="consult-yes">
                                 <div class="consultation-option-icon">✅</div>
                                 <div class="consultation-option-title">Yes</div>
-                                <div class="consultation-option-desc">Doctor consultation is needed</div>
+                                <div class="consultation-option-desc">Consultation needed</div>
                             </div>
                             <div class="consultation-option no-option" onclick="selectConsultation(false)"
                                 id="consult-no">
                                 <div class="consultation-option-icon">❌</div>
                                 <div class="consultation-option-title">No</div>
-                                <div class="consultation-option-desc">No consultation needed</div>
+                                <div class="consultation-option-desc">Not needed</div>
                             </div>
                         </div>
                     </div>
@@ -310,18 +310,18 @@
                     <div class="consultation-card">
                         <div class="consultation-card-icon">🏥</div>
                         <h2>Select Service Type</h2>
-                        <p>Where does the patient prefer to receive the doctor consultation?</p>
+                        <p>Where should the patient receive consultation?</p>
 
                         <div class="service-options">
                             <div class="service-option" onclick="selectServiceType('hospital')" id="service-hospital">
                                 <div class="service-option-icon">🏥</div>
-                                <div class="service-option-title">Hospital Visit</div>
-                                <div class="service-option-desc">Patient will visit the hospital for consultation</div>
+                                <div class="service-option-title">Hospital</div>
+                                <div class="service-option-desc">Patient visits the hospital</div>
                             </div>
                             <div class="service-option" onclick="selectServiceType('home')" id="service-home">
                                 <div class="service-option-icon">🏠</div>
-                                <div class="service-option-title">Home Service</div>
-                                <div class="service-option-desc">Doctor will visit the patient at home</div>
+                                <div class="service-option-title">Home</div>
+                                <div class="service-option-desc">Doctor visits the patient</div>
                             </div>
                         </div>
                     </div>
@@ -338,17 +338,17 @@
                         <div class="step-dot active"></div>
                     </div>
 
-                    <div class="consultation-card" style="text-align: left; padding: 32px;">
-                        <div style="text-align: center; margin-bottom: 24px;">
+                    <div class="consultation-card" style="text-align: left; padding: 24px 16px;">
+                        <div style="text-align: center; margin-bottom: 20px;">
                             <div class="consultation-card-icon">📅</div>
                             <h2>Schedule Hospital Visit</h2>
-                            <p>Please enter the details for the hospital appointment</p>
+                            <p>Enter the hospital appointment details</p>
                         </div>
 
                         <form id="hospital-form">
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label class="form-label">Appointment Date <span class="required">*</span></label>
+                                    <label class="form-label">Date <span class="required">*</span></label>
                                     <input type="date" id="h-date" class="form-input" required>
                                 </div>
                                 <div class="form-group">
@@ -364,14 +364,13 @@
                             <div class="form-group">
                                 <label class="form-label">Location / Address <span class="required">*</span></label>
                                 <textarea id="h-location" class="form-textarea" placeholder="Enter full address"
-                                    required style="height: 80px;"></textarea>
+                                    required style="height: 70px;"></textarea>
                             </div>
 
-                            <div class="flex gap-md" style="margin-top: 24px;">
+                            <div class="flex gap-md" style="margin-top: 20px;">
                                 <button type="button" class="btn btn-secondary btn-full"
                                     onclick="document.getElementById('step-hospital-form').classList.add('hidden'); document.getElementById('step-service-type').classList.remove('hidden');">Back</button>
-                                <button type="submit" class="btn btn-primary btn-full" id="h-submit-btn">Schedule
-                                    Visit</button>
+                                <button type="submit" class="btn btn-primary btn-full" id="h-submit-btn">Schedule</button>
                             </div>
                         </form>
                     </div>
@@ -382,7 +381,7 @@
             <div id="step-final" class="hidden">
                 <div class="consultation-section step-content">
                     <div class="page-header text-center">
-                        <div style="font-size: 3.5rem; margin-bottom: 16px;">🎉</div>
+                        <div style="font-size: 2.8rem; margin-bottom: 12px;">🎉</div>
                         <h1 class="page-title">Assessment Complete!</h1>
                         <p class="page-subtitle" id="final-subtitle">All records have been saved successfully</p>
                     </div>
@@ -391,7 +390,7 @@
                     <div class="summary-card fade-in" style="animation-delay: 0.1s;">
                         <div class="summary-header">
                             <div class="summary-header-icon" style="background: var(--primary-50);">📝</div>
-                            <h3 style="font-size: 1rem; font-weight: 700;">Consultation Decision</h3>
+                            <h3 style="font-size: 0.9rem; font-weight: 700;">Consultation Decision</h3>
                         </div>
                         <div class="summary-body">
                             <div class="summary-row">
@@ -410,9 +409,9 @@
                     </div>
 
                     <!-- Next Actions -->
-                    <div class="flex gap-md justify-center fade-in" style="margin-top: 32px; animation-delay: 0.3s;">
-                        <a href="/worker-dashboard.html" class="btn btn-primary btn-lg">Back to Dashboard</a>
-                        <a href="/patient-search.html" class="btn btn-secondary btn-lg">Another Patient</a>
+                    <div class="flex gap-md fade-in" style="margin-top: 24px; animation-delay: 0.3s;">
+                        <a href="/worker-dashboard.html" class="btn btn-primary btn-lg btn-full">Dashboard</a>
+                        <a href="/patient-search.html" class="btn btn-secondary btn-lg btn-full">Another Patient</a>
                     </div>
                 </div>
             </div>
@@ -529,7 +528,7 @@
                 redFlagsCard.classList.remove('hidden');
                 document.getElementById('status-icon').textContent = '⚠️';
                 document.getElementById('status-title').textContent = 'Attention Required';
-                document.getElementById('status-subtitle').textContent = `${redFlags.length} concern(s) detected — please refer to medical professional`;
+                document.getElementById('status-subtitle').textContent = `${redFlags.length} concern(s) detected — refer to medical professional`;
 
                 redFlagsList.innerHTML = redFlags.map(f => `
                     <div class="summary-row">
@@ -550,7 +549,6 @@
         }
 
         async function selectConsultation(needsDoctor) {
-            // Visual selection
             document.getElementById('consult-yes').classList.remove('selected');
             document.getElementById('consult-no').classList.remove('selected');
 
@@ -560,28 +558,23 @@
                 document.getElementById('consult-no').classList.add('selected');
             }
 
-            // Brief delay for visual feedback
             await new Promise(r => setTimeout(r, 400));
 
             if (needsDoctor) {
-                // Show service type selection
                 document.getElementById('step-consultation').classList.add('hidden');
                 document.getElementById('step-service-type').classList.remove('hidden');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
-                // No consultation needed — save and go to final
                 await saveConsultation(false, null);
                 showFinalStep(false, null);
             }
         }
 
         async function selectServiceType(type) {
-            // Visual selection
             document.getElementById('service-hospital').classList.remove('selected');
             document.getElementById('service-home').classList.remove('selected');
             document.getElementById(`service-${type}`).classList.add('selected');
 
-            // Brief delay for visual feedback
             await new Promise(r => setTimeout(r, 400));
 
             if (type === 'hospital') {
@@ -589,7 +582,6 @@
                 document.getElementById('step-hospital-form').classList.remove('hidden');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
-                // Home service - Save and go to final immediately
                 await saveConsultation(true, 'home');
                 showFinalStep(true, 'home');
             }
@@ -610,7 +602,7 @@
             };
 
             await saveConsultation(true, 'hospital', hospitalData);
-            btn.innerHTML = 'Schedule Visit';
+            btn.innerHTML = 'Schedule';
             btn.disabled = false;
 
             document.getElementById('step-hospital-form').classList.add('hidden');
@@ -645,19 +637,18 @@
             document.getElementById('step-final').classList.remove('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
-            // Populate final summary
             document.getElementById('final-patient-name').textContent = qData.patientName || 'Patient';
 
             if (doctorNeeded) {
                 document.getElementById('final-consultation').innerHTML = '<span class="badge badge-warning">Yes — Required</span>';
                 document.getElementById('final-service-row').style.display = '';
                 document.getElementById('final-service-type').innerHTML = serviceType === 'hospital'
-                    ? '<span class="badge badge-info">🏥 Hospital Visit</span>'
-                    : '<span class="badge badge-info">🏠 Home Service</span>';
-                document.getElementById('final-subtitle').textContent = 'Doctor consultation has been recorded. All records saved.';
+                    ? '<span class="badge badge-info">🏥 Hospital</span>'
+                    : '<span class="badge badge-info">🏠 Home</span>';
+                document.getElementById('final-subtitle').textContent = 'Doctor consultation recorded. All records saved.';
             } else {
                 document.getElementById('final-consultation').innerHTML = '<span class="badge badge-success">No — Not Required</span>';
-                document.getElementById('final-subtitle').textContent = 'No consultation needed. All records saved successfully.';
+                document.getElementById('final-subtitle').textContent = 'No consultation needed. All records saved.';
             }
 
             showToast('Assessment complete! Records saved.', 'success');
