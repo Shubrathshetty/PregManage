@@ -3,17 +3,15 @@ const Worker = require('../models/Worker');
 const Questionnaire = require('../models/Questionnaire');
 const Patient = require('../models/Patient');
 const { verifyToken, requireAdmin } = require('../middleware/auth');
+const { workerSchema } = require('../validators/workerSchema');
+const validate = require('../middleware/validate');
 
 const router = express.Router();
 
 // Create a new Anganwadi worker
-router.post('/workers', verifyToken, requireAdmin, async (req, res) => {
+router.post('/workers', verifyToken, requireAdmin, validate(workerSchema), async (req, res) => {
     try {
-        const { name, username, password, phone, area } = req.body;
-
-        if (!name || !username || !password) {
-            return res.status(400).json({ success: false, message: 'Name, username, and password are required.' });
-        }
+        const { name, username, password, phone, address, area } = req.body;
 
         // Check if username already exists
         const existing = await Worker.findOne({ username });
@@ -26,6 +24,13 @@ router.post('/workers', verifyToken, requireAdmin, async (req, res) => {
             username,
             password,
             phone,
+            address: address ? {
+                street: address.street,
+                taluk: address.taluk,
+                district: address.district,
+                state: address.state,
+                pincode: address.pincode
+            } : undefined,
             area,
             createdBy: req.user.id
         });
@@ -34,7 +39,7 @@ router.post('/workers', verifyToken, requireAdmin, async (req, res) => {
         res.status(201).json({
             success: true,
             message: 'Worker created successfully.',
-            worker: { id: worker._id, name: worker.name, username: worker.username, phone: worker.phone, area: worker.area }
+            worker: { id: worker._id, name: worker.name, username: worker.username, phone: worker.phone, address: worker.address, area: worker.area }
         });
     } catch (error) {
         console.error('Create worker error:', error);
@@ -68,9 +73,9 @@ router.get('/workers/:id', verifyToken, requireAdmin, async (req, res) => {
 });
 
 // Update worker
-router.put('/workers/:id', verifyToken, requireAdmin, async (req, res) => {
+router.put('/workers/:id', verifyToken, requireAdmin, validate(workerSchema), async (req, res) => {
     try {
-        const { name, phone, area, isActive, password } = req.body;
+        const { name, phone, address, area, isActive, password } = req.body;
         const worker = await Worker.findById(req.params.id);
 
         if (!worker) {
@@ -79,6 +84,15 @@ router.put('/workers/:id', verifyToken, requireAdmin, async (req, res) => {
 
         if (name) worker.name = name;
         if (phone !== undefined) worker.phone = phone;
+        if (address) {
+            worker.address = {
+                street: address.street || worker.address?.street,
+                taluk: address.taluk || worker.address?.taluk,
+                district: address.district || worker.address?.district,
+                state: address.state || worker.address?.state,
+                pincode: address.pincode || worker.address?.pincode
+            };
+        }
         if (area !== undefined) worker.area = area;
         if (isActive !== undefined) worker.isActive = isActive;
         if (password) worker.password = password;
@@ -87,7 +101,7 @@ router.put('/workers/:id', verifyToken, requireAdmin, async (req, res) => {
         res.json({
             success: true,
             message: 'Worker updated successfully.',
-            worker: { id: worker._id, name: worker.name, username: worker.username, phone: worker.phone, area: worker.area, isActive: worker.isActive }
+            worker: { id: worker._id, name: worker.name, username: worker.username, phone: worker.phone, address: worker.address, area: worker.area, isActive: worker.isActive }
         });
     } catch (error) {
         console.error('Update worker error:', error);

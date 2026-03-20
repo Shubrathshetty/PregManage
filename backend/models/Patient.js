@@ -31,7 +31,8 @@ const patientSchema = new mongoose.Schema({
         }
     },
     address: {
-        village: { type: String, required: true, trim: true },
+        street: { type: String, required: true, trim: true },
+        taluk: { type: String, required: true, trim: true },
         district: { type: String, required: true, trim: true },
         state: { type: String, required: true, trim: true },
         pincode: {

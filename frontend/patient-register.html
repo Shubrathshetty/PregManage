@@ -137,7 +137,12 @@
 
                 <div class="form-group">
                     <label class="form-label" for="phone">Phone Number <span style="color: var(--error);">*</span></label>
-                    <input type="tel" id="phone" class="form-input" placeholder="e.g., 9876543210" maxlength="10" required>
+                    <div style="display: flex; gap: 0; align-items: stretch; border-radius: var(--radius-btn); overflow: hidden; border: 1px solid var(--border-color);">
+                        <div style="background: var(--bg-main); display: flex; align-items: center; padding: 0 12px; border-right: 1px solid var(--border-color); color: var(--text-secondary); font-weight: 600; font-size: 0.9rem;">
+                            +91
+                        </div>
+                        <input type="tel" id="phone" class="form-input" style="border: none; border-radius: 0; flex: 1;" placeholder="9876543210" maxlength="10" required>
+                    </div>
                     <p id="phone-hint" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">10-digit Indian mobile number</p>
                 </div>
 
@@ -149,16 +154,20 @@
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
                     <div class="form-group">
-                        <label class="form-label" for="addressVillage">Village/Town <span style="color: var(--error);">*</span></label>
-                        <input type="text" id="addressVillage" class="form-input" placeholder="e.g., Mangalore" required>
+                        <label class="form-label" for="addressStreet">Street / Area <span style="color: var(--error);">*</span></label>
+                        <input type="text" id="addressStreet" class="form-input" placeholder="e.g., MG Road" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="addressDistrict">District <span style="color: var(--error);">*</span></label>
-                        <input type="text" id="addressDistrict" class="form-input" placeholder="e.g., Dakshina Kannada" required>
+                        <label class="form-label" for="addressTaluk">Taluk <span style="color: var(--error);">*</span></label>
+                        <input type="text" id="addressTaluk" class="form-input" placeholder="e.g., Mangalore" required>
                     </div>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
+                    <div class="form-group">
+                        <label class="form-label" for="addressDistrict">District <span style="color: var(--error);">*</span></label>
+                        <input type="text" id="addressDistrict" class="form-input" placeholder="e.g., Dakshina Kannada" required>
+                    </div>
                     <div class="form-group">
                         <label class="form-label" for="addressState">State <span style="color: var(--error);">*</span></label>
                         <select id="addressState" class="form-select" required style="background-color: #FFFFFF;">
@@ -184,7 +193,7 @@
                             <option value="Odisha">Odisha</option>
                             <option value="Punjab">Punjab</option>
                             <option value="Rajasthan">Rajasthan</option>
-                            <option value="Sikkim">Sikkim</option>
+                            <option value="Sikkim">Sikk Sikkim</option>
                             <option value="Tamil Nadu">Tamil Nadu</option>
                             <option value="Telangana">Telangana</option>
                             <option value="Tripura">Tripura</option>
@@ -201,11 +210,12 @@
                             <option value="Puducherry">Puducherry</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label" for="addressPincode">Pincode <span style="color: var(--error);">*</span></label>
-                        <input type="text" id="addressPincode" class="form-input" placeholder="e.g., 575001" maxlength="6" required>
-                        <p id="pincode-hint" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">6-digit postal code</p>
-                    </div>
+                </div>
+
+                <div class="form-group" style="width: 50%;">
+                    <label class="form-label" for="addressPincode">Pincode <span style="color: var(--error);">*</span></label>
+                    <input type="text" id="addressPincode" class="form-input" placeholder="e.g., 575001" maxlength="6" required>
+                    <p id="pincode-hint" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">6-digit postal code</p>
                 </div>
 
                 <!-- Aadhaar -->
@@ -434,6 +444,13 @@
             }
         });
 
+        // ---- Name Validation (Letters only) ----
+        ['fullName', 'husbandName'].forEach(id => {
+            document.getElementById(id).addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^a-zA-Z\s]/g, '');
+            });
+        });
+
         // ---- DOB → Auto-calculate Age ----
         document.getElementById('dob').addEventListener('change', (e) => {
             const dob = new Date(e.target.value);
@@ -573,7 +590,8 @@
             formData.append('age', age);
             formData.append('husbandName', document.getElementById('husbandName').value.trim());
             formData.append('phone', phone);
-            formData.append('addressVillage', document.getElementById('addressVillage').value.trim());
+            formData.append('addressStreet', document.getElementById('addressStreet').value.trim());
+            formData.append('addressTaluk', document.getElementById('addressTaluk').value.trim());
             formData.append('addressDistrict', document.getElementById('addressDistrict').value.trim());
             formData.append('addressState', document.getElementById('addressState').value);
             formData.append('addressPincode', pincode);

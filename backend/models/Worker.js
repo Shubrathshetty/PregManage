@@ -21,6 +21,22 @@ const workerSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
+    address: {
+        street: { type: String, trim: true },
+        taluk: { type: String, trim: true },
+        district: { type: String, trim: true },
+        state: { type: String, trim: true },
+        pincode: {
+            type: String,
+            trim: true,
+            validate: {
+                validator: function (v) {
+                    return !v || /^[1-9]\d{5}$/.test(v);
+                },
+                message: 'Pincode must be a valid 6-digit code'
+            }
+        }
+    },
     area: {
         type: String,
         trim: true

@@ -209,11 +209,17 @@
 
         <!-- Workers Table -->
         <div class="table-container" id="workers-view">
-            <div class="table-header">
+            <div class="table-header" style="flex-wrap: wrap; gap: 16px;">
                 <h2 class="table-title">Healthcare Workers</h2>
-                <button class="btn btn-primary" id="add-worker-btn" onclick="openAddModal()" style="min-height: 36px; padding: 0 16px; border-radius: var(--radius-full); font-size: 0.85rem;">
-                    <iconify-icon icon="mdi:account-plus" style="margin-right: 4px;"></iconify-icon> Add Worker
-                </button>
+                <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                    <div style="position: relative;">
+                        <iconify-icon icon="mdi:magnify" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1.2rem;"></iconify-icon>
+                        <input type="text" id="worker-search" placeholder="Search by name, username, or area..." class="form-input" style="padding-left: 36px; min-height: 36px; font-size: 0.85rem; width: 260px;" onkeyup="filterWorkers()">
+                    </div>
+                    <button class="btn btn-primary" id="add-worker-btn" onclick="openAddModal()" style="min-height: 36px; padding: 0 16px; border-radius: var(--radius-full); font-size: 0.85rem;">
+                        <iconify-icon icon="mdi:account-plus" style="margin-right: 4px;"></iconify-icon> Add Worker
+                    </button>
+                </div>
             </div>
             <div id="workers-table-body">
                 <div class="empty-state" id="empty-state">
@@ -232,6 +238,11 @@
                     </thead>
                     <tbody id="workers-tbody"></tbody>
                 </table>
+                <div id="see-more-workers-container" class="hidden" style="text-align: center; padding: var(--space-md); border-top: 1px solid var(--border-color);">
+                    <button class="btn btn-secondary" onclick="seeAllWorkers()" style="font-size: 0.85rem; border-radius: var(--radius-full); padding: 6px 16px;">
+                        See All Workers <iconify-icon icon="mdi:chevron-down" style="vertical-align: middle;"></iconify-icon>
+                    </button>
+                </div>
             </div>
         </div>
     </main>
@@ -258,15 +269,40 @@
                         <label class="form-label" for="worker-password">Password <span style="color: var(--error);">*</span></label>
                         <input type="password" id="worker-password" class="form-input" placeholder="Enter password" required>
                     </div>
+                    <div class="form-group">
+                        <label class="form-label" for="worker-phone">Phone Number <span style="color: var(--error);">*</span></label>
+                        <div style="display: flex; gap: 0; align-items: stretch; border-radius: var(--radius-btn); border: 1px solid var(--border-color); overflow: hidden;">
+                            <div style="background: var(--bg-main); padding: 0 12px; border-right: 1px solid var(--border-color); color: var(--text-secondary); display: flex; align-items: center; font-weight: 600; font-size: 0.85rem;">+91</div>
+                            <input type="tel" id="worker-phone" class="form-input" style="border: none; border-radius: 0; flex: 1;" placeholder="9876543210" maxlength="10">
+                        </div>
+                    </div>
+
+                    <!-- Granular Address -->
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
                         <div class="form-group">
-                            <label class="form-label" for="worker-phone">Phone</label>
-                            <input type="tel" id="worker-phone" class="form-input" placeholder="Phone number">
+                            <label class="form-label" for="worker-street">Street / Area <span style="color: var(--error);">*</span></label>
+                            <input type="text" id="worker-street" class="form-input" placeholder="e.g., MG Road" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="worker-area">Area</label>
-                            <input type="text" id="worker-area" class="form-input" placeholder="Assigned area">
+                            <label class="form-label" for="worker-taluk">Taluk <span style="color: var(--error);">*</span></label>
+                            <input type="text" id="worker-taluk" class="form-input" placeholder="e.g., Mangalore" required>
                         </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
+                        <div class="form-group">
+                            <label class="form-label" for="worker-district">District <span style="color: var(--error);">*</span></label>
+                            <input type="text" id="worker-district" class="form-input" placeholder="e.g., Dakshina Kannada" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="worker-state">State <span style="color: var(--error);">*</span></label>
+                            <input type="text" id="worker-state" class="form-input" placeholder="e.g., Karnataka" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="width: 50%;">
+                        <label class="form-label" for="worker-pincode">Pincode <span style="color: var(--error);">*</span></label>
+                        <input type="text" id="worker-pincode" class="form-input" placeholder="6-digit" maxlength="6" required>
                     </div>
                 </form>
             </div>
@@ -318,6 +354,22 @@
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closePatientDetailsModal()" style="min-height: 40px; padding: 0 16px;">Close Biodata</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Worker Details Modal -->
+    <div class="modal-overlay" id="worker-details-modal" style="z-index: 1050;">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 style="font-size: 1.1rem; color: var(--text-primary);">Worker Details</h3>
+                <button onclick="closeWorkerDetailsModal()" style="background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;">&times;</button>
+            </div>
+            <div class="modal-body" id="worker-details-body">
+                <!-- Dynamically populated -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeWorkerDetailsModal()" style="min-height: 40px; padding: 0 16px;">Close</button>
             </div>
         </div>
     </div>
@@ -378,10 +430,14 @@
             }
         }
 
+        let allWorkersList = [];
+
         function renderWorkers(workers) {
+            allWorkersList = workers;
             const tbody = document.getElementById('workers-tbody');
             const table = document.getElementById('workers-table');
             const emptyState = document.getElementById('empty-state');
+            const seeMoreContainer = document.getElementById('see-more-workers-container');
 
             // Stats
             document.getElementById('total-workers').textContent = workers.length;
@@ -389,17 +445,19 @@
             if (workers.length === 0) {
                 table.classList.add('hidden');
                 emptyState.classList.remove('hidden');
+                seeMoreContainer.classList.add('hidden');
                 return;
             }
 
             emptyState.classList.add('hidden');
             table.classList.remove('hidden');
+            
+            window.showingAllWorkers = false;
 
-            tbody.innerHTML = workers.map(w => `
-                <tr>
+            tbody.innerHTML = workers.map((w, index) => `
+                <tr class="worker-row ${index >= 3 ? 'hidden' : ''}">
                     <td>
-                        <div style="font-weight: 600; color: var(--gray-800); font-size: 0.8rem;">${w.name}</div>
-                        <div style="font-size: 0.65rem; color: var(--gray-400);">${w.area || '—'}</div>
+                        <div style="font-weight: 600; color: var(--primary); font-size: 0.85rem; cursor: pointer; text-decoration: underline;" onclick="openWorkerDetailsModal('${w._id}')">${w.name}</div>
                     </td>
                     <td style="font-size: 0.75rem;">${w.username}</td>
                     <td>
@@ -415,6 +473,61 @@
                     </td>
                 </tr>
             `).join('');
+
+            // If 3 or fewer workers exist, the see-more button naturally won't show!
+            if (workers.length > 3) {
+                seeMoreContainer.classList.remove('hidden');
+            } else {
+                seeMoreContainer.classList.add('hidden');
+            }
+        }
+
+        function openWorkerDetailsModal(workerId) {
+            const w = allWorkersList.find(x => x._id === workerId);
+            if (!w) return;
+            
+            document.getElementById('worker-details-body').innerHTML = `
+                <div style="text-align: center; margin-bottom: 24px;">
+                    <div style="width: 70px; height: 70px; background: var(--primary-light); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 600; margin: 0 auto 12px;">
+                        ${w.name.charAt(0).toUpperCase()}
+                    </div>
+                    <h4 style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 4px;">${w.name}</h4>
+                    <span class="badge ${w.isActive ? 'badge-success' : 'badge-danger'}">${w.isActive ? 'Active' : 'Inactive'}</span>
+                </div>
+                
+                <div style="background: var(--bg-main); padding: 16px; border-radius: var(--radius-card); margin-bottom: 16px;">
+                    <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">Contact Number</div>
+                    <div style="font-size: 1rem; color: var(--text-primary); margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                        <iconify-icon icon="mdi:phone" style="color: var(--primary);"></iconify-icon> +91 ${w.phone || 'Not provided'}
+                    </div>
+
+                    <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px;">Assigned Address</div>
+                    <div style="font-size: 0.95rem; color: var(--text-primary); display: flex; flex-direction: column; gap: 4px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <iconify-icon icon="mdi:map-marker-radius" style="color: var(--primary);"></iconify-icon>
+                            <span>${w.address?.street || '—'}</span>
+                        </div>
+                        <div style="padding-left: 24px; font-size: 0.85rem; color: var(--text-secondary);">
+                            ${w.address?.taluk || ''}, ${w.address?.district || ''}<br>
+                            ${w.address?.state || ''} - ${w.address?.pincode || ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('worker-details-modal').classList.add('active');
+        }
+
+        function closeWorkerDetailsModal() {
+            document.getElementById('worker-details-modal').classList.remove('active');
+        }
+
+        function seeAllWorkers() {
+            window.showingAllWorkers = true;
+            document.querySelectorAll('.worker-row').forEach(row => {
+                row.classList.remove('hidden');
+                row.style.display = '';
+            });
+            document.getElementById('see-more-workers-container').classList.add('hidden');
         }
 
         async function loadStats() {
@@ -449,6 +562,30 @@
                 }
             } catch (error) {
                 console.error('Failed to load stats', error);
+            }
+        }
+
+        function filterWorkers() {
+            const query = document.getElementById('worker-search').value.toLowerCase();
+            const rows = document.querySelectorAll('.worker-row');
+            const seeMoreContainer = document.getElementById('see-more-workers-container');
+
+            if (query === '' && !window.showingAllWorkers) {
+                // Reset to capped view
+                rows.forEach((row, idx) => {
+                    row.style.display = '';
+                    if (idx >= 3) row.classList.add('hidden');
+                    else row.classList.remove('hidden');
+                });
+                if (rows.length > 3) seeMoreContainer.classList.remove('hidden');
+            } else {
+                // Search across all and hide "See More" button
+                seeMoreContainer.classList.add('hidden');
+                rows.forEach(row => {
+                    row.classList.remove('hidden'); // allow overriding 'hidden' class with explicit display style
+                    const text = row.textContent.toLowerCase();
+                    row.style.display = text.includes(query) ? '' : 'none';
+                });
             }
         }
 
@@ -502,11 +639,16 @@
             if (!consultation || !consultation.patient) return;
             const p = consultation.patient;
             
-            const dob = p.dob ? new Date(p.dob).toLocaleDateString() : 'N/A';
-            const lmp = p.lastPeriodDate ? new Date(p.lastPeriodDate).toLocaleDateString() : 'N/A';
+            const dob = p.dateOfBirth ? new Date(p.dateOfBirth).toLocaleDateString('en-IN') : 'N/A';
+            const lmp = p.lmpDate ? new Date(p.lmpDate).toLocaleDateString('en-IN') : 'N/A';
+            const edd = p.edd ? new Date(p.edd).toLocaleDateString('en-IN') : 'N/A';
             const photoHtml = p.photo 
                 ? `<img src="${p.photo}" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-light);">`
                 : `<div style="width: 80px; height: 80px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 600;">${p.fullName.charAt(0)}</div>`;
+
+            const addressDetails = p.address 
+                ? `${p.address.street || ''}, ${p.address.taluk || ''}, ${p.address.district || ''}, ${p.address.state || ''} - ${p.address.pincode || ''}`
+                : 'N/A';
 
             document.getElementById('patient-details-body').innerHTML = `
                 <div style="display: flex; gap: 16px; margin-bottom: 24px; align-items: center;">
@@ -521,33 +663,37 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
                     <div style="background: var(--bg-main); padding: 12px; border-radius: var(--radius-card);">
                         <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Date of Birth</div>
-                        <div style="font-size: 0.95rem; font-weight: 500; color: var(--text-primary);">${dob}</div>
+                        <div style="font-size: 0.95rem; font-weight: 500; color: var(--text-primary);">${dob} (${p.age || '?'}y)</div>
                     </div>
                     <div style="background: var(--bg-main); padding: 12px; border-radius: var(--radius-card);">
                         <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Blood Group</div>
                         <div style="font-size: 0.95rem; font-weight: 500; color: var(--error);">${p.bloodGroup || 'N/A'}</div>
                     </div>
                     <div style="background: var(--bg-main); padding: 12px; border-radius: var(--radius-card);">
-                        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Last Period Date</div>
-                        <div style="font-size: 0.95rem; font-weight: 500; color: var(--text-primary);">${lmp}</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">LMP / EDD</div>
+                        <div style="font-size: 0.95rem; font-weight: 500; color: var(--text-primary);">${lmp} <span style="color:var(--text-muted); font-size: 0.8rem;">to</span> ${edd}</div>
                     </div>
                     <div style="background: var(--bg-main); padding: 12px; border-radius: var(--radius-card);">
-                        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Registered By</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Partner's Name</div>
+                        <div style="font-size: 0.95rem; font-weight: 500; color: var(--text-primary);">${p.husbandName || 'N/A'}</div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+                    <div style="background: var(--bg-main); padding: 12px; border-radius: var(--radius-card);">
+                        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Gravida / Para</div>
+                        <div style="font-size: 0.95rem; font-weight: 500; color: var(--text-primary);">G: ${p.gravida || 0} &nbsp;|&nbsp; P: ${p.para || 0}</div>
+                    </div>
+                    <div style="background: var(--bg-main); padding: 12px; border-radius: var(--radius-card);">
+                        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Consultation Initiated By</div>
                         <div style="font-size: 0.95rem; font-weight: 500; color: var(--text-primary);">${consultation.submittedBy?.name || 'Unknown'}</div>
                     </div>
                 </div>
 
                 <div style="margin-bottom: 16px;">
-                    <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">Address</div>
+                    <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">Full Address</div>
                     <div style="font-size: 0.9rem; color: var(--text-secondary); background: var(--bg-main); padding: 12px; border-radius: var(--radius-card);">
-                        ${p.address?.street || ''}, ${p.address?.city || ''}, ${p.address?.state || ''} - ${p.address?.pincode || ''}
-                    </div>
-                </div>
-
-                <div>
-                    <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">Medical Conditions</div>
-                    <div style="font-size: 0.9rem; color: var(--text-secondary); background: var(--bg-main); padding: 12px; border-radius: var(--radius-card);">
-                        ${p.medicalConditions || 'None reported.'}
+                        ${addressDetails}
                     </div>
                 </div>
             `;
@@ -605,7 +751,11 @@
                     document.getElementById('worker-name').value = data.worker.name;
                     document.getElementById('worker-username').value = data.worker.username;
                     document.getElementById('worker-phone').value = data.worker.phone || '';
-                    document.getElementById('worker-area').value = data.worker.area || '';
+                    document.getElementById('worker-street').value = data.worker.address?.street || '';
+                    document.getElementById('worker-taluk').value = data.worker.address?.taluk || '';
+                    document.getElementById('worker-district').value = data.worker.address?.district || '';
+                    document.getElementById('worker-state').value = data.worker.address?.state || '';
+                    document.getElementById('worker-pincode').value = data.worker.address?.pincode || '';
                     document.getElementById('worker-password').value = '';
                     document.getElementById('worker-password').required = false;
                     document.getElementById('password-group').querySelector('.form-label').innerHTML = 'Password <span style="font-weight:400;color:var(--gray-400);font-size:0.7rem">(leave blank to keep)</span>';
@@ -627,16 +777,26 @@
             const username = document.getElementById('worker-username').value.trim();
             const password = document.getElementById('worker-password').value;
             const phone = document.getElementById('worker-phone').value.trim();
-            const area = document.getElementById('worker-area').value.trim();
+            const street = document.getElementById('worker-street').value.trim();
+            const taluk = document.getElementById('worker-taluk').value.trim();
+            const district = document.getElementById('worker-district').value.trim();
+            const state = document.getElementById('worker-state').value.trim();
+            const pincode = document.getElementById('worker-pincode').value.trim();
 
             if (!name) { showToast('Name is required', 'error'); return; }
+            if (!/^[a-zA-Z\s]+$/.test(name)) { showToast('Name must only contain letters', 'error'); return; }
+            if (phone && !/^\d{10}$/.test(phone)) { showToast('Phone must be 10 digits', 'error'); return; }
+            if (!street || !taluk || !district || !state || !pincode) { showToast('All address fields are required', 'error'); return; }
+            if (!/^\d{6}$/.test(pincode)) { showToast('Pincode must be 6 digits', 'error'); return; }
+
+            const address = { street, taluk, district, state, pincode };
 
             const btn = document.getElementById('modal-submit-btn');
             btn.disabled = true;
 
             try {
                 if (editingWorker) {
-                    const body = { name, phone, area };
+                    const body = { name, phone, address };
                     if (password) body.password = password;
 
                     const res = await fetch(`${API_BASE}/admin/workers/${editingWorker._id}`, {
@@ -653,7 +813,7 @@
                         closeModal();
                         loadWorkers();
                     } else {
-                        showToast(data.message, 'error');
+                        showToast(data.message || 'Update failed', 'error');
                     }
                 } else {
                     if (!username || !password) { showToast('Username and password are required', 'error'); btn.disabled = false; return; }
@@ -664,7 +824,7 @@
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${token}`
                         },
-                        body: JSON.stringify({ name, username, password, phone, area })
+                        body: JSON.stringify({ name, username, password, phone, address })
                     });
                     const data = await res.json();
                     if (data.success) {
@@ -672,7 +832,7 @@
                         closeModal();
                         loadWorkers();
                     } else {
-                        showToast(data.message, 'error');
+                        showToast(data.message || 'Creation failed', 'error');
                     }
                 }
             } catch (error) {
@@ -713,6 +873,22 @@
         
         document.getElementById('patient-details-modal').addEventListener('click', (e) => {
             if (e.target === e.currentTarget) closePatientDetailsModal();
+        });
+        
+        document.getElementById('worker-details-modal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeWorkerDetailsModal();
+        });
+
+        // Letter only validation for worker name
+        document.getElementById('worker-name').addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/[^a-zA-Z\s]/g, '');
+        });
+
+        // Digit only for phone and pincode
+        ['worker-phone', 'worker-pincode'].forEach(id => {
+            document.getElementById(id).addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/\D/g, '');
+            });
         });
     </script>
 </body>
