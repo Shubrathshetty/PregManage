@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="description" content="Admin Dashboard - PregManage">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Admin Dashboard — PregManage</title>
@@ -17,6 +18,7 @@
             gap: var(--space-md);
             margin-bottom: var(--space-xl);
         }
+
         .stat-card {
             background: var(--bg-card);
             border-radius: var(--radius-card);
@@ -26,11 +28,13 @@
             transition: transform var(--transition-fast), box-shadow var(--transition-fast);
             border: 1px solid var(--border-color);
         }
+
         .stat-card:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow-hover);
             border-color: var(--primary-light);
         }
+
         .stat-card-value {
             font-size: 2rem;
             font-family: var(--font-heading);
@@ -38,12 +42,13 @@
             color: var(--primary);
             margin-bottom: 4px;
         }
+
         .stat-card-label {
             font-size: 0.8rem;
             font-weight: 500;
             color: var(--text-secondary);
         }
-        
+
         /* Table Styles */
         .table-container {
             background: var(--bg-card);
@@ -53,6 +58,7 @@
             overflow: hidden;
             margin-bottom: var(--space-xl);
         }
+
         .table-header {
             padding: var(--space-md) var(--space-lg);
             border-bottom: 1px solid var(--border-color);
@@ -61,21 +67,26 @@
             justify-content: space-between;
             background: var(--bg-main);
         }
+
         .table-title {
             font-size: 1.1rem;
             font-weight: 600;
             color: var(--text-primary);
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.85rem;
         }
-        th, td {
+
+        th,
+        td {
             text-align: left;
             padding: 14px var(--space-lg);
             border-bottom: 1px solid var(--border-color);
         }
+
         th {
             font-weight: 600;
             color: var(--text-secondary);
@@ -84,17 +95,23 @@
             font-size: 0.75rem;
             letter-spacing: 0.05em;
         }
-        tr:last-child td { border-bottom: none; }
-        
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
         .empty-state {
             padding: var(--space-xl) var(--space-lg);
             text-align: center;
         }
-        
+
         /* Modal Styles */
         .modal-overlay {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: rgba(15, 23, 42, 0.4);
             backdrop-filter: blur(4px);
             display: flex;
@@ -106,10 +123,12 @@
             transition: opacity var(--transition-fast);
             padding: var(--space-md);
         }
+
         .modal-overlay.active {
             opacity: 1;
             pointer-events: auto;
         }
+
         .modal {
             background: var(--bg-card);
             width: 100%;
@@ -119,9 +138,11 @@
             transform: scale(0.95);
             transition: transform var(--transition-fast);
         }
+
         .modal-overlay.active .modal {
             transform: scale(1);
         }
+
         .modal-header {
             padding: var(--space-lg);
             border-bottom: 1px solid var(--border-color);
@@ -129,7 +150,11 @@
             justify-content: space-between;
             align-items: center;
         }
-        .modal-body { padding: var(--space-lg); }
+
+        .modal-body {
+            padding: var(--space-lg);
+        }
+
         .modal-footer {
             padding: var(--space-lg);
             border-top: 1px solid var(--border-color);
@@ -139,7 +164,10 @@
             background: var(--bg-main);
             border-radius: 0 0 var(--radius-card) var(--radius-card);
         }
-        .hidden { display: none !important; }
+
+        .hidden {
+            display: none !important;
+        }
     </style>
 </head>
 
@@ -157,18 +185,23 @@
                 <div style="font-size: 0.85rem; font-weight: 600; color: #FFFFFF;" id="user-name">Administrator</div>
                 <div style="font-size: 0.7rem; color: rgba(255,255,255,0.8);">System Admin</div>
             </div>
-            <button class="btn btn-secondary" onclick="logout()" style="background: rgba(255,255,255,0.1); color: #FFFFFF; border: none; min-height: 36px; padding: 0 12px; font-size: 0.8rem; border-radius: var(--radius-full);">
+            <button class="btn btn-secondary" onclick="logout()"
+                style="background: rgba(255,255,255,0.1); color: #FFFFFF; border: none; min-height: 36px; padding: 0 12px; font-size: 0.8rem; border-radius: var(--radius-full);">
                 <iconify-icon icon="mdi:logout" style="margin-right: 4px;"></iconify-icon> Logout
             </button>
         </div>
     </header>
     <style>
-        @media (min-width: 360px) { #user-info-desktop { display: block !important; } }
+        @media (min-width: 360px) {
+            #user-info-desktop {
+                display: block !important;
+            }
+        }
     </style>
 
     <!-- Main Content -->
     <main class="container flex-col gap-lg">
-        
+
         <!-- Section Header -->
         <div style="margin-bottom: var(--space-md);">
             <h1 style="font-size: 1.5rem; color: var(--text-primary); font-weight: 700;">Admin Overview</h1>
@@ -183,26 +216,30 @@
             </div>
             <div class="stat-card" style="cursor: pointer;" onclick="window.location.href='/hospital-visits.html'">
                 <div class="stat-card-value" id="hospital-visits-count" style="color: var(--accent);">0</div>
-                <div class="stat-card-label" style="display: flex; align-items: center; gap: 6px; justify-content: center;">
+                <div class="stat-card-label"
+                    style="display: flex; align-items: center; gap: 6px; justify-content: center;">
                     <iconify-icon icon="mdi:hospital-building"></iconify-icon> Hospital Visits
                 </div>
             </div>
             <div class="stat-card" style="cursor: pointer;" onclick="window.location.href='/home-visits.html'">
                 <div class="stat-card-value" id="home-visits-count" style="color: var(--success);">0</div>
-                <div class="stat-card-label" style="display: flex; align-items: center; gap: 6px; justify-content: center;">
+                <div class="stat-card-label"
+                    style="display: flex; align-items: center; gap: 6px; justify-content: center;">
                     <iconify-icon icon="mdi:home-heart"></iconify-icon> Home Visits
                 </div>
             </div>
             <div class="stat-card" style="cursor: pointer;" onclick="openConsultationModal('Pending')">
                 <div class="stat-card-value" id="consultation-required-count" style="color: var(--error);">0</div>
-                <div class="stat-card-label" style="display: flex; align-items: center; gap: 6px; justify-content: center;">
-                    <iconify-icon icon="mdi:stethoscope"></iconify-icon> Cons. Req
+                <div class="stat-card-label"
+                    style="display: flex; align-items: center; gap: 6px; justify-content: center;">
+                    <iconify-icon icon="mdi:stethoscope"></iconify-icon> Consultation Scheduled
                 </div>
             </div>
             <div class="stat-card" style="cursor: pointer;" onclick="openConsultationModal('Completed')">
                 <div class="stat-card-value" id="consultation-completed-count" style="color: var(--success);">0</div>
-                <div class="stat-card-label" style="display: flex; align-items: center; gap: 6px; justify-content: center;">
-                    <iconify-icon icon="mdi:check-decagram"></iconify-icon> Cons. Done
+                <div class="stat-card-label"
+                    style="display: flex; align-items: center; gap: 6px; justify-content: center;">
+                    <iconify-icon icon="mdi:check-decagram"></iconify-icon> Consultation Done
                 </div>
             </div>
         </div>
@@ -213,19 +250,27 @@
                 <h2 class="table-title">Healthcare Workers</h2>
                 <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
                     <div style="position: relative;">
-                        <iconify-icon icon="mdi:magnify" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1.2rem;"></iconify-icon>
-                        <input type="text" id="worker-search" placeholder="Search by name, username, or area..." class="form-input" style="padding-left: 36px; min-height: 36px; font-size: 0.85rem; width: 260px;" onkeyup="filterWorkers()">
+                        <iconify-icon icon="mdi:magnify"
+                            style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1.2rem;"></iconify-icon>
+                        <input type="text" id="worker-search" placeholder="Search by name, username, or area..."
+                            class="form-input"
+                            style="padding-left: 36px; min-height: 36px; font-size: 0.85rem; width: 260px;"
+                            onkeyup="filterWorkers()">
                     </div>
-                    <button class="btn btn-primary" id="add-worker-btn" onclick="openAddModal()" style="min-height: 36px; padding: 0 16px; border-radius: var(--radius-full); font-size: 0.85rem;">
+                    <button class="btn btn-primary" id="add-worker-btn" onclick="openAddModal()"
+                        style="min-height: 36px; padding: 0 16px; border-radius: var(--radius-full); font-size: 0.85rem;">
                         <iconify-icon icon="mdi:account-plus" style="margin-right: 4px;"></iconify-icon> Add Worker
                     </button>
                 </div>
             </div>
             <div id="workers-table-body">
                 <div class="empty-state" id="empty-state">
-                    <iconify-icon icon="mdi:account-group" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 12px;"></iconify-icon>
-                    <h3 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 4px;">No workers registered</h3>
-                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Tap "Add Worker" to create the first account.</p>
+                    <iconify-icon icon="mdi:account-group"
+                        style="font-size: 3rem; color: var(--text-muted); margin-bottom: 12px;"></iconify-icon>
+                    <h3 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 4px;">No workers registered
+                    </h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Tap "Add Worker" to create the first
+                        account.</p>
                 </div>
                 <table id="workers-table" class="hidden">
                     <thead>
@@ -238,9 +283,12 @@
                     </thead>
                     <tbody id="workers-tbody"></tbody>
                 </table>
-                <div id="see-more-workers-container" class="hidden" style="text-align: center; padding: var(--space-md); border-top: 1px solid var(--border-color);">
-                    <button class="btn btn-secondary" onclick="seeAllWorkers()" style="font-size: 0.85rem; border-radius: var(--radius-full); padding: 6px 16px;">
-                        See All Workers <iconify-icon icon="mdi:chevron-down" style="vertical-align: middle;"></iconify-icon>
+                <div id="see-more-workers-container" class="hidden"
+                    style="text-align: center; padding: var(--space-md); border-top: 1px solid var(--border-color);">
+                    <button class="btn btn-secondary" onclick="seeAllWorkers()"
+                        style="font-size: 0.85rem; border-radius: var(--radius-full); padding: 6px 16px;">
+                        See All Workers <iconify-icon icon="mdi:chevron-down"
+                            style="vertical-align: middle;"></iconify-icon>
                     </button>
                 </div>
             </div>
@@ -252,63 +300,87 @@
         <div class="modal">
             <div class="modal-header">
                 <h3 style="font-size: 1.1rem; color: var(--text-primary);" id="modal-title">Add New Worker</h3>
-                <button onclick="closeModal()" style="background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;">&times;</button>
+                <button onclick="closeModal()"
+                    style="background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="worker-form">
                     <input type="hidden" id="worker-id">
                     <div class="form-group">
-                        <label class="form-label" for="worker-name">Full Name <span style="color: var(--error);">*</span></label>
+                        <label class="form-label" for="worker-name">Full Name <span
+                                style="color: var(--error);">*</span></label>
                         <input type="text" id="worker-name" class="form-input" placeholder="Enter full name" required>
                     </div>
                     <div class="form-group" id="username-group">
-                        <label class="form-label" for="worker-username">Username <span style="color: var(--error);">*</span></label>
-                        <input type="text" id="worker-username" class="form-input" placeholder="Enter username" required>
+                        <label class="form-label" for="worker-username">Username <span
+                                style="color: var(--error);">*</span></label>
+                        <input type="text" id="worker-username" class="form-input" placeholder="Enter username"
+                            required>
                     </div>
                     <div class="form-group" id="password-group">
-                        <label class="form-label" for="worker-password">Password <span style="color: var(--error);">*</span></label>
-                        <input type="password" id="worker-password" class="form-input" placeholder="Enter password" required>
+                        <label class="form-label" for="worker-password">Password <span
+                                style="color: var(--error);">*</span></label>
+                        <input type="password" id="worker-password" class="form-input" placeholder="Enter password"
+                            required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="worker-phone">Phone Number <span style="color: var(--error);">*</span></label>
-                        <div style="display: flex; gap: 0; align-items: stretch; border-radius: var(--radius-btn); border: 1px solid var(--border-color); overflow: hidden;">
-                            <div style="background: var(--bg-main); padding: 0 12px; border-right: 1px solid var(--border-color); color: var(--text-secondary); display: flex; align-items: center; font-weight: 600; font-size: 0.85rem;">+91</div>
-                            <input type="tel" id="worker-phone" class="form-input" style="border: none; border-radius: 0; flex: 1;" placeholder="9876543210" maxlength="10">
+                        <label class="form-label" for="worker-phone">Phone Number <span
+                                style="color: var(--error);">*</span></label>
+                        <div
+                            style="display: flex; gap: 0; align-items: stretch; border-radius: var(--radius-btn); border: 1px solid var(--border-color); overflow: hidden;">
+                            <div
+                                style="background: var(--bg-main); padding: 0 12px; border-right: 1px solid var(--border-color); color: var(--text-secondary); display: flex; align-items: center; font-weight: 600; font-size: 0.85rem;">
+                                +91</div>
+                            <input type="tel" id="worker-phone" class="form-input"
+                                style="border: none; border-radius: 0; flex: 1;" placeholder="9876543210"
+                                maxlength="10">
                         </div>
                     </div>
 
                     <!-- Granular Address -->
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
                         <div class="form-group">
-                            <label class="form-label" for="worker-street">Street / Area <span style="color: var(--error);">*</span></label>
-                            <input type="text" id="worker-street" class="form-input" placeholder="e.g., MG Road" required>
+                            <label class="form-label" for="worker-street">Street / Area <span
+                                    style="color: var(--error);">*</span></label>
+                            <input type="text" id="worker-street" class="form-input" placeholder="e.g., MG Road"
+                                required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="worker-taluk">Taluk <span style="color: var(--error);">*</span></label>
-                            <input type="text" id="worker-taluk" class="form-input" placeholder="e.g., Mangalore" required>
+                            <label class="form-label" for="worker-taluk">Taluk <span
+                                    style="color: var(--error);">*</span></label>
+                            <input type="text" id="worker-taluk" class="form-input" placeholder="e.g., Mangalore"
+                                required>
                         </div>
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
                         <div class="form-group">
-                            <label class="form-label" for="worker-district">District <span style="color: var(--error);">*</span></label>
-                            <input type="text" id="worker-district" class="form-input" placeholder="e.g., Dakshina Kannada" required>
+                            <label class="form-label" for="worker-district">District <span
+                                    style="color: var(--error);">*</span></label>
+                            <input type="text" id="worker-district" class="form-input"
+                                placeholder="e.g., Dakshina Kannada" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="worker-state">State <span style="color: var(--error);">*</span></label>
-                            <input type="text" id="worker-state" class="form-input" placeholder="e.g., Karnataka" required>
+                            <label class="form-label" for="worker-state">State <span
+                                    style="color: var(--error);">*</span></label>
+                            <input type="text" id="worker-state" class="form-input" placeholder="e.g., Karnataka"
+                                required>
                         </div>
                     </div>
 
                     <div class="form-group" style="width: 50%;">
-                        <label class="form-label" for="worker-pincode">Pincode <span style="color: var(--error);">*</span></label>
-                        <input type="text" id="worker-pincode" class="form-input" placeholder="6-digit" maxlength="6" required>
+                        <label class="form-label" for="worker-pincode">Pincode <span
+                                style="color: var(--error);">*</span></label>
+                        <input type="text" id="worker-pincode" class="form-input" placeholder="6-digit" maxlength="6"
+                            required>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal()" style="min-height: 40px; padding: 0 16px;">Cancel</button>
-                <button class="btn btn-primary" id="modal-submit-btn" onclick="submitWorker()" style="min-height: 40px; padding: 0 16px;">Create Worker</button>
+                <button class="btn btn-secondary" onclick="closeModal()"
+                    style="min-height: 40px; padding: 0 16px;">Cancel</button>
+                <button class="btn btn-primary" id="modal-submit-btn" onclick="submitWorker()"
+                    style="min-height: 40px; padding: 0 16px;">Create Worker</button>
             </div>
         </div>
     </div>
@@ -317,8 +389,10 @@
     <div class="modal-overlay" id="consultation-modal">
         <div class="modal" style="max-width: 600px;">
             <div class="modal-header">
-                <h3 style="font-size: 1.1rem; color: var(--text-primary);" id="consultation-modal-title">Consultations</h3>
-                <button onclick="closeConsultationModal()" style="background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;">&times;</button>
+                <h3 style="font-size: 1.1rem; color: var(--text-primary);" id="consultation-modal-title">Consultations
+                </h3>
+                <button onclick="closeConsultationModal()"
+                    style="background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;">&times;</button>
             </div>
             <div class="modal-body" style="max-height: 60vh; overflow-y: auto; padding: 0;">
                 <table style="width: 100%; border-collapse: collapse;">
@@ -332,12 +406,14 @@
                     <tbody id="consultation-tbody"></tbody>
                 </table>
                 <div id="consultation-empty-state" class="empty-state hidden">
-                    <iconify-icon icon="mdi:clipboard-text-outline" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 12px;"></iconify-icon>
+                    <iconify-icon icon="mdi:clipboard-text-outline"
+                        style="font-size: 3rem; color: var(--text-muted); margin-bottom: 12px;"></iconify-icon>
                     <p style="font-size: 0.85rem; color: var(--text-secondary);">No patients found in this category.</p>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeConsultationModal()" style="min-height: 40px; padding: 0 16px;">Close</button>
+                <button class="btn btn-secondary" onclick="closeConsultationModal()"
+                    style="min-height: 40px; padding: 0 16px;">Close</button>
             </div>
         </div>
     </div>
@@ -347,13 +423,15 @@
         <div class="modal" style="max-width: 500px;">
             <div class="modal-header">
                 <h3 style="font-size: 1.1rem; color: var(--text-primary);" id="patient-modal-title">Patient Biodata</h3>
-                <button onclick="closePatientDetailsModal()" style="background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;">&times;</button>
+                <button onclick="closePatientDetailsModal()"
+                    style="background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;">&times;</button>
             </div>
             <div class="modal-body" id="patient-details-body" style="max-height: 70vh; overflow-y: auto;">
                 <!-- Dynamically populated -->
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closePatientDetailsModal()" style="min-height: 40px; padding: 0 16px;">Close Biodata</button>
+                <button class="btn btn-secondary" onclick="closePatientDetailsModal()"
+                    style="min-height: 40px; padding: 0 16px;">Close Biodata</button>
             </div>
         </div>
     </div>
@@ -363,13 +441,15 @@
         <div class="modal" style="max-width: 400px;">
             <div class="modal-header">
                 <h3 style="font-size: 1.1rem; color: var(--text-primary);">Worker Details</h3>
-                <button onclick="closeWorkerDetailsModal()" style="background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;">&times;</button>
+                <button onclick="closeWorkerDetailsModal()"
+                    style="background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;">&times;</button>
             </div>
             <div class="modal-body" id="worker-details-body">
                 <!-- Dynamically populated -->
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeWorkerDetailsModal()" style="min-height: 40px; padding: 0 16px;">Close</button>
+                <button class="btn btn-secondary" onclick="closeWorkerDetailsModal()"
+                    style="min-height: 40px; padding: 0 16px;">Close</button>
             </div>
         </div>
     </div>
@@ -451,7 +531,7 @@
 
             emptyState.classList.add('hidden');
             table.classList.remove('hidden');
-            
+
             window.showingAllWorkers = false;
 
             tbody.innerHTML = workers.map((w, index) => `
@@ -485,7 +565,7 @@
         function openWorkerDetailsModal(workerId) {
             const w = allWorkersList.find(x => x._id === workerId);
             if (!w) return;
-            
+
             document.getElementById('worker-details-body').innerHTML = `
                 <div style="text-align: center; margin-bottom: 24px;">
                     <div style="width: 70px; height: 70px; background: var(--primary-light); color: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 600; margin: 0 auto 12px;">
@@ -556,7 +636,7 @@
                     allConsultations = dataC.consultations;
                     const pending = allConsultations.filter(c => c.consultationStatus !== 'Completed');
                     const completed = allConsultations.filter(c => c.consultationStatus === 'Completed');
-                    
+
                     document.getElementById('consultation-required-count').textContent = pending.length;
                     document.getElementById('consultation-completed-count').textContent = completed.length;
                 }
@@ -594,15 +674,15 @@
 
         function openConsultationModal(type) {
             document.getElementById('consultation-modal-title').textContent = type === 'Pending' ? 'Consultation Required' : 'Consultations Completed';
-            
+
             const list = allConsultations.filter(c => {
-                   if (type === 'Pending') return c.consultationStatus !== 'Completed';
-                   return c.consultationStatus === 'Completed';
+                if (type === 'Pending') return c.consultationStatus !== 'Completed';
+                return c.consultationStatus === 'Completed';
             });
 
             const tbody = document.getElementById('consultation-tbody');
             const emptyState = document.getElementById('consultation-empty-state');
-            
+
             if (list.length === 0) {
                 tbody.innerHTML = '';
                 emptyState.classList.remove('hidden');
@@ -618,10 +698,10 @@
                             <div style="font-size: 0.8rem; color: var(--text-secondary);">${c.submittedBy?.name || 'Unknown'}</div>
                         </td>
                         <td>
-                            ${type === 'Pending' 
-                                ? `<button class="btn btn-primary" style="min-height: 28px; padding: 4px 12px; font-size: 0.75rem; border-radius: var(--radius-full);" onclick="markConsultationComplete('${c._id}')">Mark Done</button>`
-                                : `<span class="badge ${c.consultationStatus === 'Completed' ? 'badge-success' : 'badge-primary'}">${c.consultationStatus}</span>`
-                            }
+                            ${type === 'Pending'
+                        ? `<button class="btn btn-primary" style="min-height: 28px; padding: 4px 12px; font-size: 0.75rem; border-radius: var(--radius-full);" onclick="markConsultationComplete('${c._id}')">Mark Done</button>`
+                        : `<span class="badge ${c.consultationStatus === 'Completed' ? 'badge-success' : 'badge-primary'}">${c.consultationStatus}</span>`
+                    }
                         </td>
                     </tr>
                 `).join('');
@@ -638,15 +718,15 @@
             const consultation = allConsultations.find(c => c.patient && c.patient._id === patientId);
             if (!consultation || !consultation.patient) return;
             const p = consultation.patient;
-            
+
             const dob = p.dateOfBirth ? new Date(p.dateOfBirth).toLocaleDateString('en-IN') : 'N/A';
             const lmp = p.lmpDate ? new Date(p.lmpDate).toLocaleDateString('en-IN') : 'N/A';
             const edd = p.edd ? new Date(p.edd).toLocaleDateString('en-IN') : 'N/A';
-            const photoHtml = p.photo 
+            const photoHtml = p.photo
                 ? `<img src="${p.photo}" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-light);">`
                 : `<div style="width: 80px; height: 80px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 600;">${p.fullName.charAt(0)}</div>`;
 
-            const addressDetails = p.address 
+            const addressDetails = p.address
                 ? `${p.address.street || ''}, ${p.address.taluk || ''}, ${p.address.district || ''}, ${p.address.state || ''} - ${p.address.pincode || ''}`
                 : 'N/A';
 
@@ -708,9 +788,9 @@
             try {
                 const res = await fetch(`${API_BASE}/admin/consultations/${id}/status`, {
                     method: 'PUT',
-                    headers: { 
+                    headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}` 
+                        'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify({ status: 'Completed' })
                 });
@@ -866,15 +946,15 @@
         document.getElementById('worker-modal').addEventListener('click', (e) => {
             if (e.target === e.currentTarget) closeModal();
         });
-        
+
         document.getElementById('consultation-modal').addEventListener('click', (e) => {
             if (e.target === e.currentTarget) closeConsultationModal();
         });
-        
+
         document.getElementById('patient-details-modal').addEventListener('click', (e) => {
             if (e.target === e.currentTarget) closePatientDetailsModal();
         });
-        
+
         document.getElementById('worker-details-modal').addEventListener('click', (e) => {
             if (e.target === e.currentTarget) closeWorkerDetailsModal();
         });
