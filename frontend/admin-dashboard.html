@@ -11,127 +11,254 @@
     <!-- Iconify Framework -->
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <style>
-        :root {
-            --app-header: var(--lavender-700);
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
         }
+        .stat-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: var(--space-md);
+            text-align: center;
+            box-shadow: var(--shadow-base);
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+            border: 1px solid var(--border-color);
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary-light);
+        }
+        .stat-card-value {
+            font-size: 2rem;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+        .stat-card-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        
+        /* Table Styles */
+        .table-container {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-base);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            margin-bottom: var(--space-xl);
+        }
+        .table-header {
+            padding: var(--space-md) var(--space-lg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-main);
+        }
+        .table-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        th, td {
+            text-align: left;
+            padding: 14px var(--space-lg);
+            border-bottom: 1px solid var(--border-color);
+        }
+        th {
+            font-weight: 600;
+            color: var(--text-secondary);
+            background: var(--bg-card);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+        tr:last-child td { border-bottom: none; }
+        
+        .empty-state {
+            padding: var(--space-xl) var(--space-lg);
+            text-align: center;
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition-fast);
+            padding: var(--space-md);
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal {
+            background: var(--bg-card);
+            width: 100%;
+            max-width: 440px;
+            border-radius: var(--radius-card);
+            box-shadow: var(--shadow-hover);
+            transform: scale(0.95);
+            transition: transform var(--transition-fast);
+        }
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+        .modal-header {
+            padding: var(--space-lg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-body { padding: var(--space-lg); }
+        .modal-footer {
+            padding: var(--space-lg);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            background: var(--bg-main);
+            border-radius: 0 0 var(--radius-card) var(--radius-card);
+        }
+        .hidden { display: none !important; }
     </style>
 </head>
 
 <body>
-    <div class="page-wrapper">
-        <!-- App Status Bar -->
-        <div class="app-status-bar">
-            <div class="strip-saffron"></div>
-            <div class="strip-white"></div>
-            <div class="strip-green"></div>
+    <!-- Professional App Header -->
+    <header class="app-header" style="background: var(--primary);">
+        <div class="brand-logo" style="color: #FFFFFF;">
+            <div class="brand-icon" style="background: rgba(255,255,255,0.2); color: #FFFFFF;">
+                <iconify-icon icon="mdi:shield-check"></iconify-icon>
+            </div>
+            PregManage Admin
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="text-align: right; display: none;" id="user-info-desktop">
+                <div style="font-size: 0.85rem; font-weight: 600; color: #FFFFFF;" id="user-name">Administrator</div>
+                <div style="font-size: 0.7rem; color: rgba(255,255,255,0.8);">System Admin</div>
+            </div>
+            <button class="btn btn-secondary" onclick="logout()" style="background: rgba(255,255,255,0.1); color: #FFFFFF; border: none; min-height: 36px; padding: 0 12px; font-size: 0.8rem; border-radius: var(--radius-full);">
+                <iconify-icon icon="mdi:logout" style="margin-right: 4px;"></iconify-icon> Logout
+            </button>
+        </div>
+    </header>
+    <style>
+        @media (min-width: 360px) { #user-info-desktop { display: block !important; } }
+    </style>
+
+    <!-- Main Content -->
+    <main class="container flex-col gap-lg">
+        
+        <!-- Section Header -->
+        <div style="margin-bottom: var(--space-md);">
+            <h1 style="font-size: 1.5rem; color: var(--text-primary); font-weight: 700;">Admin Overview</h1>
+            <p style="font-size: 0.85rem; color: var(--text-secondary);">Manage your health ecosystem at a glance</p>
         </div>
 
-        <!-- Navbar -->
-        <nav class="navbar">
-            <div class="navbar-brand">
-                <div class="logo-icon"><iconify-icon icon="mdi:human-pregnant"></iconify-icon></div>
-                <span>PregManage</span>
+        <!-- Stats -->
+        <div class="stats-grid" id="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-value" id="total-workers">0</div>
+                <div class="stat-card-label">Total Workers</div>
             </div>
-            <div class="navbar-user">
-                <div class="navbar-user-info">
-                    <div class="navbar-user-name" id="user-name">Administrator</div>
-                    <div class="navbar-user-role">Admin Panel</div>
+            <div class="stat-card" style="cursor: pointer;" onclick="window.location.href='/hospital-visits.html'">
+                <div class="stat-card-value" id="hospital-visits-count" style="color: var(--accent);">0</div>
+                <div class="stat-card-label" style="display: flex; align-items: center; gap: 6px; justify-content: center;">
+                    <iconify-icon icon="mdi:hospital-building"></iconify-icon> Hospital Visits
                 </div>
-                <button class="btn btn-ghost btn-sm" id="logout-btn" onclick="logout()">
-                    <iconify-icon icon="mdi:logout" style="margin-right: 4px; vertical-align: middle;"></iconify-icon> Logout
+            </div>
+            <div class="stat-card" style="cursor: pointer;" onclick="window.location.href='/home-visits.html'">
+                <div class="stat-card-value" id="home-visits-count" style="color: var(--success);">0</div>
+                <div class="stat-card-label" style="display: flex; align-items: center; gap: 6px; justify-content: center;">
+                    <iconify-icon icon="mdi:home-heart"></iconify-icon> Home Visits
+                </div>
+            </div>
+            <div class="stat-card" style="cursor: pointer;" onclick="openConsultationModal('Pending')">
+                <div class="stat-card-value" id="consultation-required-count" style="color: var(--error);">0</div>
+                <div class="stat-card-label" style="display: flex; align-items: center; gap: 6px; justify-content: center;">
+                    <iconify-icon icon="mdi:stethoscope"></iconify-icon> Cons. Req
+                </div>
+            </div>
+            <div class="stat-card" style="cursor: pointer;" onclick="openConsultationModal('Completed')">
+                <div class="stat-card-value" id="consultation-completed-count" style="color: var(--success);">0</div>
+                <div class="stat-card-label" style="display: flex; align-items: center; gap: 6px; justify-content: center;">
+                    <iconify-icon icon="mdi:check-decagram"></iconify-icon> Cons. Done
+                </div>
+            </div>
+        </div>
+
+        <!-- Workers Table -->
+        <div class="table-container" id="workers-view">
+            <div class="table-header">
+                <h2 class="table-title">Healthcare Workers</h2>
+                <button class="btn btn-primary" id="add-worker-btn" onclick="openAddModal()" style="min-height: 36px; padding: 0 16px; border-radius: var(--radius-full); font-size: 0.85rem;">
+                    <iconify-icon icon="mdi:account-plus" style="margin-right: 4px;"></iconify-icon> Add Worker
                 </button>
             </div>
-        </nav>
-
-        <!-- Main Content -->
-        <main class="container dashboard-content fade-in">
-            <!-- Section Header -->
-            <div style="margin-bottom: 24px;">
-                <h1 style="font-size: 1.5rem; color: var(--lavender-900); font-weight: 800;">Admin Overview</h1>
-                <p style="font-size: 0.85rem; color: var(--lavender-400);">Manage your health ecosystem at a glance</p>
+            <div id="workers-table-body">
+                <div class="empty-state" id="empty-state">
+                    <iconify-icon icon="mdi:account-group" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 12px;"></iconify-icon>
+                    <h3 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 4px;">No workers registered</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Tap "Add Worker" to create the first account.</p>
+                </div>
+                <table id="workers-table" class="hidden">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="workers-tbody"></tbody>
+                </table>
             </div>
-
-            <!-- Stats -->
-            <div class="stats-grid" id="stats-grid">
-                <div class="stat-card" style="border: 1.5px solid var(--lavender-200); background: white;">
-                    <div class="stat-card-value" id="total-workers" style="color: var(--lavender-700);">0</div>
-                    <div class="stat-card-label" style="color: var(--lavender-500);">Total Workers</div>
-                </div>
-                <div class="stat-card"
-                    style="cursor: pointer; border: 1.5px solid var(--lavender-300); background: var(--lavender-50);"
-                    onclick="window.location.href='/hospital-visits.html'">
-                    <div class="stat-card-value" id="hospital-visits-count" style="color: var(--lavender-800);">0</div>
-                    <div class="stat-card-label" style="font-weight: 600; color: var(--lavender-600); display: flex; align-items: center; gap: 6px; justify-content: center;">
-                        <iconify-icon icon="mdi:hospital-building"></iconify-icon> Hospital Visits
-                    </div>
-                    <div style="font-size: 0.65rem; color: var(--lavender-400); margin-top: 2px;">Review details <iconify-icon icon="mdi:arrow-right" style="vertical-align: middle;"></iconify-icon></div>
-                </div>
-                <div class="stat-card"
-                    style="cursor: pointer; border: 1.5px solid var(--lavender-300); background: var(--lavender-50);"
-                    onclick="window.location.href='/home-visits.html'">
-                    <div class="stat-card-value" id="home-visits-count" style="color: var(--lavender-800);">0</div>
-                    <div class="stat-card-label" style="font-weight: 600; color: var(--lavender-600); display: flex; align-items: center; gap: 6px; justify-content: center;">
-                        <iconify-icon icon="mdi:home-heart"></iconify-icon> Home Visits
-                    </div>
-                    <div style="font-size: 0.65rem; color: var(--lavender-400); margin-top: 2px;">Review details <iconify-icon icon="mdi:arrow-right" style="vertical-align: middle;"></iconify-icon></div>
-                </div>
-            </div>
-
-            <!-- Workers Table -->
-            <div class="table-container" id="workers-view" style="border-top: 1px solid var(--lavender-100);">
-                <div class="table-header">
-                    <h2 class="table-title" style="color: var(--lavender-900);">Anganwadi Workers</h2>
-                    <button class="btn btn-lavender btn-sm" id="add-worker-btn" onclick="openAddModal()" style="display: flex; align-items: center; gap: 4px;">
-                        <iconify-icon icon="mdi:account-plus"></iconify-icon> Add Worker
-                    </button>
-                </div>
-                <div id="workers-table-body">
-                    <div class="empty-state" id="empty-state">
-                        <div class="empty-state-icon">👩‍⚕️</div>
-                        <h3 class="empty-state-title">No workers yet</h3>
-                        <p class="empty-state-desc">Tap "Add" to create your first Anganwadi worker account.</p>
-                    </div>
-                    <table id="workers-table" class="hidden">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Username</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="workers-tbody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </main>
-    </div>
+        </div>
+    </main>
 
     <!-- Add/Edit Worker Modal -->
     <div class="modal-overlay" id="worker-modal">
         <div class="modal">
             <div class="modal-header">
-                <h3 class="modal-title" id="modal-title">Add New Worker</h3>
-                <button class="modal-close" onclick="closeModal()">&times;</button>
+                <h3 style="font-size: 1.1rem; color: var(--text-primary);" id="modal-title">Add New Worker</h3>
+                <button onclick="closeModal()" style="background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="worker-form">
                     <input type="hidden" id="worker-id">
                     <div class="form-group">
-                        <label class="form-label" for="worker-name">Full Name <span class="required">*</span></label>
+                        <label class="form-label" for="worker-name">Full Name <span style="color: var(--error);">*</span></label>
                         <input type="text" id="worker-name" class="form-input" placeholder="Enter full name" required>
                     </div>
                     <div class="form-group" id="username-group">
-                        <label class="form-label" for="worker-username">Username <span class="required">*</span></label>
-                        <input type="text" id="worker-username" class="form-input" placeholder="Enter username"
-                            required>
+                        <label class="form-label" for="worker-username">Username <span style="color: var(--error);">*</span></label>
+                        <input type="text" id="worker-username" class="form-input" placeholder="Enter username" required>
                     </div>
                     <div class="form-group" id="password-group">
-                        <label class="form-label" for="worker-password">Password <span class="required">*</span></label>
-                        <input type="password" id="worker-password" class="form-input" placeholder="Enter password"
-                            required>
+                        <label class="form-label" for="worker-password">Password <span style="color: var(--error);">*</span></label>
+                        <input type="password" id="worker-password" class="form-input" placeholder="Enter password" required>
                     </div>
-                    <div class="form-row">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
                         <div class="form-group">
                             <label class="form-label" for="worker-phone">Phone</label>
                             <input type="tel" id="worker-phone" class="form-input" placeholder="Phone number">
@@ -144,9 +271,53 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary btn-sm" onclick="closeModal()">Cancel</button>
-                <button class="btn btn-primary btn-sm" id="modal-submit-btn" onclick="submitWorker()">Create
-                    Worker</button>
+                <button class="btn btn-secondary" onclick="closeModal()" style="min-height: 40px; padding: 0 16px;">Cancel</button>
+                <button class="btn btn-primary" id="modal-submit-btn" onclick="submitWorker()" style="min-height: 40px; padding: 0 16px;">Create Worker</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Consultation List Modal -->
+    <div class="modal-overlay" id="consultation-modal">
+        <div class="modal" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 style="font-size: 1.1rem; color: var(--text-primary);" id="consultation-modal-title">Consultations</h3>
+                <button onclick="closeConsultationModal()" style="background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;">&times;</button>
+            </div>
+            <div class="modal-body" style="max-height: 60vh; overflow-y: auto; padding: 0;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead style="position: sticky; top: 0; background: var(--bg-card); z-index: 10;">
+                        <tr>
+                            <th>Patient Info</th>
+                            <th>Worker</th>
+                            <th>Status/Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="consultation-tbody"></tbody>
+                </table>
+                <div id="consultation-empty-state" class="empty-state hidden">
+                    <iconify-icon icon="mdi:clipboard-text-outline" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 12px;"></iconify-icon>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">No patients found in this category.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeConsultationModal()" style="min-height: 40px; padding: 0 16px;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Patient Details Modal -->
+    <div class="modal-overlay" id="patient-details-modal" style="z-index: 1050;">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 style="font-size: 1.1rem; color: var(--text-primary);" id="patient-modal-title">Patient Biodata</h3>
+                <button onclick="closePatientDetailsModal()" style="background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;">&times;</button>
+            </div>
+            <div class="modal-body" id="patient-details-body" style="max-height: 70vh; overflow-y: auto;">
+                <!-- Dynamically populated -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closePatientDetailsModal()" style="min-height: 40px; padding: 0 16px;">Close Biodata</button>
             </div>
         </div>
     </div>
@@ -263,12 +434,152 @@
                 if (dataV.success) {
                     document.getElementById('home-visits-count').textContent = dataV.visits.length;
                 }
+
+                const resC = await fetch(`${API_BASE}/admin/consultations`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const dataC = await resC.json();
+                if (dataC.success) {
+                    allConsultations = dataC.consultations;
+                    const pending = allConsultations.filter(c => c.consultationStatus !== 'Completed');
+                    const completed = allConsultations.filter(c => c.consultationStatus === 'Completed');
+                    
+                    document.getElementById('consultation-required-count').textContent = pending.length;
+                    document.getElementById('consultation-completed-count').textContent = completed.length;
+                }
             } catch (error) {
                 console.error('Failed to load stats', error);
             }
         }
 
         let editingWorker = null;
+        let allConsultations = [];
+
+        function openConsultationModal(type) {
+            document.getElementById('consultation-modal-title').textContent = type === 'Pending' ? 'Consultation Required' : 'Consultations Completed';
+            
+            const list = allConsultations.filter(c => {
+                   if (type === 'Pending') return c.consultationStatus !== 'Completed';
+                   return c.consultationStatus === 'Completed';
+            });
+
+            const tbody = document.getElementById('consultation-tbody');
+            const emptyState = document.getElementById('consultation-empty-state');
+            
+            if (list.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                tbody.innerHTML = list.map(c => `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 600; color: var(--primary); font-size: 0.85rem; cursor: pointer;" onclick="openPatientDetailsModal('${c.patient?._id}')">${c.patient?.fullName || 'Unknown'} <iconify-icon icon="mdi:open-in-new" style="font-size: 0.75rem;"></iconify-icon></div>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary);"><iconify-icon icon="mdi:phone-outline" style="vertical-align: middle;"></iconify-icon> ${c.patient?.phone || 'N/A'}</div>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">${c.submittedBy?.name || 'Unknown'}</div>
+                        </td>
+                        <td>
+                            ${type === 'Pending' 
+                                ? `<button class="btn btn-primary" style="min-height: 28px; padding: 4px 12px; font-size: 0.75rem; border-radius: var(--radius-full);" onclick="markConsultationComplete('${c._id}')">Mark Done</button>`
+                                : `<span class="badge ${c.consultationStatus === 'Completed' ? 'badge-success' : 'badge-primary'}">${c.consultationStatus}</span>`
+                            }
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            document.getElementById('consultation-modal').classList.add('active');
+        }
+
+        function closeConsultationModal() {
+            document.getElementById('consultation-modal').classList.remove('active');
+        }
+
+        function openPatientDetailsModal(patientId) {
+            const consultation = allConsultations.find(c => c.patient && c.patient._id === patientId);
+            if (!consultation || !consultation.patient) return;
+            const p = consultation.patient;
+            
+            const dob = p.dob ? new Date(p.dob).toLocaleDateString() : 'N/A';
+            const lmp = p.lastPeriodDate ? new Date(p.lastPeriodDate).toLocaleDateString() : 'N/A';
+            const photoHtml = p.photo 
+                ? `<img src="${p.photo}" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-light);">`
+                : `<div style="width: 80px; height: 80px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 600;">${p.fullName.charAt(0)}</div>`;
+
+            document.getElementById('patient-details-body').innerHTML = `
+                <div style="display: flex; gap: 16px; margin-bottom: 24px; align-items: center;">
+                    ${photoHtml}
+                    <div>
+                        <h4 style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 4px;">${p.fullName}</h4>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary); display: flex; align-items: center; gap: 6px;"><iconify-icon icon="mdi:phone"></iconify-icon> ${p.phone}</div>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary); display: flex; align-items: center; gap: 6px;"><iconify-icon icon="mdi:identifier"></iconify-icon> ${p.aadhaar}</div>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+                    <div style="background: var(--bg-main); padding: 12px; border-radius: var(--radius-card);">
+                        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Date of Birth</div>
+                        <div style="font-size: 0.95rem; font-weight: 500; color: var(--text-primary);">${dob}</div>
+                    </div>
+                    <div style="background: var(--bg-main); padding: 12px; border-radius: var(--radius-card);">
+                        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Blood Group</div>
+                        <div style="font-size: 0.95rem; font-weight: 500; color: var(--error);">${p.bloodGroup || 'N/A'}</div>
+                    </div>
+                    <div style="background: var(--bg-main); padding: 12px; border-radius: var(--radius-card);">
+                        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Last Period Date</div>
+                        <div style="font-size: 0.95rem; font-weight: 500; color: var(--text-primary);">${lmp}</div>
+                    </div>
+                    <div style="background: var(--bg-main); padding: 12px; border-radius: var(--radius-card);">
+                        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Registered By</div>
+                        <div style="font-size: 0.95rem; font-weight: 500; color: var(--text-primary);">${consultation.submittedBy?.name || 'Unknown'}</div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 16px;">
+                    <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">Address</div>
+                    <div style="font-size: 0.9rem; color: var(--text-secondary); background: var(--bg-main); padding: 12px; border-radius: var(--radius-card);">
+                        ${p.address?.street || ''}, ${p.address?.city || ''}, ${p.address?.state || ''} - ${p.address?.pincode || ''}
+                    </div>
+                </div>
+
+                <div>
+                    <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">Medical Conditions</div>
+                    <div style="font-size: 0.9rem; color: var(--text-secondary); background: var(--bg-main); padding: 12px; border-radius: var(--radius-card);">
+                        ${p.medicalConditions || 'None reported.'}
+                    </div>
+                </div>
+            `;
+            document.getElementById('patient-details-modal').classList.add('active');
+        }
+
+        function closePatientDetailsModal() {
+            document.getElementById('patient-details-modal').classList.remove('active');
+        }
+
+        async function markConsultationComplete(id) {
+            try {
+                const res = await fetch(`${API_BASE}/admin/consultations/${id}/status`, {
+                    method: 'PUT',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}` 
+                    },
+                    body: JSON.stringify({ status: 'Completed' })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast('Consultation marked as completed!');
+                    await loadStats(); // Refresh data
+                    openConsultationModal('Pending');
+                } else {
+                    showToast(data.message, 'error');
+                }
+            } catch (error) {
+                showToast('Server error.', 'error');
+            }
+        }
 
         function openAddModal() {
             editingWorker = null;
@@ -394,6 +705,14 @@
         // Close modal on backdrop click
         document.getElementById('worker-modal').addEventListener('click', (e) => {
             if (e.target === e.currentTarget) closeModal();
+        });
+        
+        document.getElementById('consultation-modal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeConsultationModal();
+        });
+        
+        document.getElementById('patient-details-modal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closePatientDetailsModal();
         });
     </script>
 </body>

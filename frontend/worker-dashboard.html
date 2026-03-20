@@ -11,79 +11,86 @@
     <!-- Iconify Framework -->
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <style>
-        :root {
-            --app-header: var(--lavender-700);
+        .welcome-card-role {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            opacity: 0.9;
+            margin-bottom: 4px;
+        }
+        .welcome-card-name {
+            font-size: 1.4rem;
+            font-weight: 700;
         }
     </style>
 </head>
 
 <body>
-    <div class="page-wrapper">
-        <!-- App Status Bar -->
-        <div class="app-status-bar">
-            <div class="strip-saffron"></div>
-            <div class="strip-white"></div>
-            <div class="strip-green"></div>
+    <!-- Professional App Header -->
+    <header class="app-header">
+        <div class="brand-logo">
+            <div class="brand-icon">
+                <iconify-icon icon="mdi:mother-nurse"></iconify-icon>
+            </div>
+            PregManage
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="text-align: right; display: none;" id="user-info-desktop">
+                <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary);" id="user-name">Worker</div>
+                <div style="font-size: 0.7rem; color: var(--text-secondary);">Healthcare Worker</div>
+            </div>
+            <button class="btn btn-secondary" onclick="logout()" style="min-height: 36px; padding: 0 12px; font-size: 0.8rem; border-radius: var(--radius-full);">
+                <iconify-icon icon="mdi:logout" style="margin-right: 4px;"></iconify-icon> Logout
+            </button>
+        </div>
+    </header>
+    <style>
+        @media (min-width: 360px) { #user-info-desktop { display: block !important; } }
+    </style>
+
+    <!-- Main Content -->
+    <main class="container flex-col gap-lg">
+        
+        <!-- Welcome Hero Card -->
+        <div class="card-hero" style="margin-bottom: var(--space-md);">
+            <div class="welcome-card-role">Anganwadi Worker</div>
+            <div class="welcome-card-name">Welcome, <span id="welcome-name">Worker</span> <iconify-icon icon="mdi:hand-wave" style="vertical-align: middle;"></iconify-icon></div>
         </div>
 
-        <!-- Navbar -->
-        <nav class="navbar">
-            <div class="navbar-brand">
-                <div class="logo-icon"><iconify-icon icon="mdi:human-pregnant"></iconify-icon></div>
-                <span>PregManage</span>
-            </div>
-            <div class="navbar-user">
-                <div class="navbar-user-info">
-                    <div class="navbar-user-name" id="user-name">Worker</div>
-                    <div class="navbar-user-role">Anganwadi Worker</div>
+        <div>
+            <h2 style="font-size: 1.25rem; color: var(--text-primary); font-weight: 700;">Patient Management</h2>
+            <p style="font-size: 0.85rem; color: var(--text-secondary);">Register and assess maternal health</p>
+        </div>
+
+        <!-- Dashboard Actions Grid -->
+        <div class="flex-col gap-md">
+            
+            <a href="/patient-register.html" class="card" style="display: flex; align-items: center; gap: 20px; border-left: 4px solid var(--accent); cursor: pointer;">
+                <div style="font-size: 2.2rem; color: var(--accent); background: var(--accent-light); padding: 12px; border-radius: var(--radius-full); display: flex;"><iconify-icon icon="mdi:account-plus"></iconify-icon></div>
+                <div>
+                    <h3 style="font-size: 1.1rem; color: var(--text-primary); font-weight: 600;">New Registration</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; margin-top: 4px;">Add a new expectant mother to the system</p>
                 </div>
-                <button class="btn btn-ghost btn-sm" id="logout-btn" onclick="logout()">
-                    <iconify-icon icon="mdi:logout" style="margin-right: 4px; vertical-align: middle;"></iconify-icon> Logout
-                </button>
-            </div>
-        </nav>
+            </a>
 
-        <!-- Main Content -->
-        <main class="container dashboard-content fade-in">
-            <!-- Welcome Card -->
-            <div class="welcome-card" style="background: linear-gradient(135deg, var(--lavender-600) 0%, var(--lavender-800) 100%); margin-bottom: 24px; box-shadow: 0 8px 24px rgba(139, 92, 246, 0.2);">
-                <div class="welcome-card-role">Anganwadi Worker</div>
-                <div class="welcome-card-name">Welcome, <span id="welcome-name">Worker</span> <iconify-icon icon="mdi:hand-wave" style="vertical-align: middle;"></iconify-icon></div>
-            </div>
+            <a href="/patient-search.html" class="card" style="display: flex; align-items: center; gap: 20px; border-left: 4px solid var(--primary); cursor: pointer;">
+                <div style="font-size: 2.2rem; color: var(--primary); background: var(--primary-light); padding: 12px; border-radius: var(--radius-full); display: flex;"><iconify-icon icon="mdi:account-search"></iconify-icon></div>
+                <div>
+                    <h3 style="font-size: 1.1rem; color: var(--text-primary); font-weight: 600;">Search Patients</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; margin-top: 4px;">Find existing records for health assessment</p>
+                </div>
+            </a>
 
-            <!-- Section Header -->
-            <div style="margin-bottom: 24px; padding-left: 4px;">
-                <h2 style="font-size: 1.25rem; color: var(--lavender-900); font-weight: 800;">Patient Management</h2>
-                <p style="font-size: 0.8rem; color: var(--lavender-400);">Register and assess maternal health</p>
-            </div>
+        </div>
 
-            <!-- Dashboard Actions -->
-            <div class="flex flex-col gap-lg">
-                <a href="/patient-register.html" class="card" style="display: flex; align-items: center; gap: 20px; border-left: 5px solid var(--lavender-500); padding: 24px;">
-                    <div style="font-size: 2.22rem; color: var(--lavender-600); display: flex;"><iconify-icon icon="mdi:account-plus"></iconify-icon></div>
-                    <div>
-                        <h3 style="font-size: 1.1rem; color: var(--lavender-900); font-weight: 700;">New Registration</h3>
-                        <p style="font-size: 0.8rem; color: var(--gray-500); line-height: 1.4;">Add a new pregnant woman to the system</p>
-                    </div>
-                </a>
+        <!-- Trust Badge -->
+        <div style="margin-top: var(--space-xl); padding: 16px; background: var(--bg-card); border-radius: var(--radius-card); border: 1px dashed var(--border-color); text-align: center;">
+            <p style="font-size: 0.75rem; color: var(--success); font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <iconify-icon icon="mdi:shield-check" style="font-size: 1.1rem;"></iconify-icon> Secure Medical Operations Portal
+            </p>
+        </div>
 
-                <a href="/patient-search.html" class="card" style="display: flex; align-items: center; gap: 20px; border-left: 5px solid var(--lavender-500); padding: 24px;">
-                    <div style="font-size: 2.22rem; color: var(--lavender-600); display: flex;"><iconify-icon icon="mdi:account-search"></iconify-icon></div>
-                    <div>
-                        <h3 style="font-size: 1.1rem; color: var(--lavender-900); font-weight: 700;">Search Patients</h3>
-                        <p style="font-size: 0.8rem; color: var(--gray-500); line-height: 1.4;">Find existing records for health assessment</p>
-                    </div>
-                </a>
-            </div>
-
-            <!-- Quick Info -->
-            <div style="margin-top: 40px; padding: 16px; background: var(--lavender-50); border-radius: var(--radius-md); border: 1px dashed var(--lavender-200); text-align: center;">
-                <p style="font-size: 0.75rem; color: var(--lavender-600); font-weight: 500;">
-                    🛡️ Secure Government Portal for Maternal Health
-                </p>
-            </div>
-        </main>
-    </div>
+    </main>
 
     <script>
         const token = localStorage.getItem('token');

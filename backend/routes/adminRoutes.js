@@ -139,4 +139,42 @@ router.get('/home-visits', verifyToken, requireAdmin, async (req, res) => {
     }
 });
 
+// Get all consultations (Needed & Completed)
+router.get('/consultations', verifyToken, requireAdmin, async (req, res) => {
+    try {
+        const consultations = await Questionnaire.find({ doctorConsultation: true })
+            .populate('patient') // Populate all patient fields for biodata view
+            .populate('submittedBy', 'name')
+            .sort({ submittedAt: -1 });
+
+        res.json({ success: true, consultations });
+    } catch (error) {
+        console.error('Get consultations error:', error);
+        res.status(500).json({ success: false, message: 'Server error.' });
+    }
+});
+
+// Update consultation status
+router.put('/consultations/:id/status', verifyToken, requireAdmin, async (req, res) => {
+    try {
+        const { status } = req.body;
+        const questionnaire = await Questionnaire.findById(req.params.id);
+
+        if (!questionnaire) {
+            return res.status(404).json({ success: false, message: 'Consultation record not found.' });
+        }
+
+        if (status === 'Completed' || status === 'Pending') {
+            questionnaire.consultationStatus = status;
+            await questionnaire.save();
+            return res.json({ success: true, message: `Consultation marked as ${status}.` });
+        }
+
+        res.status(400).json({ success: false, message: 'Invalid status.' });
+    } catch (error) {
+        console.error('Update consultation status error:', error);
+        res.status(500).json({ success: false, message: 'Server error.' });
+    }
+});
+
 module.exports = router;

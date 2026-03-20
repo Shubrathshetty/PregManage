@@ -14,253 +14,269 @@
 </head>
 
 <body>
-    <div class="page-wrapper">
-        <!-- App Status Bar -->
-        <div class="app-status-bar">
-            <div class="strip-saffron"></div>
-            <div class="strip-white"></div>
-            <div class="strip-green"></div>
+    <!-- Professional App Header -->
+    <header class="app-header">
+        <div class="brand-logo">
+            <div class="brand-icon">
+                <iconify-icon icon="mdi:account-plus"></iconify-icon>
+            </div>
+            PregManage
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="text-align: right; display: none;" id="user-info-desktop">
+                <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary);" id="user-name">Worker</div>
+                <div style="font-size: 0.7rem; color: var(--text-secondary);">Anganwadi Worker</div>
+            </div>
+            <button class="btn btn-secondary" onclick="logout()" style="min-height: 36px; padding: 0 12px; font-size: 0.8rem; border-radius: var(--radius-full);">
+                Logout
+            </button>
+        </div>
+    </header>
+    <style>
+        @media (min-width: 360px) { #user-info-desktop { display: block !important; } }
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: var(--space-xl) 0 var(--space-md);
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .section-header h2 {
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+        .section-icon {
+            font-size: 1.4rem;
+            color: var(--primary);
+        }
+    </style>
+
+    <!-- Main Content -->
+    <main class="container flex-col gap-lg">
+        
+        <a href="/worker-dashboard.html" onclick="history.back(); return false;" class="btn btn-secondary" style="width: auto; align-self: flex-start; padding: 0 12px; min-height: 40px; border-radius: var(--radius-full);">
+            <iconify-icon icon="mdi:arrow-left"></iconify-icon> Back
+        </a>
+
+        <div>
+            <h1 style="font-size: 1.4rem; color: var(--text-primary);">New Patient Registration</h1>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">Register an expectant mother for care tracking.</p>
         </div>
 
-        <!-- Navbar -->
-        <nav class="navbar">
-            <div class="navbar-brand">
-                <div class="logo-icon"><iconify-icon icon="mdi:account-plus"></iconify-icon></div>
-                <span>PregManage</span>
-            </div>
-            <div class="navbar-user">
-                <div class="navbar-user-info">
-                    <div class="navbar-user-name" id="user-name">Worker</div>
-                    <div class="navbar-user-role">Anganwadi Worker</div>
+        <div class="card">
+            <form id="register-form">
+                
+                <!-- Camera Capture -->
+                <div class="form-group" style="margin-bottom: var(--space-xl);">
+                    <label class="form-label">Patient Photo <span style="color: var(--error);">*</span></label>
+                    <div id="camera-container" style="background: var(--bg-main); border: 2px dashed var(--border-color); border-radius: var(--radius-card); padding: var(--space-md); text-align: center;">
+                        
+                        <!-- Camera Feed -->
+                        <div id="camera-feed-wrapper" style="position: relative; width: 100%; max-width: 320px; aspect-ratio: 4/3; margin: 0 auto; background: #000; border-radius: var(--radius-btn); overflow: hidden;">
+                            <video id="camera-feed" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
+                            <div id="camera-loading" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.7); color: white; display: none;">
+                                <iconify-icon icon="mdi:loading" class="spin" style="font-size: 2rem; margin-bottom: 8px;"></iconify-icon>
+                                <span>Starting camera...</span>
+                            </div>
+                        </div>
+
+                        <!-- Captured Photo Preview -->
+                        <div id="captured-preview-wrapper" style="position: relative; width: 100%; max-width: 320px; aspect-ratio: 4/3; margin: 0 auto; border-radius: var(--radius-btn); overflow: hidden; display: none;">
+                            <img id="captured-preview" alt="Captured photo" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+
+                        <canvas id="capture-canvas" style="display: none;"></canvas>
+
+                        <!-- Camera Controls -->
+                        <div style="margin-top: var(--space-md); display: flex; justify-content: center; gap: 8px;">
+                            <button type="button" class="btn btn-primary" id="capture-btn" onclick="capturePhoto()" style="min-height: 40px;">
+                                <iconify-icon icon="mdi:camera-iris" style="margin-right: 6px;"></iconify-icon> Capture
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="retake-btn" onclick="retakePhoto()" style="min-height: 40px; display: none;">
+                                <iconify-icon icon="mdi:camera-retake" style="margin-right: 6px;"></iconify-icon> Retake
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="switch-camera-btn" onclick="switchCamera()" style="min-height: 40px; display: none;">
+                                <iconify-icon icon="mdi:camera-flip" style="margin-right: 6px;"></iconify-icon> Switch
+                            </button>
+                        </div>
+                        
+                        <p id="camera-status" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">
+                            Position the patient and tap Capture
+                        </p>
+                    </div>
                 </div>
-                <button class="btn btn-ghost btn-sm" onclick="logout()">Logout</button>
-            </div>
-        </nav>
 
-        <!-- Main Content -->
-        <main class="container dashboard-content fade-in">
-            <a href="/worker-dashboard.html" onclick="history.back(); return false;" class="app-back-btn"><iconify-icon icon="mdi:arrow-left"></iconify-icon></a>
+                <!-- Personal Info -->
+                <div class="section-header">
+                    <iconify-icon icon="mdi:account-details" class="section-icon"></iconify-icon>
+                    <h2>Personal Information</h2>
+                </div>
 
-            <div class="page-header">
-                <h1 class="page-title">New Patient Registration</h1>
-                <p class="page-subtitle">Fill in the details below to register</p>
-            </div>
+                <div class="form-group">
+                    <label class="form-label" for="fullName">Full Name <span style="color: var(--error);">*</span></label>
+                    <input type="text" id="fullName" class="form-input" placeholder="Enter full name as per Aadhaar" required minlength="3">
+                </div>
 
-            <div class="card" style="padding: 16px;">
-                <form id="register-form">
-                    <!-- Camera Capture -->
-                    <div class="form-group" style="margin-bottom: 20px;">
-                        <label class="form-label">Patient Photo <span class="required">*</span></label>
-                        <div class="camera-container" id="camera-container">
-                            <!-- Camera Feed -->
-                            <div id="camera-feed-wrapper" class="camera-feed-wrapper">
-                                <video id="camera-feed" autoplay playsinline></video>
-                                <div id="camera-loading" class="camera-loading">
-                                    <div class="spinner"></div>
-                                    <p>Starting camera...</p>
-                                </div>
-                            </div>
-
-                            <!-- Captured Photo Preview (hidden initially) -->
-                            <div id="captured-preview-wrapper" class="camera-feed-wrapper hidden">
-                                <img id="captured-preview" alt="Captured photo">
-                            </div>
-
-                            <!-- Hidden Canvas for capture -->
-                            <canvas id="capture-canvas" class="hidden"></canvas>
-
-                            <!-- Camera Controls -->
-                            <div class="camera-controls">
-                                <button type="button" class="btn btn-primary btn-sm" id="capture-btn" onclick="capturePhoto()">
-                                    📸 Capture
-                                </button>
-                                <button type="button" class="btn btn-secondary btn-sm hidden" id="retake-btn"
-                                    onclick="retakePhoto()">
-                                    🔄 Retake
-                                </button>
-                                <button type="button" class="btn btn-ghost btn-sm hidden" id="switch-camera-btn"
-                                    onclick="switchCamera()">
-                                    🔄 Switch
-                                </button>
-                            </div>
-
-                            <p class="form-hint" style="text-align: center; margin-top: 6px;" id="camera-status">
-                                Position the patient and tap Capture
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Personal Info -->
-                    <div class="section-divider">
-                        <span class="section-divider-icon">👤</span>
-                        <h2>Personal Information</h2>
-                    </div>
-
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
                     <div class="form-group">
-                        <label class="form-label" for="fullName">Full Name <span class="required">*</span></label>
-                        <input type="text" id="fullName" class="form-input"
-                            placeholder="Enter full name as per Aadhaar" required minlength="3">
+                        <label class="form-label" for="dob">Date of Birth <span style="color: var(--error);">*</span></label>
+                        <input type="date" id="dob" class="form-input" required>
                     </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label" for="dob">Date of Birth <span class="required">*</span></label>
-                            <input type="date" id="dob" class="form-input" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="age">Age (Auto)</label>
-                            <input type="number" id="age" class="form-input" placeholder="—" readonly
-                                style="background: var(--gray-100); cursor: not-allowed;">
-                            <p class="form-hint" id="age-hint"></p>
-                        </div>
-                    </div>
-
                     <div class="form-group">
-                        <label class="form-label" for="husbandName">Husband's Name <span class="required">*</span></label>
-                        <input type="text" id="husbandName" class="form-input" placeholder="Enter husband's name"
-                            required minlength="3">
+                        <label class="form-label" for="age">Age (Auto)</label>
+                        <input type="number" id="age" class="form-input" placeholder="—" readonly style="background: var(--bg-main); color: var(--text-muted);">
+                        <p id="age-hint" style="font-size: 0.75rem; margin-top: 4px;"></p>
                     </div>
+                </div>
 
+                <div class="form-group">
+                    <label class="form-label" for="husbandName">Partner's Name <span style="color: var(--error);">*</span></label>
+                    <input type="text" id="husbandName" class="form-input" placeholder="Enter partner's name" required minlength="3">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="phone">Phone Number <span style="color: var(--error);">*</span></label>
+                    <input type="tel" id="phone" class="form-input" placeholder="e.g., 9876543210" maxlength="10" required>
+                    <p id="phone-hint" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">10-digit Indian mobile number</p>
+                </div>
+
+                <!-- Address Details -->
+                <div class="section-header">
+                    <iconify-icon icon="mdi:map-marker-radius" class="section-icon"></iconify-icon>
+                    <h2>Address Details</h2>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
                     <div class="form-group">
-                        <label class="form-label" for="phone">Phone Number <span class="required">*</span></label>
-                        <input type="tel" id="phone" class="form-input" placeholder="e.g., 9876543210"
-                            maxlength="10" required>
-                        <p class="form-hint" id="phone-hint">10-digit Indian mobile number (starts with 6-9)</p>
+                        <label class="form-label" for="addressVillage">Village/Town <span style="color: var(--error);">*</span></label>
+                        <input type="text" id="addressVillage" class="form-input" placeholder="e.g., Mangalore" required>
                     </div>
-
-                    <!-- Address Details -->
-                    <div class="section-divider">
-                        <span class="section-divider-icon">📍</span>
-                        <h2>Address Details</h2>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label" for="addressVillage">Village/Town <span class="required">*</span></label>
-                            <input type="text" id="addressVillage" class="form-input" placeholder="e.g., Mangalore"
-                                required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="addressDistrict">District <span class="required">*</span></label>
-                            <input type="text" id="addressDistrict" class="form-input"
-                                placeholder="e.g., Dakshina Kannada" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label" for="addressState">State <span class="required">*</span></label>
-                            <select id="addressState" class="form-select" required>
-                                <option value="">Select State</option>
-                                <option value="Andhra Pradesh">Andhra Pradesh</option>
-                                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
-                                <option value="Assam">Assam</option>
-                                <option value="Bihar">Bihar</option>
-                                <option value="Chhattisgarh">Chhattisgarh</option>
-                                <option value="Goa">Goa</option>
-                                <option value="Gujarat">Gujarat</option>
-                                <option value="Haryana">Haryana</option>
-                                <option value="Himachal Pradesh">Himachal Pradesh</option>
-                                <option value="Jharkhand">Jharkhand</option>
-                                <option value="Karnataka">Karnataka</option>
-                                <option value="Kerala">Kerala</option>
-                                <option value="Madhya Pradesh">Madhya Pradesh</option>
-                                <option value="Maharashtra">Maharashtra</option>
-                                <option value="Manipur">Manipur</option>
-                                <option value="Meghalaya">Meghalaya</option>
-                                <option value="Mizoram">Mizoram</option>
-                                <option value="Nagaland">Nagaland</option>
-                                <option value="Odisha">Odisha</option>
-                                <option value="Punjab">Punjab</option>
-                                <option value="Rajasthan">Rajasthan</option>
-                                <option value="Sikkim">Sikkim</option>
-                                <option value="Tamil Nadu">Tamil Nadu</option>
-                                <option value="Telangana">Telangana</option>
-                                <option value="Tripura">Tripura</option>
-                                <option value="Uttar Pradesh">Uttar Pradesh</option>
-                                <option value="Uttarakhand">Uttarakhand</option>
-                                <option value="West Bengal">West Bengal</option>
-                                <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
-                                <option value="Chandigarh">Chandigarh</option>
-                                <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
-                                <option value="Delhi">Delhi</option>
-                                <option value="Jammu and Kashmir">Jammu and Kashmir</option>
-                                <option value="Ladakh">Ladakh</option>
-                                <option value="Lakshadweep">Lakshadweep</option>
-                                <option value="Puducherry">Puducherry</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="addressPincode">Pincode <span class="required">*</span></label>
-                            <input type="text" id="addressPincode" class="form-input" placeholder="e.g., 575001"
-                                maxlength="6" required>
-                            <p class="form-hint" id="pincode-hint">6-digit postal code</p>
-                        </div>
-                    </div>
-
-                    <!-- Aadhaar -->
                     <div class="form-group">
-                        <label class="form-label" for="aadhaar">Aadhaar Number <span class="required">*</span></label>
-                        <input type="text" id="aadhaar" class="form-input" placeholder="e.g., 2345 6789 0123"
-                            maxlength="14" required>
-                        <p class="form-hint" id="aadhaar-hint">12-digit Aadhaar number (cannot start with 0 or 1)</p>
+                        <label class="form-label" for="addressDistrict">District <span style="color: var(--error);">*</span></label>
+                        <input type="text" id="addressDistrict" class="form-input" placeholder="e.g., Dakshina Kannada" required>
                     </div>
+                </div>
 
-                    <!-- Medical Info -->
-                    <div class="section-divider">
-                        <span class="section-divider-icon">🏥</span>
-                        <h2>Medical Information</h2>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label" for="lmpDate">LMP Date <span class="required">*</span></label>
-                            <input type="date" id="lmpDate" class="form-input" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="edd">EDD <span class="required">*</span></label>
-                            <input type="date" id="edd" class="form-input" required>
-                            <p class="form-hint" id="edd-hint"></p>
-                        </div>
-                    </div>
-
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
                     <div class="form-group">
-                        <label class="form-label" for="bloodGroup">Blood Group <span class="required">*</span></label>
-                        <select id="bloodGroup" class="form-select" required>
-                            <option value="">Select blood group</option>
-                            <option value="A+">A+</option>
-                            <option value="A-">A-</option>
-                            <option value="B+">B+</option>
-                            <option value="B-">B-</option>
-                            <option value="AB+">AB+</option>
-                            <option value="AB-">AB-</option>
-                            <option value="O+">O+</option>
-                            <option value="O-">O-</option>
+                        <label class="form-label" for="addressState">State <span style="color: var(--error);">*</span></label>
+                        <select id="addressState" class="form-select" required style="background-color: #FFFFFF;">
+                            <option value="">Select State</option>
+                            <option value="Andhra Pradesh">Andhra Pradesh</option>
+                            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                            <option value="Assam">Assam</option>
+                            <option value="Bihar">Bihar</option>
+                            <option value="Chhattisgarh">Chhattisgarh</option>
+                            <option value="Goa">Goa</option>
+                            <option value="Gujarat">Gujarat</option>
+                            <option value="Haryana">Haryana</option>
+                            <option value="Himachal Pradesh">Himachal Pradesh</option>
+                            <option value="Jharkhand">Jharkhand</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Kerala">Kerala</option>
+                            <option value="Madhya Pradesh">Madhya Pradesh</option>
+                            <option value="Maharashtra">Maharashtra</option>
+                            <option value="Manipur">Manipur</option>
+                            <option value="Meghalaya">Meghalaya</option>
+                            <option value="Mizoram">Mizoram</option>
+                            <option value="Nagaland">Nagaland</option>
+                            <option value="Odisha">Odisha</option>
+                            <option value="Punjab">Punjab</option>
+                            <option value="Rajasthan">Rajasthan</option>
+                            <option value="Sikkim">Sikkim</option>
+                            <option value="Tamil Nadu">Tamil Nadu</option>
+                            <option value="Telangana">Telangana</option>
+                            <option value="Tripura">Tripura</option>
+                            <option value="Uttar Pradesh">Uttar Pradesh</option>
+                            <option value="Uttarakhand">Uttarakhand</option>
+                            <option value="West Bengal">West Bengal</option>
+                            <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                            <option value="Chandigarh">Chandigarh</option>
+                            <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                            <option value="Delhi">Delhi</option>
+                            <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                            <option value="Ladakh">Ladakh</option>
+                            <option value="Lakshadweep">Lakshadweep</option>
+                            <option value="Puducherry">Puducherry</option>
                         </select>
                     </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label" for="gravida">Gravida <span class="required">*</span></label>
-                            <input type="number" id="gravida" class="form-input" placeholder="e.g., 1" min="1" required>
-                            <p class="form-hint">No. of Pregnancies</p>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="para">Para <span class="required">*</span></label>
-                            <input type="number" id="para" class="form-input" placeholder="e.g., 0" min="0" required>
-                            <p class="form-hint">No. of Deliveries</p>
-                        </div>
+                    <div class="form-group">
+                        <label class="form-label" for="addressPincode">Pincode <span style="color: var(--error);">*</span></label>
+                        <input type="text" id="addressPincode" class="form-input" placeholder="e.g., 575001" maxlength="6" required>
+                        <p id="pincode-hint" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">6-digit postal code</p>
                     </div>
+                </div>
 
-                    <div id="form-error" class="form-error" style="text-align: center; margin-bottom: 12px;"></div>
+                <!-- Aadhaar -->
+                <div class="form-group">
+                    <label class="form-label" for="aadhaar">Aadhaar Number <span style="color: var(--error);">*</span></label>
+                    <input type="text" id="aadhaar" class="form-input" placeholder="e.g., 2345 6789 0123" maxlength="14" required>
+                    <p id="aadhaar-hint" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">12-digit Aadhaar number (cannot start with 0 or 1)</p>
+                </div>
 
-                    <button type="submit" class="btn btn-primary btn-lg btn-full" id="submit-btn">
-                        Register Patient
-                    </button>
-                </form>
-            </div>
-        </main>
-    </div>
+                <!-- Medical Info -->
+                <div class="section-header">
+                    <iconify-icon icon="mdi:hospital-box" class="section-icon"></iconify-icon>
+                    <h2>Medical Information</h2>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
+                    <div class="form-group">
+                        <label class="form-label" for="lmpDate">LMP Date <span style="color: var(--error);">*</span></label>
+                        <input type="date" id="lmpDate" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="edd">EDD <span style="color: var(--error);">*</span></label>
+                        <input type="date" id="edd" class="form-input" required>
+                        <p id="edd-hint" style="font-size: 0.75rem; margin-top: 4px;"></p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="bloodGroup">Blood Group <span style="color: var(--error);">*</span></label>
+                    <select id="bloodGroup" class="form-select" required style="background-color: #FFFFFF;">
+                        <option value="">Select blood group</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                    </select>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
+                    <div class="form-group">
+                        <label class="form-label" for="gravida">Gravida <span style="color: var(--error);">*</span></label>
+                        <input type="number" id="gravida" class="form-input" placeholder="e.g., 1" min="1" required>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">No. of Pregnancies</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="para">Para <span style="color: var(--error);">*</span></label>
+                        <input type="number" id="para" class="form-input" placeholder="e.g., 0" min="0" required>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">No. of Deliveries</p>
+                    </div>
+                </div>
+
+                <div id="form-error" style="display: none; color: var(--error); text-align: center; font-weight: 500; margin-bottom: 16px;"></div>
+
+                <button type="submit" class="btn btn-primary" id="submit-btn" style="margin-top: var(--space-md);">
+                    <iconify-icon icon="mdi:check-circle" style="margin-right: 8px; font-size: 1.2rem;"></iconify-icon> Register Patient
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Medical Disclaimer Footer -->
+    <footer class="app-footer">
+        <p class="disclaimer-text">
+            <iconify-icon icon="mdi:information-outline" style="font-size: 1.1rem; color: var(--primary);"></iconify-icon>
+            Always consult your healthcare provider.
+        </p>
+    </footer>
 
     <div class="toast-container" id="toast-container"></div>
 

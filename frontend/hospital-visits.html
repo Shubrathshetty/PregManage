@@ -14,63 +14,63 @@
 </head>
 
 <body>
-    <div class="page-wrapper">
-        <!-- App Status Bar -->
-        <div class="app-status-bar">
-            <div class="strip-saffron"></div>
-            <div class="strip-white"></div>
-            <div class="strip-green"></div>
+    <!-- Professional App Header (Admin Theme) -->
+    <header class="app-header" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);">
+        <div class="brand-logo">
+            <div class="brand-icon" style="background: rgba(255,255,255,0.2); color: #FFF;">
+                <iconify-icon icon="mdi:hospital-building"></iconify-icon>
+            </div>
+            PregManage <span style="font-size: 0.7rem; font-weight: 500; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px; margin-left: 8px;">Admin</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="text-align: right; display: none;" id="user-info-desktop">
+                <div style="font-size: 0.85rem; font-weight: 600; color: #FFFFFF;" id="user-name">Administrator</div>
+                <div style="font-size: 0.7rem; color: rgba(255,255,255,0.8);">Admin Panel</div>
+            </div>
+            <button class="btn btn-secondary" onclick="logout()" style="min-height: 36px; padding: 0 12px; font-size: 0.8rem; border-radius: var(--radius-full); background: rgba(255,255,255,0.1); color: #FFF; border: none;">
+                <iconify-icon icon="mdi:logout" style="margin-right: 4px;"></iconify-icon> Logout
+            </button>
+        </div>
+    </header>
+    <style>@media (min-width: 360px) { #user-info-desktop { display: block !important; } }</style>
+
+    <!-- Main Content -->
+    <main class="container flex-col gap-lg">
+        
+        <a href="/admin-dashboard.html" onclick="history.back(); return false;" class="btn btn-secondary" style="width: auto; align-self: flex-start; padding: 0 12px; min-height: 40px; border-radius: var(--radius-full);">
+            <iconify-icon icon="mdi:arrow-left"></iconify-icon> Dashboard
+        </a>
+
+        <div>
+            <h1 style="font-size: 1.4rem; color: var(--text-primary);">Hospital Visits</h1>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">Scheduled hospital consultations for patients</p>
         </div>
 
-        <!-- Navbar -->
-        <nav class="navbar">
-            <div class="navbar-brand">
-                <div class="logo-icon">🤰</div>
-                <span>PregManage</span>
-            </div>
-            <div class="navbar-user">
-                <div class="navbar-user-info">
-                    <div class="navbar-user-name" id="user-name">Administrator</div>
-                    <div class="navbar-user-role">Admin Panel</div>
+        <!-- Visits List -->
+        <div class="card" style="padding: 0; overflow: hidden; border: 1px solid var(--border-color);">
+            <div id="visits-table-body">
+                <div style="text-align: center; padding: var(--space-xl) var(--space-md);" id="visits-empty-state" class="hidden">
+                    <iconify-icon icon="mdi:hospital-marker" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 12px;"></iconify-icon>
+                    <h3 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 4px;">No visits scheduled</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">When workers schedule hospital visits, they will appear here.</p>
                 </div>
-                <button class="btn btn-ghost btn-sm" onclick="logout()">Logout</button>
-            </div>
-        </nav>
-
-        <!-- Main Content -->
-        <main class="container dashboard-content fade-in">
-            <a href="/admin-dashboard.html" onclick="history.back(); return false;" class="app-back-btn">
-                <iconify-icon icon="mdi:arrow-left"></iconify-icon>
-            </a>
-
-            <div class="page-header">
-                <h1 class="page-title">Hospital Visits</h1>
-                <p class="page-subtitle">Scheduled hospital consultations for patients</p>
-            </div>
-
-            <!-- Visits List -->
-            <div class="table-container">
-                <div id="visits-table-body">
-                    <div class="empty-state hidden" id="visits-empty-state">
-                        <div class="empty-state-icon">🩺</div>
-                        <h3 class="empty-state-title">No visits scheduled</h3>
-                        <p class="empty-state-desc">When workers schedule hospital visits, they will appear here.</p>
-                    </div>
-                    <table id="visits-table" class="hidden">
-                        <thead>
+                
+                <div style="overflow-x: auto; width: 100%;">
+                    <table id="visits-table" class="hidden" style="width: 100%; border-collapse: collapse; text-align: left;">
+                        <thead style="background: var(--bg-main); border-bottom: 2px solid var(--border-color);">
                             <tr>
-                                <th>Patient</th>
-                                <th>Schedule</th>
-                                <th>Hospital</th>
-                                <th>Reported By</th>
+                                <th style="padding: 12px 16px; font-weight: 600; font-size: 0.85rem; color: var(--text-secondary);">Patient</th>
+                                <th style="padding: 12px 16px; font-weight: 600; font-size: 0.85rem; color: var(--text-secondary);">Schedule</th>
+                                <th style="padding: 12px 16px; font-weight: 600; font-size: 0.85rem; color: var(--text-secondary);">Hospital</th>
+                                <th style="padding: 12px 16px; font-weight: 600; font-size: 0.85rem; color: var(--text-secondary);">Reported By</th>
                             </tr>
                         </thead>
-                        <tbody id="visits-tbody"></tbody>
+                        <tbody id="visits-tbody" style="font-size: 0.9rem;"></tbody>
                     </table>
                 </div>
             </div>
-        </main>
-    </div>
+        </div>
+    </main>
 
     <div class="toast-container" id="toast-container"></div>
 
@@ -137,22 +137,22 @@
                 const hTime = details.time ? details.time : '';
 
                 return `
-                <tr>
-                    <td>
-                        <div style="font-weight: 600; color: var(--gray-800); font-size: 0.85rem;">${v.patient ? v.patient.fullName : 'Unknown'}</div>
-                        <div style="font-size: 0.7rem; color: var(--gray-400);">📞 ${v.patient ? v.patient.phone : '—'}</div>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 16px;">
+                        <div style="font-weight: 600; color: var(--text-primary); font-size: 0.95rem;">${v.patient ? v.patient.fullName : 'Unknown'}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); display: flex; align-items: center; gap: 4px; margin-top: 4px;"><iconify-icon icon="mdi:phone-outline"></iconify-icon> ${v.patient ? v.patient.phone : '—'}</div>
                     </td>
-                    <td>
-                        <span class="badge badge-warning" style="font-size: 0.7rem;">${hDate}</span>
-                        <div style="font-size: 0.7rem; color: var(--gray-500); margin-top: 4px;">${hTime}</div>
+                    <td style="padding: 16px;">
+                        <span style="font-size: 0.8rem; font-weight: 600; color: var(--primary); background: var(--primary-light); padding: 4px 8px; border-radius: 4px;">${hDate}</span>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 6px; display: flex; align-items: center; gap: 4px;"><iconify-icon icon="mdi:clock-outline"></iconify-icon> ${hTime}</div>
                     </td>
-                    <td>
-                        <div style="font-size: 0.8rem; font-weight: 500;">${details.hospitalName || '—'}</div>
-                        <div style="font-size: 0.65rem; color: var(--gray-400); max-width: 150px;">${details.location || ''}</div>
+                    <td style="padding: 16px;">
+                        <div style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary);">${details.hospitalName || '—'}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); max-width: 150px; line-height: 1.3; margin-top: 2px;">${details.location || ''}</div>
                     </td>
-                    <td>
-                        <div style="font-size: 0.8rem;">${v.submittedBy ? v.submittedBy.name : '—'}</div>
-                        <div style="font-size: 0.65rem; color: var(--gray-400);">${v.submittedBy ? (v.submittedBy.area || '') : ''}</div>
+                    <td style="padding: 16px;">
+                        <div style="font-size: 0.9rem; color: var(--text-primary);">${v.submittedBy ? v.submittedBy.name : '—'}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 2px;">${v.submittedBy ? (v.submittedBy.area || '') : ''}</div>
                     </td>
                 </tr>
             `}).join('');

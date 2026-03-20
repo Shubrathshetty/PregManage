@@ -14,177 +14,253 @@
 </head>
 
 <body>
-    <div class="page-wrapper">
-        <!-- App Status Bar -->
-        <div class="app-status-bar">
-            <div class="strip-saffron"></div>
-            <div class="strip-white"></div>
-            <div class="strip-green"></div>
+    <!-- Professional App Header -->
+    <header class="app-header">
+        <div class="brand-logo">
+            <div class="brand-icon">
+                <iconify-icon icon="mdi:clipboard-pulse"></iconify-icon>
+            </div>
+            PregManage
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="text-align: right; display: none;" id="user-info-desktop">
+                <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary);" id="user-name">Worker</div>
+                <div style="font-size: 0.7rem; color: var(--text-secondary);">Healthcare Worker</div>
+            </div>
+            <button class="btn btn-secondary" onclick="logout()" style="min-height: 36px; padding: 0 12px; font-size: 0.8rem; border-radius: var(--radius-full);">
+                <iconify-icon icon="mdi:logout" style="margin-right: 4px;"></iconify-icon> Logout
+            </button>
+        </div>
+    </header>
+    <style>
+        @media (min-width: 360px) { #user-info-desktop { display: block !important; } }
+        .question-card {
+            background: #FFFFFF;
+            border-radius: var(--radius-card);
+            padding: var(--space-md);
+            margin-bottom: var(--space-md);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            transition: border-color var(--transition-fast);
+        }
+        .question-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--primary-light);
+            border-radius: var(--radius-card) 0 0 var(--radius-card);
+        }
+        .question-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .question-number {
+            background: var(--primary-light);
+            color: var(--primary);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .question-text {
+            font-size: 1rem;
+            color: var(--text-primary);
+            line-height: 1.4;
+            padding-top: 2px;
+        }
+        .question-text strong {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        .toggle-group {
+            display: flex;
+            background: var(--bg-main);
+            border-radius: var(--radius-btn);
+            padding: 4px;
+            gap: 4px;
+        }
+        .toggle-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            border-radius: calc(var(--radius-btn) - 2px);
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .toggle-btn:hover { background: rgba(0,0,0,0.03); }
+        .toggle-btn.active-yes {
+            background: #FFFFFF;
+            color: var(--error);
+            box-shadow: var(--shadow-sm);
+        }
+        .toggle-btn.active-no {
+            background: #FFFFFF;
+            color: var(--success);
+            box-shadow: var(--shadow-sm);
+        }
+    </style>
+
+    <!-- Main Content -->
+    <main class="container flex-col gap-lg">
+        
+        <a href="/worker-dashboard.html" onclick="history.back(); return false;" class="btn btn-secondary" style="width: auto; align-self: flex-start; padding: 0 12px; min-height: 40px; border-radius: var(--radius-full);">
+            <iconify-icon icon="mdi:arrow-left"></iconify-icon> Back
+        </a>
+
+        <div>
+            <h1 style="font-size: 1.4rem; color: var(--text-primary);">Health Assessment</h1>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">Patient: <strong id="patient-name-display" style="color: var(--primary);">—</strong></p>
         </div>
 
-        <!-- Navbar -->
-        <nav class="navbar">
-            <div class="navbar-brand">
-                <div class="logo-icon">🤰</div>
-                <span>PregManage</span>
-            </div>
-            <div class="navbar-user">
-                <div class="navbar-user-info">
-                    <div class="navbar-user-name" id="user-name">Worker</div>
-                    <div class="navbar-user-role">Anganwadi Worker</div>
-                </div>
-                <button class="btn btn-ghost btn-sm" onclick="logout()">Logout</button>
-            </div>
-        </nav>
+        <div style="background: var(--primary-light); color: var(--primary); padding: var(--space-md); border-radius: var(--radius-card); display: flex; gap: 12px; align-items: flex-start; font-size: 0.85rem; line-height: 1.5;">
+            <iconify-icon icon="mdi:information-outline" style="font-size: 1.4rem; flex-shrink: 0; margin-top: 2px;"></iconify-icon>
+            <div>Please answer all 10 questions by selecting <strong>Yes</strong> or <strong>No</strong> for each. This helps assess the patient's current health status.</div>
+        </div>
 
-        <!-- Main Content -->
-        <main class="container dashboard-content fade-in">
-            <a href="/worker-dashboard.html" onclick="history.back(); return false;" class="app-back-btn">
-                <iconify-icon icon="mdi:arrow-left"></iconify-icon>
-            </a>
-
-            <div class="page-header">
-                <h1 class="page-title">Health Questionnaire</h1>
-                <p class="page-subtitle">Patient: <strong id="patient-name-display">—</strong></p>
-            </div>
-
-            <div class="info-banner">
-                <span class="info-banner-icon">📋</span>
-                <span class="info-banner-text">Please answer all 10 questions by selecting <strong>Yes</strong> or <strong>No</strong> for each. This helps assess the patient's current health status.</span>
-            </div>
-
-            <form id="questionnaire-form">
-                <!-- Question 1 -->
-                <div class="question-card fade-in" style="animation-delay: 0.05s;">
+        <form id="questionnaire-form" style="margin-top: 8px;">
+            <!-- Question 1 -->
+            <div class="question-card fade-in" style="animation-delay: 0.05s;">
+                <div class="question-header">
                     <div class="question-number">1</div>
                     <div class="question-text">Any <strong>bleeding or spotting</strong>?</div>
-                    <div class="toggle-group" data-question="q1_bleeding">
-                        <button type="button" class="toggle-btn" data-value="true"
-                            onclick="toggleAnswer(this)">Yes</button>
-                        <button type="button" class="toggle-btn" data-value="false"
-                            onclick="toggleAnswer(this)">No</button>
-                    </div>
                 </div>
+                <div class="toggle-group" data-question="q1_bleeding">
+                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes</button>
+                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No</button>
+                </div>
+            </div>
 
-                <!-- Question 2 -->
-                <div class="question-card fade-in" style="animation-delay: 0.1s;">
+            <!-- Question 2 -->
+            <div class="question-card fade-in" style="animation-delay: 0.1s;">
+                <div class="question-header">
                     <div class="question-number">2</div>
                     <div class="question-text"><strong>Severe headaches or blurred vision</strong>?</div>
-                    <div class="toggle-group" data-question="q2_headache_vision">
-                        <button type="button" class="toggle-btn" data-value="true"
-                            onclick="toggleAnswer(this)">Yes</button>
-                        <button type="button" class="toggle-btn" data-value="false"
-                            onclick="toggleAnswer(this)">No</button>
-                    </div>
                 </div>
+                <div class="toggle-group" data-question="q2_headache_vision">
+                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes</button>
+                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No</button>
+                </div>
+            </div>
 
-                <!-- Question 3 -->
-                <div class="question-card fade-in" style="animation-delay: 0.15s;">
+            <!-- Question 3 -->
+            <div class="question-card fade-in" style="animation-delay: 0.15s;">
+                <div class="question-header">
                     <div class="question-number">3</div>
                     <div class="question-text"><strong>Swelling</strong> in hands, feet, or face?</div>
-                    <div class="toggle-group" data-question="q3_swelling">
-                        <button type="button" class="toggle-btn" data-value="true"
-                            onclick="toggleAnswer(this)">Yes</button>
-                        <button type="button" class="toggle-btn" data-value="false"
-                            onclick="toggleAnswer(this)">No</button>
-                    </div>
                 </div>
+                <div class="toggle-group" data-question="q3_swelling">
+                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes</button>
+                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No</button>
+                </div>
+            </div>
 
-                <!-- Question 4 -->
-                <div class="question-card fade-in" style="animation-delay: 0.2s;">
+            <!-- Question 4 -->
+            <div class="question-card fade-in" style="animation-delay: 0.2s;">
+                <div class="question-header">
                     <div class="question-number">4</div>
                     <div class="question-text"><strong>Persistent nausea or vomiting</strong>?</div>
-                    <div class="toggle-group" data-question="q4_nausea_vomiting">
-                        <button type="button" class="toggle-btn" data-value="true"
-                            onclick="toggleAnswer(this)">Yes</button>
-                        <button type="button" class="toggle-btn" data-value="false"
-                            onclick="toggleAnswer(this)">No</button>
-                    </div>
                 </div>
+                <div class="toggle-group" data-question="q4_nausea_vomiting">
+                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes</button>
+                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No</button>
+                </div>
+            </div>
 
-                <!-- Question 5 -->
-                <div class="question-card fade-in" style="animation-delay: 0.25s;">
+            <!-- Question 5 -->
+            <div class="question-card fade-in" style="animation-delay: 0.25s;">
+                <div class="question-header">
                     <div class="question-number">5</div>
                     <div class="question-text"><strong>Reduced or no fetal movement</strong>?</div>
-                    <div class="toggle-group" data-question="q5_fetal_movement">
-                        <button type="button" class="toggle-btn" data-value="true"
-                            onclick="toggleAnswer(this)">Yes</button>
-                        <button type="button" class="toggle-btn" data-value="false"
-                            onclick="toggleAnswer(this)">No</button>
-                    </div>
                 </div>
+                <div class="toggle-group" data-question="q5_fetal_movement">
+                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes</button>
+                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No</button>
+                </div>
+            </div>
 
-                <!-- Question 6 -->
-                <div class="question-card fade-in" style="animation-delay: 0.3s;">
+            <!-- Question 6 -->
+            <div class="question-card fade-in" style="animation-delay: 0.3s;">
+                <div class="question-header">
                     <div class="question-number">6</div>
                     <div class="question-text"><strong>Abdominal pain or cramping</strong>?</div>
-                    <div class="toggle-group" data-question="q6_abdominal_pain">
-                        <button type="button" class="toggle-btn" data-value="true"
-                            onclick="toggleAnswer(this)">Yes</button>
-                        <button type="button" class="toggle-btn" data-value="false"
-                            onclick="toggleAnswer(this)">No</button>
-                    </div>
                 </div>
+                <div class="toggle-group" data-question="q6_abdominal_pain">
+                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes</button>
+                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No</button>
+                </div>
+            </div>
 
-                <!-- Question 7 -->
-                <div class="question-card fade-in" style="animation-delay: 0.35s;">
+            <!-- Question 7 -->
+            <div class="question-card fade-in" style="animation-delay: 0.35s;">
+                <div class="question-header">
                     <div class="question-number">7</div>
                     <div class="question-text"><strong>Fever or chills</strong>?</div>
-                    <div class="toggle-group" data-question="q7_fever_chills">
-                        <button type="button" class="toggle-btn" data-value="true"
-                            onclick="toggleAnswer(this)">Yes</button>
-                        <button type="button" class="toggle-btn" data-value="false"
-                            onclick="toggleAnswer(this)">No</button>
-                    </div>
                 </div>
+                <div class="toggle-group" data-question="q7_fever_chills">
+                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes</button>
+                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No</button>
+                </div>
+            </div>
 
-                <!-- Question 8 -->
-                <div class="question-card fade-in" style="animation-delay: 0.4s;">
+            <!-- Question 8 -->
+            <div class="question-card fade-in" style="animation-delay: 0.4s;">
+                <div class="question-header">
                     <div class="question-number">8</div>
                     <div class="question-text"><strong>Difficulty breathing or chest pain</strong>?</div>
-                    <div class="toggle-group" data-question="q8_breathing_chest">
-                        <button type="button" class="toggle-btn" data-value="true"
-                            onclick="toggleAnswer(this)">Yes</button>
-                        <button type="button" class="toggle-btn" data-value="false"
-                            onclick="toggleAnswer(this)">No</button>
-                    </div>
                 </div>
+                <div class="toggle-group" data-question="q8_breathing_chest">
+                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes</button>
+                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No</button>
+                </div>
+            </div>
 
-                <!-- Question 9 -->
-                <div class="question-card fade-in" style="animation-delay: 0.45s;">
+            <!-- Question 9 -->
+            <div class="question-card fade-in" style="animation-delay: 0.45s;">
+                <div class="question-header">
                     <div class="question-number">9</div>
-                    <div class="question-text">Taking <strong>iron/folic acid supplements</strong> regularly?</div>
-                    <div class="toggle-group" data-question="q9_supplements">
-                        <button type="button" class="toggle-btn" data-value="true"
-                            onclick="toggleAnswer(this)">Yes</button>
-                        <button type="button" class="toggle-btn" data-value="false"
-                            onclick="toggleAnswer(this)">No</button>
-                    </div>
+                    <div class="question-text">Taking <strong>iron/folic acid supplements</strong>?</div>
                 </div>
+                <div class="toggle-group" data-question="q9_supplements">
+                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes</button>
+                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No</button>
+                </div>
+            </div>
 
-                <!-- Question 10 -->
-                <div class="question-card fade-in" style="animation-delay: 0.5s;">
+            <!-- Question 10 -->
+            <div class="question-card fade-in" style="animation-delay: 0.5s;">
+                <div class="question-header">
                     <div class="question-number">10</div>
                     <div class="question-text">Attended <strong>last antenatal checkup</strong>?</div>
-                    <div class="toggle-group" data-question="q10_checkup">
-                        <button type="button" class="toggle-btn" data-value="true"
-                            onclick="toggleAnswer(this)">Yes</button>
-                        <button type="button" class="toggle-btn" data-value="false"
-                            onclick="toggleAnswer(this)">No</button>
-                    </div>
                 </div>
-
-                <div id="form-error"
-                    style="color: var(--danger); font-size: 0.8rem; text-align: center; margin: 16px 0; display: none;">
+                <div class="toggle-group" data-question="q10_checkup">
+                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes</button>
+                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No</button>
                 </div>
+            </div>
 
-                <button type="submit" class="btn btn-primary btn-lg btn-full" id="submit-btn"
-                    style="margin-top: 16px;">
-                    Submit Questionnaire
-                </button>
-            </form>
-        </main>
-    </div>
+            <div id="form-error" style="color: var(--error); font-size: 0.85rem; font-weight: 500; text-align: center; margin: 16px 0; display: none;"></div>
+
+            <button type="submit" class="btn btn-primary btn-lg" id="submit-btn" style="width: 100%; margin-top: var(--space-md);">
+                <iconify-icon icon="mdi:check-all" style="margin-right: 8px; font-size: 1.2rem;"></iconify-icon> Submit Assessment
+            </button>
+        </form>
+    </main>
 
     <div class="toast-container" id="toast-container"></div>
 
@@ -280,7 +356,7 @@
                 unanswered.forEach(q => {
                     const group = document.querySelector(`[data-question="${q}"]`);
                     if (group) {
-                        group.closest('.question-card').style.border = '2px solid var(--danger)';
+                        group.closest('.question-card').style.border = '1px solid var(--error)';
                         setTimeout(() => {
                             group.closest('.question-card').style.border = '';
                         }, 3000);

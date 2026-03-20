@@ -1,80 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="description" content="PregManage - Pregnancy Management System for Anganwadi Workers">
-    <meta name="theme-color" content="#f8f7ff">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Welcome — PregManage</title>
+    
+    <!-- Design System -->
     <link rel="stylesheet" href="/css/style.css">
+    
     <!-- Iconify Framework -->
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 </head>
-
 <body>
-    <!-- Animated Soft Background -->
-    <div class="bg-animated"></div>
 
-    <div class="page-center">
-        <div class="landing-container">
-            <!-- Professional Logo -->
-            <div class="landing-logo" style="background: var(--lavender-600); color: white; display: flex; align-items: center; justify-content: center; width: 80px; height: 80px; margin: 0 auto 24px; border-radius: 20px; font-size: 2.8rem; box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);">
-                <iconify-icon icon="mdi:human-pregnant"></iconify-icon>
+    <!-- Professional App Header -->
+    <header class="app-header">
+        <div class="brand-logo">
+            <div class="brand-icon">
+                <iconify-icon icon="mdi:mother-nurse"></iconify-icon>
             </div>
-            <div class="fade-in text-center" style="margin-bottom: 40px;">
-                <h1 class="landing-title"
-                    style="color: var(--lavender-900); font-weight: 800; font-size: 2.2rem; margin-bottom: 8px;">
-                    PregaManage</h1>
-                <p class="landing-subtitle" style="color: var(--lavender-600); font-weight: 500; font-size: 1rem;">
-                    Maternal Health Ecosystem</p>
-                <div class="govt-tagline"
-                    style="color: var(--lavender-300); border-bottom: 1px solid var(--lavender-100); padding-bottom: 12px; display: inline-block; width: auto; margin-top: 12px;">
-                    Government of India Initiative</div>
-            </div>
-
-            <!-- Role Selection Cards -->
-            <div class="flex flex-col gap-lg fade-in" style="animation-delay: 200ms;">
-                <div class="card-role" onclick="window.location.href='/admin-login.html'">
-                    <div class="card-role-icon" style="color: var(--lavender-600);"><iconify-icon icon="mdi:shield-account-outline"></iconify-icon></div>
-                    <div class="card-role-title">System Administrator</div>
-                    <div class="card-role-desc">Manage workers, view reports, and export statistics.</div>
-                </div>
-
-                <div class="card-role" onclick="window.location.href='/worker-login.html'">
-                    <div class="card-role-icon" style="color: var(--lavender-600);"><iconify-icon icon="mdi:doctor"></iconify-icon></div>
-                    <div class="card-role-title">Anganwadi Worker</div>
-                    <div class="card-role-desc">Register patients and perform health assessments.</div>
-                </div>
-            </div>
-
-            <p style="margin-top: 48px; font-size: 0.75rem; color: var(--lavender-300); text-align: center;"
-                class="fade-in">
-                Version 1.2.0 • Unified Professional Platform
-            </p>
+            PregManage
         </div>
-    </div>
+    </header>
 
-    <script>
-        // Redirect if already logged in
-        (async () => {
-            try {
-                const token = localStorage.getItem('token');
-                if (!token) return;
-                const res = await fetch('/api/auth/verify', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const data = await res.json();
-                if (data.success) {
-                    if (data.user.role === 'admin') window.location.href = '/admin-dashboard.html';
-                    else if (data.user.role === 'worker') window.location.href = '/worker-dashboard.html';
-                }
-            } catch (e) { }
-        })();
-    </script>
+    <!-- Main Content -->
+    <main class="container flex-col gap-lg" style="margin-top: 20px;">
+        
+        <!-- Hero / Welcome Card -->
+        <section class="card-hero text-center">
+            <h1 style="font-size: 1.6rem; margin-bottom: 8px;">Healthy Journeys.</h1>
+            <p style="font-size: 0.95rem; opacity: 0.95;">Empowering safe pregnancies through modern, connected care.</p>
+        </section>
+
+        <!-- Role Selection Text -->
+        <div class="text-center" style="margin-top: 10px;">
+            <h2 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 4px;">Choose your portal</h2>
+            <p style="font-size: 0.85rem; color: var(--text-secondary);">Select how you want to access the platform</p>
+        </div>
+
+        <!-- Role Selection Grid -->
+        <div class="flex-col gap-md">
+            
+            <!-- Expectant Mother card removed as per requirements -->
+
+            <!-- Healthcare Worker Card -->
+            <a href="/worker-login.html" class="card-role">
+                <div class="role-icon-wrapper">
+                    <iconify-icon icon="mdi:stethoscope"></iconify-icon>
+                </div>
+                <h3>Healthcare Worker</h3>
+                <p>Conduct assessments, manage patient visits, and review health data.</p>
+            </a>
+
+            <!-- Admin Portal Link -->
+            <a href="/admin-login.html" class="btn btn-secondary" style="margin-top: 8px;">
+                <iconify-icon icon="mdi:shield-account"></iconify-icon>
+                Administrator Login
+            </a>
+
+        </div>
+
+    </main>
+
+    <!-- Medical Disclaimer Footer -->
+    <footer class="app-footer">
+        <p class="disclaimer-text">
+            <iconify-icon icon="mdi:information-outline" style="font-size: 1.1rem; color: var(--primary);"></iconify-icon>
+            Always consult your healthcare provider.
+        </p>
+    </footer>
+
 </body>
-
 </html>
