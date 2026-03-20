@@ -1,41 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="description" content="PregManage - Pregnancy Management System for Anganwadi Workers">
-    <meta name="theme-color" content="#1e3a5f">
+    <meta name="theme-color" content="#f8f7ff">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>PregManage — Pregnancy Management System</title>
+    <title>Welcome — PregManage</title>
     <link rel="stylesheet" href="/css/style.css">
+    <!-- Iconify Framework -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 </head>
+
 <body>
+    <!-- Animated Soft Background -->
     <div class="bg-animated"></div>
+
     <div class="page-center">
-        <div class="landing-container fade-in">
-            <div class="landing-logo">🤰</div>
-            <h1 class="landing-title">PregManage</h1>
-            <p class="landing-subtitle">Comprehensive pregnancy management system for Anganwadi centers</p>
-            <div class="govt-tagline">Ministry of Women & Child Development</div>
-
-            <div class="role-cards">
-                <a href="/admin-login.html" class="role-card fade-in stagger-1" id="admin-login-card">
-                    <div class="role-card-icon">🛡️</div>
-                    <div>
-                        <h2 class="role-card-title">Administrator</h2>
-                        <p class="role-card-desc">Manage workers & oversee system operations</p>
-                    </div>
-                </a>
-
-                <a href="/worker-login.html" class="role-card fade-in stagger-2" id="worker-login-card">
-                    <div class="role-card-icon">👩‍⚕️</div>
-                    <div>
-                        <h2 class="role-card-title">Anganwadi Worker</h2>
-                        <p class="role-card-desc">Register patients & conduct health assessments</p>
-                    </div>
-                </a>
+        <div class="landing-container">
+            <!-- Professional Logo -->
+            <div class="landing-logo" style="background: var(--lavender-600); color: white; display: flex; align-items: center; justify-content: center; width: 80px; height: 80px; margin: 0 auto 24px; border-radius: 20px; font-size: 2.8rem; box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);">
+                <iconify-icon icon="mdi:human-pregnant"></iconify-icon>
             </div>
+            <div class="fade-in text-center" style="margin-bottom: 40px;">
+                <h1 class="landing-title"
+                    style="color: var(--lavender-900); font-weight: 800; font-size: 2.2rem; margin-bottom: 8px;">
+                    PregaManage</h1>
+                <p class="landing-subtitle" style="color: var(--lavender-600); font-weight: 500; font-size: 1rem;">
+                    Maternal Health Ecosystem</p>
+                <div class="govt-tagline"
+                    style="color: var(--lavender-300); border-bottom: 1px solid var(--lavender-100); padding-bottom: 12px; display: inline-block; width: auto; margin-top: 12px;">
+                    Government of India Initiative</div>
+            </div>
+
+            <!-- Role Selection Cards -->
+            <div class="flex flex-col gap-lg fade-in" style="animation-delay: 200ms;">
+                <div class="card-role" onclick="window.location.href='/admin-login.html'">
+                    <div class="card-role-icon" style="color: var(--lavender-600);"><iconify-icon icon="mdi:shield-account-outline"></iconify-icon></div>
+                    <div class="card-role-title">System Administrator</div>
+                    <div class="card-role-desc">Manage workers, view reports, and export statistics.</div>
+                </div>
+
+                <div class="card-role" onclick="window.location.href='/worker-login.html'">
+                    <div class="card-role-icon" style="color: var(--lavender-600);"><iconify-icon icon="mdi:doctor"></iconify-icon></div>
+                    <div class="card-role-title">Anganwadi Worker</div>
+                    <div class="card-role-desc">Register patients and perform health assessments.</div>
+                </div>
+            </div>
+
+            <p style="margin-top: 48px; font-size: 0.75rem; color: var(--lavender-300); text-align: center;"
+                class="fade-in">
+                Version 1.2.0 • Unified Professional Platform
+            </p>
         </div>
     </div>
 
@@ -53,8 +72,9 @@
                     if (data.user.role === 'admin') window.location.href = '/admin-dashboard.html';
                     else if (data.user.role === 'worker') window.location.href = '/worker-dashboard.html';
                 }
-            } catch (e) {}
+            } catch (e) { }
         })();
     </script>
 </body>
+
 </html>

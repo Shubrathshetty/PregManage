@@ -7,8 +7,10 @@
     <meta name="description" content="New Patient Registration - PregManage">
     <meta name="theme-color" content="#1e3a5f">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>Patient Registration — PregManage</title>
+    <title>Register Patient — PregManage</title>
     <link rel="stylesheet" href="/css/style.css">
+    <!-- Iconify Framework -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 </head>
 
 <body>
@@ -23,7 +25,7 @@
         <!-- Navbar -->
         <nav class="navbar">
             <div class="navbar-brand">
-                <div class="logo-icon">🤰</div>
+                <div class="logo-icon"><iconify-icon icon="mdi:account-plus"></iconify-icon></div>
                 <span>PregManage</span>
             </div>
             <div class="navbar-user">
@@ -37,7 +39,7 @@
 
         <!-- Main Content -->
         <main class="container dashboard-content fade-in">
-            <a href="/worker-dashboard.html" onclick="history.back(); return false;" class="app-back-btn">←</a>
+            <a href="/worker-dashboard.html" onclick="history.back(); return false;" class="app-back-btn"><iconify-icon icon="mdi:arrow-left"></iconify-icon></a>
 
             <div class="page-header">
                 <h1 class="page-title">New Patient Registration</h1>

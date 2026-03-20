@@ -9,16 +9,17 @@
 /* ---- CSS Custom Properties ---- */
 :root {
     /* Government Theme - Deep Blue & Saffron */
-    --primary-50: #eef2ff;
-    --primary-100: #e0e7ff;
-    --primary-200: #c7d2fe;
-    --primary-300: #a5b4fc;
-    --primary-400: #818cf8;
-    --primary-500: #1e3a5f;
-    --primary-600: #1a3252;
-    --primary-700: #152a45;
-    --primary-800: #0f1f33;
-    --primary-900: #0a1526;
+    /* Lavender Palette - Primary Theme */
+    --primary-50: #f8f7ff;
+    --primary-100: #f3f0ff;
+    --primary-200: #e9e5ff;
+    --primary-300: #ddd6fe;
+    --primary-400: #c4b5fd;
+    --primary-500: #8b5cf6;
+    --primary-600: #7c3aed;
+    --primary-700: #6d28d9;
+    --primary-800: #5b21b6;
+    --primary-900: #4c1d95;
 
     /* Saffron accent - Government of India style */
     --saffron-50: #fff7ed;
@@ -29,6 +30,18 @@
     --saffron-500: #f97316;
     --saffron-600: #ea580c;
     --saffron-700: #c2410c;
+
+    /* Lavender Palette - Professional choice */
+    --lavender-50: #f8f7ff;
+    --lavender-100: #f3f0ff;
+    --lavender-200: #e9e5ff;
+    --lavender-300: #ddd6fe;
+    --lavender-400: #c4b5fd;
+    --lavender-500: #a78bfa;
+    --lavender-600: #8b5cf6;
+    --lavender-700: #7c3aed;
+    --lavender-800: #6d28d9;
+    --lavender-900: #5b21b6;
 
     /* Green accent */
     --green-50: #f0fdf4;
@@ -59,12 +72,12 @@
     --info: #2563eb;
 
     /* App Colors */
-    --app-bg: #f0f2f5;
-    --app-header: #1e3a5f;
+    --app-bg: #fdfcff;
+    --app-header: var(--primary-700);
     --app-header-text: #ffffff;
     --app-card: #ffffff;
     --app-bottom-nav: #ffffff;
-    --app-accent: #f97316;
+    --app-accent: var(--primary-500);
 
     /* Shadows */
     --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
@@ -112,11 +125,12 @@ html {
     -webkit-text-size-adjust: 100%;
 }
 
+/* ---- Typography ---- */
 body {
-    font-family: var(--font-body);
+    font-family: var(--font-body); /* Changed from --font-main to --font-body as --font-main is not defined */
+    background-color: var(--app-bg);
     color: var(--gray-800);
-    background: var(--app-bg);
-    line-height: 1.6;
+    line-height: 1.5; /* Changed from 1.6 to 1.5 */
     min-height: 100vh;
     min-height: 100dvh;
     -webkit-font-smoothing: antialiased;
@@ -240,8 +254,12 @@ img {
     width: 100%;
     height: 100%;
     z-index: -1;
-    background: linear-gradient(170deg, #1e3a5f 0%, #0f1f33 40%, #1a3252 70%, #152a45 100%);
+    background: linear-gradient(135deg, var(--lavender-50) 0%, #ffffff 50%, var(--lavender-100) 100%);
     overflow: hidden;
+}
+
+.bg-animated-dark {
+    background: linear-gradient(170deg, #1e3a5f 0%, #0f1f33 40%, #1a3252 70%, #152a45 100%);
 }
 
 .bg-animated::before {
@@ -249,11 +267,11 @@ img {
     position: absolute;
     top: -20%;
     right: -15%;
-    width: 300px;
-    height: 300px;
+    width: 400px;
+    height: 400px;
     border-radius: 50%;
-    background: rgba(249, 115, 22, 0.08);
-    animation: float 20s infinite ease-in-out;
+    background: radial-gradient(circle, var(--lavender-200) 0%, rgba(221, 214, 254, 0) 70%);
+    animation: float 25s infinite ease-in-out;
 }
 
 .bg-animated::after {
@@ -261,12 +279,12 @@ img {
     position: absolute;
     bottom: -15%;
     left: -10%;
-    width: 250px;
-    height: 250px;
+    width: 350px;
+    height: 350px;
     border-radius: 50%;
-    background: rgba(19, 136, 8, 0.06);
-    animation: float 20s infinite ease-in-out;
-    animation-delay: -10s;
+    background: radial-gradient(circle, var(--lavender-100) 0%, rgba(243, 240, 255, 0) 70%);
+    animation: float 25s infinite ease-in-out;
+    animation-delay: -12s;
 }
 
 @keyframes float {
@@ -345,6 +363,53 @@ img {
     box-shadow: var(--shadow-xl);
     color: white;
     padding: 28px 20px;
+}
+
+.glass-card-lavender {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--lavender-200);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 10px 40px rgba(139, 92, 246, 0.1);
+    padding: 32px 24px;
+}
+
+.card-role {
+    background: white;
+    border: 2px solid var(--lavender-100);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    text-align: center;
+    transition: all var(--transition-base);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.card-role:hover {
+    border-color: var(--lavender-400);
+    background: var(--lavender-50);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.card-role-icon {
+    font-size: 2.2rem;
+    margin-bottom: 4px;
+}
+
+.card-role-title {
+    font-weight: 700;
+    color: var(--lavender-900);
+    font-size: 1.1rem;
+}
+
+.card-role-desc {
+    font-size: 0.8rem;
+    color: var(--gray-500);
 }
 
 /* ---- Cards ---- */
@@ -511,6 +576,21 @@ img {
     background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
     color: white;
     box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
+}
+
+.btn-lavender {
+    background: linear-gradient(135deg, var(--lavender-600) 0%, var(--lavender-700) 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
+}
+
+.btn-lavender:hover {
+    background: linear-gradient(135deg, var(--lavender-700) 0%, var(--lavender-800) 100%);
+    box-shadow: 0 6px 16px rgba(124, 58, 237, 0.35);
+}
+
+.btn-lavender:active {
+    transform: scale(0.97);
 }
 
 .btn-saffron:hover {

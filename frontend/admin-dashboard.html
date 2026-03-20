@@ -5,10 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="description" content="Admin Dashboard - PregManage">
-    <meta name="theme-color" content="#1e3a5f">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Admin Dashboard — PregManage</title>
     <link rel="stylesheet" href="/css/style.css">
+    <!-- Iconify Framework -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        :root {
+            --app-header: var(--lavender-700);
+        }
+    </style>
 </head>
 
 <body>
@@ -23,7 +29,7 @@
         <!-- Navbar -->
         <nav class="navbar">
             <div class="navbar-brand">
-                <div class="logo-icon">🤰</div>
+                <div class="logo-icon"><iconify-icon icon="mdi:human-pregnant"></iconify-icon></div>
                 <span>PregManage</span>
             </div>
             <div class="navbar-user">
@@ -31,40 +37,52 @@
                     <div class="navbar-user-name" id="user-name">Administrator</div>
                     <div class="navbar-user-role">Admin Panel</div>
                 </div>
-                <button class="btn btn-ghost btn-sm" id="logout-btn" onclick="logout()">Logout</button>
+                <button class="btn btn-ghost btn-sm" id="logout-btn" onclick="logout()">
+                    <iconify-icon icon="mdi:logout" style="margin-right: 4px; vertical-align: middle;"></iconify-icon> Logout
+                </button>
             </div>
         </nav>
 
         <!-- Main Content -->
         <main class="container dashboard-content fade-in">
+            <!-- Section Header -->
+            <div style="margin-bottom: 24px;">
+                <h1 style="font-size: 1.5rem; color: var(--lavender-900); font-weight: 800;">Admin Overview</h1>
+                <p style="font-size: 0.85rem; color: var(--lavender-400);">Manage your health ecosystem at a glance</p>
+            </div>
+
             <!-- Stats -->
             <div class="stats-grid" id="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-card-value" id="total-workers">0</div>
-                    <div class="stat-card-label">Total Workers</div>
+                <div class="stat-card" style="border: 1.5px solid var(--lavender-200); background: white;">
+                    <div class="stat-card-value" id="total-workers" style="color: var(--lavender-700);">0</div>
+                    <div class="stat-card-label" style="color: var(--lavender-500);">Total Workers</div>
                 </div>
                 <div class="stat-card"
-                    style="cursor: pointer; border: 1.5px solid var(--saffron-200); background: var(--saffron-50);"
+                    style="cursor: pointer; border: 1.5px solid var(--lavender-300); background: var(--lavender-50);"
                     onclick="window.location.href='/hospital-visits.html'">
-                    <div class="stat-card-value" id="hospital-visits-count" style="color: var(--saffron-600);">0</div>
-                    <div class="stat-card-label" style="font-weight: 600;">🏥 Hospital Visits</div>
-                    <div style="font-size: 0.65rem; color: var(--saffron-500); margin-top: 2px;">View List →</div>
+                    <div class="stat-card-value" id="hospital-visits-count" style="color: var(--lavender-800);">0</div>
+                    <div class="stat-card-label" style="font-weight: 600; color: var(--lavender-600); display: flex; align-items: center; gap: 6px; justify-content: center;">
+                        <iconify-icon icon="mdi:hospital-building"></iconify-icon> Hospital Visits
+                    </div>
+                    <div style="font-size: 0.65rem; color: var(--lavender-400); margin-top: 2px;">Review details <iconify-icon icon="mdi:arrow-right" style="vertical-align: middle;"></iconify-icon></div>
                 </div>
                 <div class="stat-card"
-                    style="cursor: pointer; border: 1.5px solid var(--primary-100); background: var(--primary-50);"
+                    style="cursor: pointer; border: 1.5px solid var(--lavender-300); background: var(--lavender-50);"
                     onclick="window.location.href='/home-visits.html'">
-                    <div class="stat-card-value" id="home-visits-count" style="color: var(--primary-600);">0</div>
-                    <div class="stat-card-label" style="font-weight: 600;">🏠 Home Visits</div>
-                    <div style="font-size: 0.65rem; color: var(--primary-500); margin-top: 2px;">View List →</div>
+                    <div class="stat-card-value" id="home-visits-count" style="color: var(--lavender-800);">0</div>
+                    <div class="stat-card-label" style="font-weight: 600; color: var(--lavender-600); display: flex; align-items: center; gap: 6px; justify-content: center;">
+                        <iconify-icon icon="mdi:home-heart"></iconify-icon> Home Visits
+                    </div>
+                    <div style="font-size: 0.65rem; color: var(--lavender-400); margin-top: 2px;">Review details <iconify-icon icon="mdi:arrow-right" style="vertical-align: middle;"></iconify-icon></div>
                 </div>
             </div>
 
             <!-- Workers Table -->
-            <div class="table-container" id="workers-view">
+            <div class="table-container" id="workers-view" style="border-top: 1px solid var(--lavender-100);">
                 <div class="table-header">
-                    <h2 class="table-title">Anganwadi Workers</h2>
-                    <button class="btn btn-primary btn-sm" id="add-worker-btn" onclick="openAddModal()">
-                        + Add
+                    <h2 class="table-title" style="color: var(--lavender-900);">Anganwadi Workers</h2>
+                    <button class="btn btn-lavender btn-sm" id="add-worker-btn" onclick="openAddModal()" style="display: flex; align-items: center; gap: 4px;">
+                        <iconify-icon icon="mdi:account-plus"></iconify-icon> Add Worker
                     </button>
                 </div>
                 <div id="workers-table-body">

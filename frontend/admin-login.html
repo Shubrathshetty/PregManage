@@ -3,50 +3,65 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="description" content="Admin Login - PregManage">
-    <meta name="theme-color" content="#1e3a5f">
+    <meta name="theme-color" content="#f8f7ff">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Admin Login — PregManage</title>
     <link rel="stylesheet" href="/css/style.css">
+    <!-- Iconify Framework -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 </head>
 
 <body>
+    <!-- Animated Soft Background -->
     <div class="bg-animated"></div>
-    <div class="page-center">
-        <div class="login-container fade-in">
-            <div class="glass-card-dark">
-                <div class="login-header">
-                    <div class="login-logo">🛡️</div>
-                    <h1 class="login-title">Admin Login</h1>
-                    <p class="login-subtitle">System Administrator Portal</p>
-                </div>
 
+    <div class="page-center">
+        <div class="login-container">
+            <!-- Back Button -->
+            <a href="/" onclick="history.back(); return false;" class="app-back-btn"
+                style="background: white; border-color: var(--lavender-100); color: var(--lavender-600);">
+                <iconify-icon icon="mdi:arrow-left"></iconify-icon>
+            </a>
+
+            <!-- Login Header -->
+            <div class="login-header fade-in">
+                <div class="login-logo"
+                    style="background: var(--lavender-600); color: white; width: 64px; height: 64px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                    <iconify-icon icon="mdi:shield-check"></iconify-icon></div>
+                <h1 class="login-title" style="color: var(--lavender-900);">Admin Portal</h1>
+                <p class="login-subtitle" style="color: var(--lavender-400);">System Administrator Login</p>
+            </div>
+
+            <!-- Login Card -->
+            <div class="glass-card-lavender fade-in" style="animation-delay: 100ms;">
                 <form id="admin-login-form">
                     <div class="form-group">
-                        <label class="form-label" for="username" style="color: rgba(255,255,255,0.7);">Username</label>
-                        <input type="text" id="username" class="form-input" placeholder="Enter your username" required
-                            autocomplete="username" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); color: white;">
+                        <label class="form-label" for="username" style="color: var(--lavender-700);">Username</label>
+                        <input type="text" id="username" class="form-input" placeholder="Enter admin username" required
+                            style="border-color: var(--lavender-100); background: white;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 24px;">
+                        <label class="form-label" for="password" style="color: var(--lavender-700);">Password</label>
+                        <input type="password" id="password" class="form-input" placeholder="Enter admin password"
+                            required style="border-color: var(--lavender-100); background: white;">
                     </div>
 
-                    <div class="form-group">
-                        <label class="form-label" for="password" style="color: rgba(255,255,255,0.7);">Password</label>
-                        <input type="password" id="password" class="form-input" placeholder="Enter your password"
-                            required autocomplete="current-password" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); color: white;">
-                    </div>
+                    <div id="error-message" class="form-error text-center"
+                        style="display: none; margin-bottom: 16px; color: var(--danger); font-weight: 500;"></div>
 
-                    <div id="error-message" class="form-error"
-                        style="color: #fb7185; margin-bottom: 16px; text-align: center;"></div>
-
-                    <button type="submit" class="btn btn-primary btn-lg btn-full" id="login-btn">
-                        Sign In
+                    <button type="submit" class="btn btn-lavender btn-full btn-lg" id="login-btn">
+                        <iconify-icon icon="mdi:login" style="margin-right: 8px; vertical-align: middle;"></iconify-icon> Login to Dashboard
                     </button>
                 </form>
-
-                <div style="text-align: center; margin-top: 20px;">
-                    <a href="/" onclick="history.back(); return false;" class="app-back-btn" style="color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);">←</a>
-                </div>
             </div>
+
+            <p style="margin-top: 32px; font-size: 0.75rem; color: var(--lavender-300); text-align: center;"
+                class="fade-in">
+                Secure SSL Encrypted Connection
+            </p>
         </div>
     </div>
 
@@ -61,7 +76,7 @@
             e.preventDefault();
             errorMessage.style.display = 'none';
             loginBtn.disabled = true;
-            loginBtn.innerHTML = '<div class="spinner"></div> Signing in...';
+            loginBtn.innerHTML = 'Signing in...';
 
             try {
                 const res = await fetch('/api/auth/admin/login', {
@@ -88,7 +103,7 @@
                 errorMessage.style.display = 'block';
             } finally {
                 loginBtn.disabled = false;
-                loginBtn.innerHTML = 'Sign In';
+                loginBtn.innerHTML = '<iconify-icon icon="mdi:login" style="margin-right: 8px; vertical-align: middle;"></iconify-icon> Login to Dashboard';
             }
         });
     </script>

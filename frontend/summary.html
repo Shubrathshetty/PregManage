@@ -7,8 +7,10 @@
     <meta name="description" content="Questionnaire Summary - PregManage">
     <meta name="theme-color" content="#1e3a5f">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>Summary — PregManage</title>
+    <title>Patient Summary — PregManage</title>
     <link rel="stylesheet" href="/css/style.css">
+    <!-- Iconify Framework -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <style>
         /* Consultation Step Styles */
         .consultation-section {
@@ -214,13 +216,15 @@
         </nav>
 
         <!-- Main Content -->
-        <main class="container dashboard-content">
-            <a href="/worker-dashboard.html" onclick="history.back(); return false;" class="app-back-btn" style="margin-bottom: 24px;">←</a>
+        <main class="container dashboard-content fade-in">
+            <a href="/worker-dashboard.html" onclick="history.back(); return false;" class="app-back-btn" style="margin-bottom: 24px;">
+                <iconify-icon icon="mdi:arrow-left"></iconify-icon>
+            </a>
 
             <!-- ====== STEP 1: Questionnaire Results ====== -->
             <div id="step-results" class="step-content fade-in">
                 <div class="page-header text-center">
-                    <div style="font-size: 2.8rem; margin-bottom: 12px;" id="status-icon">✅</div>
+                    <div style="font-size: 2.8rem; margin-bottom: 12px;" id="status-icon"><iconify-icon icon="mdi:check-circle"></iconify-icon></div>
                     <h1 class="page-title" id="status-title">Questionnaire Submitted</h1>
                     <p class="page-subtitle" id="status-subtitle">Successfully recorded health assessment</p>
                 </div>
