@@ -3,12 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="description" content="Worker Dashboard - PregManage">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Worker Dashboard — PregManage</title>
     <link rel="stylesheet" href="/css/style.css">
-    <!-- Iconify Framework -->
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <style>
         .welcome-card-role {
@@ -18,9 +18,261 @@
             opacity: 0.9;
             margin-bottom: 4px;
         }
+
         .welcome-card-name {
             font-size: 1.4rem;
             font-weight: 700;
+        }
+
+        .stat-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-md);
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            padding: var(--space-md);
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-card .stat-icon {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .stat-card .stat-count {
+            font-size: 1.8rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .action-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .action-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .action-icon {
+            font-size: 2.2rem;
+            padding: 12px;
+            border-radius: var(--radius-full);
+            display: flex;
+        }
+
+        /* Language toggle — modern switch style */
+        .lang-toggle {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: var(--bg-card);
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            font-size: 0.72rem;
+            font-weight: 700;
+            border: 2px solid var(--border-color);
+            padding: 3px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
+            user-select: none;
+        }
+
+        .lang-toggle .lang-option {
+            position: relative;
+            z-index: 1;
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
+            transition: color 0.25s ease;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .lang-toggle .lang-option.active-lang {
+            color: #fff;
+        }
+
+        .lang-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            height: calc(100% - 6px);
+            width: calc(50% - 3px);
+            background: var(--primary);
+            border-radius: var(--radius-full);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .lang-toggle.kn-active .lang-slider {
+            transform: translateX(100%);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: flex-start;
+            padding: var(--space-lg) var(--space-md);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border-radius: var(--radius-card);
+            width: 100%;
+            max-width: 600px;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-md) var(--space-lg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-body {
+            padding: var(--space-md);
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            padding: var(--space-md) var(--space-lg);
+            border-top: 1px solid var(--border-color);
+            text-align: right;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .patient-item {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .patient-item:last-child {
+            border-bottom: none;
+        }
+
+        .patient-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            cursor: pointer;
+        }
+
+        .patient-row:hover {
+            background: var(--bg-main);
+        }
+
+        .patient-row .chevron {
+            transition: transform 0.2s;
+        }
+
+        .patient-item.expanded .chevron {
+            transform: rotate(90deg);
+        }
+
+        .biodata-panel {
+            display: none;
+            padding: 0 0 12px 0;
+            animation: slideDown 0.2s ease-out;
+        }
+
+        .patient-item.expanded .biodata-panel {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; max-height: 0; }
+            to { opacity: 1; max-height: 500px; }
+        }
+
+        .bio-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            padding: 10px 12px;
+            background: var(--bg-main);
+            border-radius: var(--radius-sm);
+        }
+
+        .bio-item {
+            font-size: 0.78rem;
+        }
+
+        .bio-item .bio-label {
+            color: var(--text-muted);
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .bio-item .bio-value {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-top: 1px;
+        }
+
+        .bio-photo {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius-full);
+            object-fit: cover;
+            border: 2px solid var(--primary-light);
+        }
+
+        @media (max-width: 400px) {
+            .stat-cards-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .bio-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -32,68 +284,311 @@
             <div class="brand-icon">
                 <iconify-icon icon="mdi:mother-nurse"></iconify-icon>
             </div>
-            PregManage
+            <span data-i18n="brand">PregManage</span>
         </div>
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="text-align: right; display: none;" id="user-info-desktop">
-                <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary);" id="user-name">Worker</div>
-                <div style="font-size: 0.7rem; color: var(--text-secondary);">Healthcare Worker</div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="lang-toggle" onclick="toggleLanguage()" id="lang-toggle-btn">
+                <div class="lang-slider"></div>
+                <span id="lang-en" class="lang-option active-lang">EN</span>
+                <span id="lang-kn" class="lang-option">ಕನ್ನಡ</span>
             </div>
-            <button class="btn btn-secondary" onclick="logout()" style="min-height: 36px; padding: 0 12px; font-size: 0.8rem; border-radius: var(--radius-full);">
-                <iconify-icon icon="mdi:logout" style="margin-right: 4px;"></iconify-icon> Logout
+            <div style="text-align: right; display: none;" id="user-info-desktop">
+                <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary);" id="user-name">Worker
+                </div>
+                <div style="font-size: 0.7rem; color: var(--text-secondary);" data-i18n="role_sub">Healthcare Worker
+                </div>
+            </div>
+            <button class="btn btn-secondary" onclick="logout()"
+                style="min-height: 36px; padding: 0 12px; font-size: 0.8rem; border-radius: var(--radius-full);">
+                <iconify-icon icon="mdi:logout" style="margin-right: 4px;"></iconify-icon> <span
+                    data-i18n="logout">Logout</span>
             </button>
         </div>
     </header>
     <style>
-        @media (min-width: 360px) { #user-info-desktop { display: block !important; } }
+        @media (min-width: 360px) {
+            #user-info-desktop {
+                display: block !important;
+            }
+        }
     </style>
 
     <!-- Main Content -->
     <main class="container flex-col gap-lg">
-        
+
         <!-- Welcome Hero Card -->
         <div class="card-hero" style="margin-bottom: var(--space-md);">
-            <div class="welcome-card-role">Anganwadi Worker</div>
-            <div class="welcome-card-name">Welcome, <span id="welcome-name">Worker</span> <iconify-icon icon="mdi:hand-wave" style="vertical-align: middle;"></iconify-icon></div>
+            <div class="welcome-card-role" data-i18n="worker_role">Anganwadi Worker</div>
+            <div class="welcome-card-name"><span data-i18n="welcome">Welcome</span>, <span id="welcome-name">Worker</span>
+                <iconify-icon icon="mdi:hand-wave" style="vertical-align: middle;"></iconify-icon>
+            </div>
         </div>
 
+        <!-- Stat Cards -->
+        <div class="stat-cards-grid">
+            <div class="stat-card" onclick="openMyPatientsModal()">
+                <div class="stat-icon" style="color: var(--primary);"><iconify-icon
+                        icon="mdi:account-group"></iconify-icon></div>
+                <div class="stat-count" id="patient-count" style="color: var(--primary);">0</div>
+                <div class="stat-label" data-i18n="my_patients">My Patients</div>
+            </div>
+            <div class="stat-card" onclick="openAppointmentsModal()">
+                <div class="stat-icon" style="color: var(--accent);"><iconify-icon
+                        icon="mdi:calendar-check"></iconify-icon></div>
+                <div class="stat-count" id="appointments-count" style="color: var(--accent);">0</div>
+                <div class="stat-label" data-i18n="appointments_fixed">Appointments Fixed</div>
+            </div>
+            <div class="stat-card" onclick="openCompletedModal()">
+                <div class="stat-icon" style="color: var(--success);"><iconify-icon
+                        icon="mdi:check-decagram"></iconify-icon></div>
+                <div class="stat-count" id="completed-count" style="color: var(--success);">0</div>
+                <div class="stat-label" data-i18n="consultation_completed">Consultation Completed</div>
+            </div>
+        </div>
+
+        <!-- Section Title -->
         <div>
-            <h2 style="font-size: 1.25rem; color: var(--text-primary); font-weight: 700;">Patient Management</h2>
-            <p style="font-size: 0.85rem; color: var(--text-secondary);">Register and assess maternal health</p>
+            <h2 style="font-size: 1.15rem; color: var(--text-primary); font-weight: 700;" data-i18n="quick_actions">
+                Quick Actions</h2>
         </div>
 
-        <!-- Dashboard Actions Grid -->
+        <!-- Action Cards -->
         <div class="flex-col gap-md">
-            
-            <a href="/patient-register.html" class="card" style="display: flex; align-items: center; gap: 20px; border-left: 4px solid var(--accent); cursor: pointer;">
-                <div style="font-size: 2.2rem; color: var(--accent); background: var(--accent-light); padding: 12px; border-radius: var(--radius-full); display: flex;"><iconify-icon icon="mdi:account-plus"></iconify-icon></div>
+            <a href="/patient-register.html" class="card action-card"
+                style="border-left: 4px solid var(--accent);">
+                <div class="action-icon"
+                    style="color: var(--accent); background: var(--accent-light);">
+                    <iconify-icon icon="mdi:account-plus"></iconify-icon>
+                </div>
                 <div>
-                    <h3 style="font-size: 1.1rem; color: var(--text-primary); font-weight: 600;">New Registration</h3>
-                    <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; margin-top: 4px;">Add a new expectant mother to the system</p>
+                    <h3 style="font-size: 1.05rem; color: var(--text-primary); font-weight: 600;"
+                        data-i18n="new_registration">New Registration</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; margin-top: 4px;"
+                        data-i18n="new_reg_desc">Add a new expectant mother to the system</p>
                 </div>
             </a>
 
-            <a href="/patient-search.html" class="card" style="display: flex; align-items: center; gap: 20px; border-left: 4px solid var(--primary); cursor: pointer;">
-                <div style="font-size: 2.2rem; color: var(--primary); background: var(--primary-light); padding: 12px; border-radius: var(--radius-full); display: flex;"><iconify-icon icon="mdi:account-search"></iconify-icon></div>
+            <a href="/patient-search.html" class="card action-card"
+                style="border-left: 4px solid var(--primary);">
+                <div class="action-icon"
+                    style="color: var(--primary); background: var(--primary-light);">
+                    <iconify-icon icon="mdi:account-search"></iconify-icon>
+                </div>
                 <div>
-                    <h3 style="font-size: 1.1rem; color: var(--text-primary); font-weight: 600;">Search Patients</h3>
-                    <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; margin-top: 4px;">Find existing records for health assessment</p>
+                    <h3 style="font-size: 1.05rem; color: var(--text-primary); font-weight: 600;"
+                        data-i18n="already_registered">Already Registered</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.4; margin-top: 4px;"
+                        data-i18n="already_reg_desc">Search existing records for health assessment</p>
                 </div>
             </a>
-
         </div>
 
         <!-- Trust Badge -->
-        <div style="margin-top: var(--space-xl); padding: 16px; background: var(--bg-card); border-radius: var(--radius-card); border: 1px dashed var(--border-color); text-align: center;">
+        <div
+            style="margin-top: var(--space-xl); padding: 16px; background: var(--bg-card); border-radius: var(--radius-card); border: 1px dashed var(--border-color); text-align: center;">
             <p style="font-size: 0.75rem; color: var(--success); font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px;">
-                <iconify-icon icon="mdi:shield-check" style="font-size: 1.1rem;"></iconify-icon> Secure Medical Operations Portal
+                <iconify-icon icon="mdi:shield-check" style="font-size: 1.1rem;"></iconify-icon> <span
+                    data-i18n="secure_portal">Secure Medical Operations Portal</span>
             </p>
         </div>
 
     </main>
 
+    <!-- My Patients Modal -->
+    <div class="modal-overlay" id="patients-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 style="font-size: 1.1rem; color: var(--text-primary);" data-i18n="my_patients">My Patients</h3>
+                <button onclick="closeModal('patients-modal')"
+                    style="background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;">&times;</button>
+            </div>
+            <div class="modal-body" id="patients-modal-body">
+                <p style="text-align: center; color: var(--text-muted);" data-i18n="loading">Loading...</p>
+            </div>
+            <div class="modal-footer">
+                <span style="font-size: 0.8rem; color: var(--text-secondary);"><span data-i18n="total">Total</span>:
+                    <strong id="patients-modal-total">0</strong></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Appointments Fixed Modal -->
+    <div class="modal-overlay" id="appointments-modal">
+        <div class="modal" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3 style="font-size: 1.1rem; color: var(--text-primary);" data-i18n="appointments_fixed">Appointments
+                    Fixed</h3>
+                <button onclick="closeModal('appointments-modal')"
+                    style="background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 0;" id="appointments-modal-body">
+                <p style="text-align: center; padding: var(--space-lg); color: var(--text-muted);" data-i18n="loading">
+                    Loading...</p>
+            </div>
+            <div class="modal-footer">
+                <span style="font-size: 0.8rem; color: var(--text-secondary);"><span data-i18n="total">Total</span>:
+                    <strong id="appointments-modal-total">0</strong></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Consultation Completed Modal -->
+    <div class="modal-overlay" id="completed-modal">
+        <div class="modal" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3 style="font-size: 1.1rem; color: var(--text-primary);" data-i18n="consultation_completed">
+                    Consultation Completed</h3>
+                <button onclick="closeModal('completed-modal')"
+                    style="background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 0;" id="completed-modal-body">
+                <p style="text-align: center; padding: var(--space-lg); color: var(--text-muted);" data-i18n="loading">
+                    Loading...</p>
+            </div>
+            <div class="modal-footer">
+                <span style="font-size: 0.8rem; color: var(--text-secondary);"><span data-i18n="total">Total</span>:
+                    <strong id="completed-modal-total">0</strong></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+
     <script>
+        // =================== LANGUAGE SYSTEM ===================
+        const translations = {
+            en: {
+                brand: 'PregManage',
+                role_sub: 'Healthcare Worker',
+                logout: 'Logout',
+                worker_role: 'Anganwadi Worker',
+                welcome: 'Welcome',
+                my_patients: 'My Patients',
+                appointments_fixed: 'Appointments Fixed',
+                consultation_completed: 'Consultation Completed',
+                quick_actions: 'Quick Actions',
+                new_registration: 'New Registration',
+                new_reg_desc: 'Add a new expectant mother to the system',
+                already_registered: 'Already Registered',
+                already_reg_desc: 'Search existing records for health assessment',
+                secure_portal: 'Secure Medical Operations Portal',
+                loading: 'Loading...',
+                total: 'Total',
+                patient_name: 'Patient Name',
+                phone: 'Phone',
+                status: 'Status',
+                chosen_at: 'Consultation Chosen Time',
+                time_scheduled: 'Time Scheduled',
+                completed_at: 'Completed At',
+                pending: 'Pending',
+                completed: 'Completed',
+                no_patients: 'No patients registered yet.',
+                no_appointments: 'No appointments scheduled yet.',
+                no_completed: 'No consultations completed yet.',
+                close: 'Close',
+                dob: 'Date of Birth',
+                age: 'Age',
+                husband_name: 'Husband Name',
+                address: 'Address',
+                aadhaar: 'Aadhaar',
+                lmp_date: 'LMP Date',
+                edd: 'Expected Delivery',
+                blood_group: 'Blood Group',
+                gravida: 'Gravida',
+                para: 'Para',
+                years: 'years'
+            },
+            kn: {
+                brand: 'ಪ್ರೆಗ್‌ಮ್ಯಾನೇಜ್',
+                role_sub: 'ಆರೋಗ್ಯ ಕಾರ್ಯಕರ್ತೆ',
+                logout: 'ಲಾಗ್ ಔಟ್',
+                worker_role: 'ಅಂಗನವಾಡಿ ಕಾರ್ಯಕರ್ತೆ',
+                welcome: 'ಸ್ವಾಗತ',
+                my_patients: 'ನನ್ನ ರೋಗಿಗಳು',
+                appointments_fixed: 'ನಿಗದಿಪಡಿಸಿದ ಅಪಾಯಿಂಟ್‌ಮೆಂಟ್‌ಗಳು',
+                consultation_completed: 'ಸಮಾಲೋಚನೆ ಪೂರ್ಣಗೊಂಡಿದೆ',
+                quick_actions: 'ತ್ವರಿತ ಕ್ರಿಯೆಗಳು',
+                new_registration: 'ಹೊಸ ನೋಂದಣಿ',
+                new_reg_desc: 'ಹೊಸ ಗರ್ಭಿಣಿ ತಾಯಿಯನ್ನು ವ್ಯವಸ್ಥೆಗೆ ಸೇರಿಸಿ',
+                already_registered: 'ಈಗಾಗಲೇ ನೋಂದಾಯಿಸಲಾಗಿದೆ',
+                already_reg_desc: 'ಆರೋಗ್ಯ ಮೌಲ್ಯಮಾಪನಕ್ಕಾಗಿ ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ ದಾಖಲೆಗಳನ್ನು ಹುಡುಕಿ',
+                secure_portal: 'ಸುರಕ್ಷಿತ ವೈದ್ಯಕೀಯ ಕಾರ್ಯಾಚರಣೆ ಪೋರ್ಟಲ್',
+                loading: 'ಲೋಡ್ ಆಗುತ್ತಿದೆ...',
+                total: 'ಒಟ್ಟು',
+                patient_name: 'ರೋಗಿಯ ಹೆಸರು',
+                phone: 'ಫೋನ್',
+                status: 'ಸ್ಥಿತಿ',
+                chosen_at: 'ಸಮಾಲೋಚನೆ ಆಯ್ಕೆ ಸಮಯ',
+                time_scheduled: 'ನಿಗದಿಪಡಿಸಿದ ಸಮಯ',
+                completed_at: 'ಪೂರ್ಣಗೊಂಡ ಸಮಯ',
+                pending: 'ಬಾಕಿ ಇದೆ',
+                completed: 'ಪೂರ್ಣಗೊಂಡಿದೆ',
+                no_patients: 'ಇನ್ನೂ ಯಾವುದೇ ರೋಗಿಗಳನ್ನು ನೋಂದಾಯಿಸಲಾಗಿಲ್ಲ.',
+                no_appointments: 'ಇನ್ನೂ ಯಾವುದೇ ಅಪಾಯಿಂಟ್‌ಮೆಂಟ್‌ಗಳನ್ನು ನಿಗದಿಪಡಿಸಲಾಗಿಲ್ಲ.',
+                no_completed: 'ಇನ್ನೂ ಯಾವುದೇ ಸಮಾಲೋಚನೆ ಪೂರ್ಣಗೊಂಡಿಲ್ಲ.',
+                close: 'ಮುಚ್ಚಿ',
+                dob: 'ಹುಟ್ಟಿದ ದಿನಾಂಕ',
+                age: 'ವಯಸ್ಸು',
+                husband_name: 'ಗಂಡನ ಹೆಸರು',
+                address: 'ವಿಳಾಸ',
+                aadhaar: 'ಆಧಾರ್',
+                lmp_date: 'ಕೊನೆಯ ಮುಟ್ಟಿನ ದಿನಾಂಕ',
+                edd: 'ನಿರೀಕ್ಷಿತ ಹೆರಿಗೆ ದಿನಾಂಕ',
+                blood_group: 'ರಕ್ತದ ಗುಂಪು',
+                gravida: 'ಗ್ರಾವಿಡ',
+                para: 'ಪ್ಯಾರ',
+                years: 'ವರ್ಷಗಳು'
+            }
+        };
+
+        let currentLang = localStorage.getItem('app_lang') || 'en';
+
+        function t(key) {
+            return translations[currentLang][key] || translations['en'][key] || key;
+        }
+
+        function applyTranslations() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                el.textContent = t(key);
+            });
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'kn' : 'en';
+            localStorage.setItem('app_lang', currentLang);
+            
+            const btn = document.getElementById('lang-toggle-btn');
+            if (currentLang === 'kn') {
+                btn.classList.add('kn-active');
+            } else {
+                btn.classList.remove('kn-active');
+            }
+            
+            document.getElementById('lang-en').className = currentLang === 'en' ? 'lang-option active-lang' : 'lang-option';
+            document.getElementById('lang-kn').className = currentLang === 'kn' ? 'lang-option active-lang' : 'lang-option';
+            applyTranslations();
+            // Re-render modals if data is loaded
+            if (allPatients.length > 0 || allConsultations.length > 0) {
+                renderPatientsModal();
+                renderAppointmentsModal();
+                renderCompletedModal();
+            }
+        }
+
+        // Apply saved language on load
+        (function initLang() {
+            const btn = document.getElementById('lang-toggle-btn');
+            if (currentLang === 'kn') btn.classList.add('kn-active');
+            document.getElementById('lang-en').className = currentLang === 'en' ? 'lang-option active-lang' : 'lang-option';
+            document.getElementById('lang-kn').className = currentLang === 'kn' ? 'lang-option active-lang' : 'lang-option';
+            applyTranslations();
+        })();
+
+        // =================== DATA ===================
         const token = localStorage.getItem('token');
+        let allPatients = [];
+        let allConsultations = [];
 
         // Auth check
         (async () => {
@@ -111,6 +606,7 @@
                 const name = data.user.name || 'Worker';
                 document.getElementById('user-name').textContent = name;
                 document.getElementById('welcome-name').textContent = name;
+                loadDashboardData();
             } catch (e) {
                 localStorage.clear();
                 window.location.href = '/worker-login.html';
@@ -120,6 +616,202 @@
         function logout() {
             localStorage.clear();
             window.location.href = '/';
+        }
+
+        async function loadDashboardData() {
+            try {
+                // Load patients
+                const pRes = await fetch('/api/patients', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const pData = await pRes.json();
+                if (pData.success) {
+                    allPatients = pData.patients;
+                    document.getElementById('patient-count').textContent = allPatients.length;
+                }
+
+                // Load consultations
+                const cRes = await fetch('/api/questionnaires/worker/consultations', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const cData = await cRes.json();
+                if (cData.success) {
+                    allConsultations = cData.consultations;
+                    const pending = allConsultations.filter(c => c.consultationStatus !== 'Completed');
+                    const completed = allConsultations.filter(c => c.consultationStatus === 'Completed');
+                    document.getElementById('appointments-count').textContent = pending.length;
+                    document.getElementById('completed-count').textContent = completed.length;
+                }
+            } catch (error) {
+                console.error('Failed to load dashboard data', error);
+            }
+        }
+
+        // =================== MODALS ===================
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        // Close on outside click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) overlay.classList.remove('active');
+            });
+        });
+
+        function formatDateTime(dateStr) {
+            if (!dateStr) return '—';
+            return new Date(dateStr).toLocaleString('en-IN', {
+                day: 'numeric', month: 'short', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+            });
+        }
+
+        // --- My Patients ---
+        function openMyPatientsModal() {
+            renderPatientsModal();
+            document.getElementById('patients-modal').classList.add('active');
+        }
+
+        function renderPatientsModal() {
+            const body = document.getElementById('patients-modal-body');
+            document.getElementById('patients-modal-total').textContent = allPatients.length;
+
+            if (allPatients.length === 0) {
+                body.innerHTML = `<div style="text-align: center; padding: var(--space-xl);">
+                    <iconify-icon icon="mdi:account-off-outline" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 12px;"></iconify-icon>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">${t('no_patients')}</p>
+                </div>`;
+                return;
+            }
+
+            body.innerHTML = allPatients.map((p, i) => {
+                const dob = p.dateOfBirth ? new Date(p.dateOfBirth).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+                const lmp = p.lmpDate ? new Date(p.lmpDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+                const edd = p.edd ? new Date(p.edd).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+                const addr = p.address ? `${p.address.street || ''}, ${p.address.taluk || ''}, ${p.address.district || ''}, ${p.address.state || ''} - ${p.address.pincode || ''}` : '—';
+                return `
+                <div class="patient-item" id="patient-item-${i}">
+                    <div class="patient-row" onclick="toggleBiodata(${i})" style="padding: 12px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            ${p.photo ? `<img src="${p.photo}" class="bio-photo" alt="">` : `<div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; color: var(--primary); font-weight: 700; font-size: 1rem;">${(p.fullName || '?')[0].toUpperCase()}</div>`}
+                            <div>
+                                <div style="font-weight: 600; color: var(--text-primary); font-size: 0.9rem;">${p.fullName}</div>
+                                <div style="font-size: 0.78rem; color: var(--text-secondary); display: flex; align-items: center; gap: 4px; margin-top: 2px;">
+                                    <iconify-icon icon="mdi:phone-outline"></iconify-icon> ${p.phone}
+                                </div>
+                            </div>
+                        </div>
+                        <iconify-icon icon="mdi:chevron-right" class="chevron" style="font-size: 1.2rem; color: var(--text-muted);"></iconify-icon>
+                    </div>
+                    <div class="biodata-panel" style="padding: 0 12px 12px 12px;">
+                        <div class="bio-grid">
+                            <div class="bio-item"><div class="bio-label">${t('dob')}</div><div class="bio-value">${dob}</div></div>
+                            <div class="bio-item"><div class="bio-label">${t('age')}</div><div class="bio-value">${p.age || '—'} ${t('years')}</div></div>
+                            <div class="bio-item"><div class="bio-label">${t('husband_name')}</div><div class="bio-value">${p.husbandName || '—'}</div></div>
+                            <div class="bio-item"><div class="bio-label">${t('blood_group')}</div><div class="bio-value">${p.bloodGroup || '—'}</div></div>
+                            <div class="bio-item"><div class="bio-label">${t('aadhaar')}</div><div class="bio-value">${p.aadhaar || '—'}</div></div>
+                            <div class="bio-item"><div class="bio-label">${t('lmp_date')}</div><div class="bio-value">${lmp}</div></div>
+                            <div class="bio-item"><div class="bio-label">${t('edd')}</div><div class="bio-value">${edd}</div></div>
+                            <div class="bio-item"><div class="bio-label">${t('gravida')} / ${t('para')}</div><div class="bio-value">${p.gravida ?? '—'} / ${p.para ?? '—'}</div></div>
+                            <div class="bio-item" style="grid-column: 1 / -1;"><div class="bio-label">${t('address')}</div><div class="bio-value">${addr}</div></div>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        function toggleBiodata(index) {
+            const item = document.getElementById(`patient-item-${index}`);
+            item.classList.toggle('expanded');
+        }
+
+        // --- Appointments Fixed ---
+        function openAppointmentsModal() {
+            renderAppointmentsModal();
+            document.getElementById('appointments-modal').classList.add('active');
+        }
+
+        function renderAppointmentsModal() {
+            const body = document.getElementById('appointments-modal-body');
+            const pending = allConsultations.filter(c => c.consultationStatus !== 'Completed');
+            document.getElementById('appointments-modal-total').textContent = pending.length;
+
+            if (pending.length === 0) {
+                body.innerHTML = `<div style="text-align: center; padding: var(--space-xl);">
+                    <iconify-icon icon="mdi:calendar-blank-outline" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 12px;"></iconify-icon>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">${t('no_appointments')}</p>
+                </div>`;
+                return;
+            }
+
+            body.innerHTML = `
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead style="position: sticky; top: 0; background: var(--bg-card); z-index: 10;">
+                        <tr>
+                            <th style="padding: 10px 12px; text-align: left; font-size: 0.78rem;">${t('patient_name')}</th>
+                            <th style="padding: 10px 12px; text-align: left; font-size: 0.78rem;">${t('phone')}</th>
+                            <th style="padding: 10px 12px; text-align: left; font-size: 0.78rem;">${t('chosen_at')}</th>
+                            <th style="padding: 10px 12px; text-align: left; font-size: 0.78rem;">${t('time_scheduled')}</th>
+                            <th style="padding: 10px 12px; text-align: left; font-size: 0.78rem;">${t('status')}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${pending.map(c => `
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 10px 12px; font-weight: 600; color: var(--primary); font-size: 0.85rem;">${c.patient?.fullName || '—'}</td>
+                                <td style="padding: 10px 12px; font-size: 0.8rem; color: var(--text-secondary);">${c.patient?.phone || '—'}</td>
+                                <td style="padding: 10px 12px; font-size: 0.75rem; color: var(--text-muted);">${formatDateTime(c.submittedAt)}</td>
+                                <td style="padding: 10px 12px; font-size: 0.75rem; color: var(--accent);">${formatDateTime(c.scheduledAt)}</td>
+                                <td style="padding: 10px 12px;"><span class="badge badge-primary">${t('pending')}</span></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>`;
+        }
+
+        // --- Consultation Completed ---
+        function openCompletedModal() {
+            renderCompletedModal();
+            document.getElementById('completed-modal').classList.add('active');
+        }
+
+        function renderCompletedModal() {
+            const body = document.getElementById('completed-modal-body');
+            const completed = allConsultations.filter(c => c.consultationStatus === 'Completed');
+            document.getElementById('completed-modal-total').textContent = completed.length;
+
+            if (completed.length === 0) {
+                body.innerHTML = `<div style="text-align: center; padding: var(--space-xl);">
+                    <iconify-icon icon="mdi:clipboard-check-outline" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 12px;"></iconify-icon>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">${t('no_completed')}</p>
+                </div>`;
+                return;
+            }
+
+            body.innerHTML = `
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead style="position: sticky; top: 0; background: var(--bg-card); z-index: 10;">
+                        <tr>
+                            <th style="padding: 10px 12px; text-align: left; font-size: 0.78rem;">${t('patient_name')}</th>
+                            <th style="padding: 10px 12px; text-align: left; font-size: 0.78rem;">${t('phone')}</th>
+                            <th style="padding: 10px 12px; text-align: left; font-size: 0.78rem;">${t('chosen_at')}</th>
+                            <th style="padding: 10px 12px; text-align: left; font-size: 0.78rem;">${t('completed_at')}</th>
+                            <th style="padding: 10px 12px; text-align: left; font-size: 0.78rem;">${t('status')}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${completed.map(c => `
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 10px 12px; font-weight: 600; color: var(--primary); font-size: 0.85rem;">${c.patient?.fullName || '—'}</td>
+                                <td style="padding: 10px 12px; font-size: 0.8rem; color: var(--text-secondary);">${c.patient?.phone || '—'}</td>
+                                <td style="padding: 10px 12px; font-size: 0.75rem; color: var(--text-muted);">${formatDateTime(c.submittedAt)}</td>
+                                <td style="padding: 10px 12px; font-size: 0.75rem; color: #047857;">${formatDateTime(c.completedAt)}</td>
+                                <td style="padding: 10px 12px;"><span class="badge badge-success">${t('completed')}</span></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>`;
         }
     </script>
 </body>

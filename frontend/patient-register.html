@@ -69,7 +69,7 @@
                 
                 <!-- Camera Capture -->
                 <div class="form-group" style="margin-bottom: var(--space-xl);">
-                    <label class="form-label">Patient Photo <span style="color: var(--error);">*</span></label>
+                    <label class="form-label">Patient Photo / ರೋಗಿಯ ಫೋಟೋ <span style="color: var(--error);">*</span></label>
                     <div id="camera-container" style="background: var(--bg-main); border: 2px dashed var(--border-color); border-radius: var(--radius-card); padding: var(--space-md); text-align: center;">
                         
                         <!-- Camera Feed -->
@@ -91,18 +91,18 @@
                         <!-- Camera Controls -->
                         <div style="margin-top: var(--space-md); display: flex; justify-content: center; gap: 8px;">
                             <button type="button" class="btn btn-primary" id="capture-btn" onclick="capturePhoto()" style="min-height: 40px;">
-                                <iconify-icon icon="mdi:camera-iris" style="margin-right: 6px;"></iconify-icon> Capture
+                                <iconify-icon icon="mdi:camera-iris" style="margin-right: 6px;"></iconify-icon> Capture / ಫೋಟೋ ತೆಗೆಯಿರಿ
                             </button>
                             <button type="button" class="btn btn-secondary" id="retake-btn" onclick="retakePhoto()" style="min-height: 40px; display: none;">
-                                <iconify-icon icon="mdi:camera-retake" style="margin-right: 6px;"></iconify-icon> Retake
+                                <iconify-icon icon="mdi:camera-retake" style="margin-right: 6px;"></iconify-icon> Retake / ಮರುಪಡೆಯಿರಿ
                             </button>
                             <button type="button" class="btn btn-secondary" id="switch-camera-btn" onclick="switchCamera()" style="min-height: 40px; display: none;">
-                                <iconify-icon icon="mdi:camera-flip" style="margin-right: 6px;"></iconify-icon> Switch
+                                <iconify-icon icon="mdi:camera-flip" style="margin-right: 6px;"></iconify-icon> Switch / ಬದಲಾಯಿಸಿ
                             </button>
                         </div>
                         
                         <p id="camera-status" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">
-                            Position the patient and tap Capture
+                            Position the patient and tap Capture / ರೋಗಿಯನ್ನು ಸರಿಯಾಗಿ ನಿಲ್ಲಿಸಿ ಫೋಟೋ ತೆಗೆಯಿರಿ
                         </p>
                     </div>
                 </div>
@@ -110,68 +110,68 @@
                 <!-- Personal Info -->
                 <div class="section-header">
                     <iconify-icon icon="mdi:account-details" class="section-icon"></iconify-icon>
-                    <h2>Personal Information</h2>
+                    <h2>Personal Information / ವೈಯಕ್ತಿಕ ಮಾಹಿತಿ</h2>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="fullName">Full Name <span style="color: var(--error);">*</span></label>
-                    <input type="text" id="fullName" class="form-input" placeholder="Enter full name as per Aadhaar" required minlength="3">
+                    <label class="form-label" for="fullName">Full Name / ಪೂರ್ಣ ಹೆಸರು <span style="color: var(--error);">*</span></label>
+                    <input type="text" id="fullName" class="form-input" placeholder="Enter full name as per Aadhaar / ಆಧಾರ್ ಪ್ರಕಾರ ಪೂರ್ಣ ಹೆಸರನ್ನು ನಮೂದಿಸಿ" required minlength="3">
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
                     <div class="form-group">
-                        <label class="form-label" for="dob">Date of Birth <span style="color: var(--error);">*</span></label>
+                        <label class="form-label" for="dob">Date of Birth / ಹುಟ್ಟಿದ ದಿನಾಂಕ <span style="color: var(--error);">*</span></label>
                         <input type="date" id="dob" class="form-input" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="age">Age (Auto)</label>
+                        <label class="form-label" for="age">Age (Auto) / ವಯಸ್ಸು (ಸ್ವಯಂ ಚಾಲಿತ)</label>
                         <input type="number" id="age" class="form-input" placeholder="—" readonly style="background: var(--bg-main); color: var(--text-muted);">
                         <p id="age-hint" style="font-size: 0.75rem; margin-top: 4px;"></p>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="husbandName">Partner's Name <span style="color: var(--error);">*</span></label>
-                    <input type="text" id="husbandName" class="form-input" placeholder="Enter partner's name" required minlength="3">
+                    <label class="form-label" for="husbandName">Partner's Name / ಗಂಡನ ಹೆಸರು <span style="color: var(--error);">*</span></label>
+                    <input type="text" id="husbandName" class="form-input" placeholder="Enter partner's name / ಗಂಡನ ಹೆಸರನ್ನು ನಮೂದಿಸಿ" required minlength="3">
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="phone">Phone Number <span style="color: var(--error);">*</span></label>
+                    <label class="form-label" for="phone">Phone Number / ಫೋನ್ ಸಂಖ್ಯೆ <span style="color: var(--error);">*</span></label>
                     <div style="display: flex; gap: 0; align-items: stretch; border-radius: var(--radius-btn); overflow: hidden; border: 1px solid var(--border-color);">
                         <div style="background: var(--bg-main); display: flex; align-items: center; padding: 0 12px; border-right: 1px solid var(--border-color); color: var(--text-secondary); font-weight: 600; font-size: 0.9rem;">
                             +91
                         </div>
                         <input type="tel" id="phone" class="form-input" style="border: none; border-radius: 0; flex: 1;" placeholder="9876543210" maxlength="10" required>
                     </div>
-                    <p id="phone-hint" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">10-digit Indian mobile number</p>
+                    <p id="phone-hint" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">10-digit Indian mobile number / 10-ಅಂಕಿಯ ಭಾರತೀಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ</p>
                 </div>
 
                 <!-- Address Details -->
                 <div class="section-header">
                     <iconify-icon icon="mdi:map-marker-radius" class="section-icon"></iconify-icon>
-                    <h2>Address Details</h2>
+                    <h2>Address Details / ವಿಳಾಸದ ವಿವರಗಳು</h2>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
                     <div class="form-group">
-                        <label class="form-label" for="addressStreet">Street / Area <span style="color: var(--error);">*</span></label>
+                        <label class="form-label" for="addressStreet">Street / Area / ರಸ್ತೆ / ಪ್ರದೇಶ <span style="color: var(--error);">*</span></label>
                         <input type="text" id="addressStreet" class="form-input" placeholder="e.g., MG Road" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="addressTaluk">Taluk <span style="color: var(--error);">*</span></label>
+                        <label class="form-label" for="addressTaluk">Taluk / ತಾಲೂಕು <span style="color: var(--error);">*</span></label>
                         <input type="text" id="addressTaluk" class="form-input" placeholder="e.g., Mangalore" required>
                     </div>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
                     <div class="form-group">
-                        <label class="form-label" for="addressDistrict">District <span style="color: var(--error);">*</span></label>
+                        <label class="form-label" for="addressDistrict">District / ಜಿಲ್ಲೆ <span style="color: var(--error);">*</span></label>
                         <input type="text" id="addressDistrict" class="form-input" placeholder="e.g., Dakshina Kannada" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="addressState">State <span style="color: var(--error);">*</span></label>
+                        <label class="form-label" for="addressState">State / ರಾಜ್ಯ <span style="color: var(--error);">*</span></label>
                         <select id="addressState" class="form-select" required style="background-color: #FFFFFF;">
-                            <option value="">Select State</option>
+                            <option value="">Select State / ರಾಜ್ಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ</option>
                             <option value="Andhra Pradesh">Andhra Pradesh</option>
                             <option value="Arunachal Pradesh">Arunachal Pradesh</option>
                             <option value="Assam">Assam</option>
@@ -213,40 +213,40 @@
                 </div>
 
                 <div class="form-group" style="width: 50%;">
-                    <label class="form-label" for="addressPincode">Pincode <span style="color: var(--error);">*</span></label>
+                    <label class="form-label" for="addressPincode">Pincode / ಪಿನ್ ಕೋಡ್ <span style="color: var(--error);">*</span></label>
                     <input type="text" id="addressPincode" class="form-input" placeholder="e.g., 575001" maxlength="6" required>
-                    <p id="pincode-hint" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">6-digit postal code</p>
+                    <p id="pincode-hint" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">6-digit postal code / 6-ಅಂಕಿಯ ಅಂಚೆ ಕೋಡ್</p>
                 </div>
 
                 <!-- Aadhaar -->
                 <div class="form-group">
-                    <label class="form-label" for="aadhaar">Aadhaar Number <span style="color: var(--error);">*</span></label>
+                    <label class="form-label" for="aadhaar">Aadhaar Number / ಆಧಾರ್ ಸಂಖ್ಯೆ <span style="color: var(--error);">*</span></label>
                     <input type="text" id="aadhaar" class="form-input" placeholder="e.g., 2345 6789 0123" maxlength="14" required>
-                    <p id="aadhaar-hint" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">12-digit Aadhaar number (cannot start with 0 or 1)</p>
+                    <p id="aadhaar-hint" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">12-digit Aadhaar number (cannot start with 0 or 1) / 12-ಅಂಕಿಯ ಆಧಾರ್ ಸಂಖ್ಯೆ (0 ಅಥವಾ 1 ರಿಂದ ಪ್ರಾರಂಭವಾಗುವಂತಿಲ್ಲ)</p>
                 </div>
 
                 <!-- Medical Info -->
                 <div class="section-header">
                     <iconify-icon icon="mdi:hospital-box" class="section-icon"></iconify-icon>
-                    <h2>Medical Information</h2>
+                    <h2>Medical Information / ವೈದ್ಯಕೀಯ ಮಾಹಿತಿ</h2>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
                     <div class="form-group">
-                        <label class="form-label" for="lmpDate">LMP Date <span style="color: var(--error);">*</span></label>
+                        <label class="form-label" for="lmpDate">LMP Date / ಕೊನೆಯ ಮುಟ್ಟಿನ ದಿನಾಂಕ <span style="color: var(--error);">*</span></label>
                         <input type="date" id="lmpDate" class="form-input" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="edd">EDD <span style="color: var(--error);">*</span></label>
+                        <label class="form-label" for="edd">EDD / ನಿರೀಕ್ಷಿತ ಹೆರಿಗೆ ದಿನಾಂಕ <span style="color: var(--error);">*</span></label>
                         <input type="date" id="edd" class="form-input" required>
                         <p id="edd-hint" style="font-size: 0.75rem; margin-top: 4px;"></p>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="bloodGroup">Blood Group <span style="color: var(--error);">*</span></label>
+                    <label class="form-label" for="bloodGroup">Blood Group / ರಕ್ತದ ಗುಂಪು <span style="color: var(--error);">*</span></label>
                     <select id="bloodGroup" class="form-select" required style="background-color: #FFFFFF;">
-                        <option value="">Select blood group</option>
+                        <option value="">Select blood group / ರಕ್ತದ ಗುಂಪನ್ನು ಆಯ್ಕೆಮಾಡಿ</option>
                         <option value="A+">A+</option>
                         <option value="A-">A-</option>
                         <option value="B+">B+</option>
@@ -260,21 +260,21 @@
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
                     <div class="form-group">
-                        <label class="form-label" for="gravida">Gravida <span style="color: var(--error);">*</span></label>
+                        <label class="form-label" for="gravida">Gravida / ಗ್ರಾವಿಡ <span style="color: var(--error);">*</span></label>
                         <input type="number" id="gravida" class="form-input" placeholder="e.g., 1" min="1" required>
-                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">No. of Pregnancies</p>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">No. of Pregnancies / ಗರ್ಭಧಾರಣೆಯ ಸಂಖ್ಯೆ</p>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="para">Para <span style="color: var(--error);">*</span></label>
+                        <label class="form-label" for="para">Para / ಪ್ಯಾರ <span style="color: var(--error);">*</span></label>
                         <input type="number" id="para" class="form-input" placeholder="e.g., 0" min="0" required>
-                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">No. of Deliveries</p>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">No. of Deliveries / ಹೆರಿಗೆಗಳ ಸಂಖ್ಯೆ</p>
                     </div>
                 </div>
 
                 <div id="form-error" style="display: none; color: var(--error); text-align: center; font-weight: 500; margin-bottom: 16px;"></div>
 
                 <button type="submit" class="btn btn-primary" id="submit-btn" style="margin-top: var(--space-md);">
-                    <iconify-icon icon="mdi:check-circle" style="margin-right: 8px; font-size: 1.2rem;"></iconify-icon> Register Patient
+                    <iconify-icon icon="mdi:check-circle" style="margin-right: 8px; font-size: 1.2rem;"></iconify-icon> Register Patient / ರೋಗಿಯನ್ನು ನೋಂದಾಯಿಸಿ
                 </button>
             </form>
         </div>
@@ -473,17 +473,17 @@
             const val = e.target.value;
             const hint = document.getElementById('phone-hint');
             if (val.length === 0) {
-                hint.textContent = '10-digit Indian mobile number (starts with 6-9)';
+                hint.textContent = '10-digit Indian mobile number (starts with 6-9) / 10-ಅಂಕಿಯ ಭಾರತೀಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ (6-9 ರಿಂದ ಪ್ರಾರಂಭವಾಗುತ್ತದೆ)';
                 hint.style.color = '';
             } else if (val.length < 10) {
-                hint.textContent = `${10 - val.length} more digits needed`;
+                hint.innerHTML = `<iconify-icon icon="mdi:information-outline" style="vertical-align: middle; margin-right: 2px;"></iconify-icon> ${10 - val.length} more digits needed / ಇನ್ನೂ ${10 - val.length} ಅಂಕಿಯ ಅಗತ್ಯವಿದೆ`;
                 hint.style.color = 'var(--warning)';
             } else if (!/^[6-9]/.test(val)) {
-                hint.textContent = '❌ Must start with 6, 7, 8, or 9';
+                hint.innerHTML = `<iconify-icon icon="mdi:alert-circle-outline" style="vertical-align: middle; margin-right: 2px;"></iconify-icon> Must start with 6, 7, 8, or 9 / 6, 7, 8, ಅಥವಾ 9 ರಿಂದ ಪ್ರಾರಂಭವಾಗಬೇಕು`;
                 hint.style.color = 'var(--danger)';
             } else {
-                hint.textContent = '✅ Valid phone number';
-                hint.style.color = 'var(--green-500)';
+                hint.textContent = '';
+                hint.style.color = '';
             }
         });
 
@@ -499,17 +499,17 @@
 
             const hint = document.getElementById('aadhaar-hint');
             if (raw.length === 0) {
-                hint.textContent = '12-digit Aadhaar number (cannot start with 0 or 1)';
+                hint.textContent = '12-digit Aadhaar number (cannot start with 0 or 1) / 12-ಅಂಕಿಯ ಆಧಾರ್ ಸಂಖ್ಯೆ (0 ಅಥವಾ 1 ರಿಂದ ಪ್ರಾರಂಭವಾಗುವಂತಿಲ್ಲ)';
                 hint.style.color = '';
             } else if (raw.length < 12) {
-                hint.textContent = `${12 - raw.length} more digits needed`;
+                hint.innerHTML = `<iconify-icon icon="mdi:information-outline" style="vertical-align: middle; margin-right: 2px;"></iconify-icon> ${12 - raw.length} more digits needed / ಇನ್ನೂ ${12 - raw.length} ಅಂಕಿಯ ಅಗತ್ಯವಿದೆ`;
                 hint.style.color = 'var(--warning)';
             } else if (/^[01]/.test(raw)) {
-                hint.textContent = '❌ Aadhaar cannot start with 0 or 1';
+                hint.innerHTML = `<iconify-icon icon="mdi:alert-circle-outline" style="vertical-align: middle; margin-right: 2px;"></iconify-icon> Aadhaar cannot start with 0 or 1 / ಆಧಾರ್ 0 ಅಥವಾ 1 ರಿಂದ ಪ್ರಾರಂಭವಾಗುವಂತಿಲ್ಲ`;
                 hint.style.color = 'var(--danger)';
             } else {
-                hint.textContent = '✅ Valid Aadhaar number';
-                hint.style.color = 'var(--green-500)';
+                hint.textContent = '';
+                hint.style.color = '';
             }
         });
 
@@ -519,17 +519,17 @@
             const val = e.target.value;
             const hint = document.getElementById('pincode-hint');
             if (val.length === 0) {
-                hint.textContent = '6-digit postal code';
+                hint.textContent = '6-digit postal code / 6-ಅಂಕಿಯ ಅಂಚೆ ಕೋಡ್';
                 hint.style.color = '';
             } else if (val.length < 6) {
-                hint.textContent = `${6 - val.length} more digits needed`;
+                hint.innerHTML = `<iconify-icon icon="mdi:information-outline" style="vertical-align: middle; margin-right: 2px;"></iconify-icon> ${6 - val.length} more digits needed / ಇನ್ನೂ ${6 - val.length} ಅಂಕಿಯ ಅಗತ್ಯವಿದೆ`;
                 hint.style.color = 'var(--warning)';
             } else if (/^[0]/.test(val)) {
-                hint.textContent = '❌ Pincode cannot start with 0';
+                hint.innerHTML = `<iconify-icon icon="mdi:alert-circle-outline" style="vertical-align: middle; margin-right: 2px;"></iconify-icon> Pincode cannot start with 0 / ಪಿನ್ ಕೋಡ್ 0 ರಿಂದ ಪ್ರಾರಂಭವಾಗುವಂತಿಲ್ಲ`;
                 hint.style.color = 'var(--danger)';
             } else {
-                hint.textContent = '✅ Valid pincode';
-                hint.style.color = 'var(--green-500)';
+                hint.textContent = '';
+                hint.style.color = '';
             }
         });
 
@@ -540,7 +540,7 @@
                 const edd = new Date(lmp);
                 edd.setDate(edd.getDate() + 280);
                 document.getElementById('edd').value = edd.toISOString().split('T')[0];
-                document.getElementById('edd-hint').textContent = 'Auto-calculated (LMP + 280 days)';
+                document.getElementById('edd-hint').textContent = 'Auto-calculated (LMP + 280 days) / ಸ್ವಯಂ ಚಾಲಿತವಾಗಿ ಲೆಕ್ಕಹಾಕಲಾಗಿದೆ (LMP + 280 ದಿನಗಳು)';
             }
         });
 

@@ -101,4 +101,21 @@ router.put('/:id/consultation', verifyToken, requireWorker, async (req, res) => 
     }
 });
 
+// Get all consultations submitted by this worker
+router.get('/worker/consultations', verifyToken, requireWorker, async (req, res) => {
+    try {
+        const consultations = await Questionnaire.find({
+            submittedBy: req.user.id,
+            doctorConsultation: true
+        })
+            .populate('patient', 'fullName phone')
+            .sort({ submittedAt: 1 });
+
+        res.json({ success: true, consultations });
+    } catch (error) {
+        console.error('Get worker consultations error:', error);
+        res.status(500).json({ success: false, message: 'Server error.' });
+    }
+});
+
 module.exports = router;
