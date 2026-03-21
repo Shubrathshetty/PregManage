@@ -178,7 +178,7 @@
             <div class="brand-icon" style="background: rgba(255,255,255,0.2); color: #FFFFFF;">
                 <iconify-icon icon="mdi:shield-check"></iconify-icon>
             </div>
-            PregManage Admin
+            Admin
         </div>
         <div style="display: flex; align-items: center; gap: 12px;">
             <div style="text-align: right; display: none;" id="user-info-desktop">
@@ -387,7 +387,7 @@
 
     <!-- Consultation List Modal -->
     <div class="modal-overlay" id="consultation-modal">
-        <div class="modal" style="max-width: 600px;">
+        <div class="modal" style="max-width: 750px;">
             <div class="modal-header">
                 <h3 style="font-size: 1.1rem; color: var(--text-primary);" id="consultation-modal-title">Consultations
                 </h3>
@@ -396,10 +396,12 @@
             </div>
             <div class="modal-body" style="max-height: 60vh; overflow-y: auto; padding: 0;">
                 <table style="width: 100%; border-collapse: collapse;">
-                    <thead style="position: sticky; top: 0; background: var(--bg-card); z-index: 10;">
+                    <thead id="consultation-thead"
+                        style="position: sticky; top: 0; background: var(--bg-card); z-index: 10;">
                         <tr>
                             <th>Patient Info</th>
                             <th>Worker</th>
+                            <th>Consultation chosen Time</th>
                             <th>Status/Action</th>
                         </tr>
                     </thead>
@@ -675,6 +677,14 @@
         function openConsultationModal(type) {
             document.getElementById('consultation-modal-title').textContent = type === 'Pending' ? 'Consultation Required' : 'Consultations Completed';
 
+            // Dynamic table headers
+            const thead = document.getElementById('consultation-thead');
+            if (type === 'Pending') {
+                thead.innerHTML = `<tr><th>Patient Info</th><th>Worker</th><th>Consultation chosen Time</th><th>Time Scheduled</th><th>Status/Action</th></tr>`;
+            } else {
+                thead.innerHTML = `<tr><th>Patient Info</th><th>Worker</th><th>Consultation chosen Time</th><th>Completed At</th><th>Status</th></tr>`;
+            }
+
             const list = allConsultations.filter(c => {
                 if (type === 'Pending') return c.consultationStatus !== 'Completed';
                 return c.consultationStatus === 'Completed';
@@ -688,7 +698,12 @@
                 emptyState.classList.remove('hidden');
             } else {
                 emptyState.classList.add('hidden');
-                tbody.innerHTML = list.map(c => `
+                tbody.innerHTML = list.map(c => {
+                    const chosenAt = c.submittedAt ? new Date(c.submittedAt).toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'N/A';
+                    const doneAt = c.completedAt ? new Date(c.completedAt).toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
+                    const scheduledAt = c.scheduledAt ? new Date(c.scheduledAt).toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
+
+                    return `
                     <tr>
                         <td>
                             <div style="font-weight: 600; color: var(--primary); font-size: 0.85rem; cursor: pointer;" onclick="openPatientDetailsModal('${c.patient?._id}')">${c.patient?.fullName || 'Unknown'} <iconify-icon icon="mdi:open-in-new" style="font-size: 0.75rem;"></iconify-icon></div>
@@ -698,13 +713,22 @@
                             <div style="font-size: 0.8rem; color: var(--text-secondary);">${c.submittedBy?.name || 'Unknown'}</div>
                         </td>
                         <td>
+                            <div style="font-size: 0.78rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px;"><iconify-icon icon="mdi:clock-outline"></iconify-icon> ${chosenAt}</div>
+                        </td>
+                        ${type === 'Pending' ? `<td>
+                            <div style="font-size: 0.78rem; color: var(--accent); display: flex; align-items: center; gap: 4px;"><iconify-icon icon="mdi:calendar-clock"></iconify-icon> ${scheduledAt}</div>
+                        </td>` : `<td>
+                            <div style="font-size: 0.78rem; color: #047857; display: flex; align-items: center; gap: 4px;"><iconify-icon icon="mdi:check-circle-outline"></iconify-icon> ${doneAt}</div>
+                        </td>`}
+                        <td>
                             ${type === 'Pending'
-                        ? `<button class="btn btn-primary" style="min-height: 28px; padding: 4px 12px; font-size: 0.75rem; border-radius: var(--radius-full);" onclick="markConsultationComplete('${c._id}')">Mark Done</button>`
-                        : `<span class="badge ${c.consultationStatus === 'Completed' ? 'badge-success' : 'badge-primary'}">${c.consultationStatus}</span>`
-                    }
+                            ? `<button class="btn btn-primary" style="min-height: 28px; padding: 4px 12px; font-size: 0.75rem; border-radius: var(--radius-full);" onclick="markConsultationComplete('${c._id}')">Mark Done</button>`
+                            : `<span class="badge ${c.consultationStatus === 'Completed' ? 'badge-success' : 'badge-primary'}">${c.consultationStatus}</span>`
+                        }
                         </td>
                     </tr>
-                `).join('');
+                `;
+                }).join('');
             }
 
             document.getElementById('consultation-modal').classList.add('active');

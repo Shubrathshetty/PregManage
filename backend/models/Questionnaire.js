@@ -67,6 +67,14 @@ const questionnaireSchema = new mongoose.Schema({
         enum: ['Pending', 'Completed'],
         default: 'Pending'
     },
+    completedAt: {
+        type: Date,
+        default: null
+    },
+    scheduledAt: {
+        type: Date,
+        default: null
+    },
     hospitalVisitDetails: {
         date: { type: Date, default: null },
         time: { type: String, default: null },

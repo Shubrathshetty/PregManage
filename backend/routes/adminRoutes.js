@@ -129,7 +129,7 @@ router.get('/hospital-visits', verifyToken, requireAdmin, async (req, res) => {
         const visits = await Questionnaire.find({ consultationType: 'hospital' })
             .populate('patient', 'fullName phone address')
             .populate('submittedBy', 'name area')
-            .sort({ 'hospitalVisitDetails.date': 1, submittedAt: -1 });
+            .sort({ submittedAt: 1 });
 
         res.json({ success: true, visits });
     } catch (error) {
@@ -144,7 +144,7 @@ router.get('/home-visits', verifyToken, requireAdmin, async (req, res) => {
         const visits = await Questionnaire.find({ consultationType: 'home' })
             .populate('patient', 'fullName phone address')
             .populate('submittedBy', 'name area')
-            .sort({ submittedAt: -1 });
+            .sort({ submittedAt: 1 });
 
         res.json({ success: true, visits });
     } catch (error) {
@@ -159,7 +159,7 @@ router.get('/consultations', verifyToken, requireAdmin, async (req, res) => {
         const consultations = await Questionnaire.find({ doctorConsultation: true })
             .populate('patient') // Populate all patient fields for biodata view
             .populate('submittedBy', 'name')
-            .sort({ submittedAt: -1 });
+            .sort({ submittedAt: 1 });
 
         res.json({ success: true, consultations });
     } catch (error) {
@@ -180,6 +180,11 @@ router.put('/consultations/:id/status', verifyToken, requireAdmin, async (req, r
 
         if (status === 'Completed' || status === 'Pending') {
             questionnaire.consultationStatus = status;
+            if (status === 'Completed') {
+                questionnaire.completedAt = new Date();
+            } else {
+                questionnaire.completedAt = null;
+            }
             await questionnaire.save();
             return res.json({ success: true, message: `Consultation marked as ${status}.` });
         }

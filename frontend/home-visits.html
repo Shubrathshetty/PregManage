@@ -132,7 +132,7 @@
             table.classList.remove('hidden');
 
             tbody.innerHTML = visits.map(v => {
-                const submittedAt = new Date(v.submittedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+                const submittedAt = new Date(v.submittedAt).toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
                 
                 return `
                 <tr style="border-bottom: 1px solid var(--border-color);">
@@ -141,7 +141,7 @@
                     </td>
                     <td style="padding: 16px;">
                         <div style="font-size: 0.8rem; color: var(--text-primary); display: flex; align-items: center; gap: 4px;"><iconify-icon icon="mdi:phone-outline" style="color: var(--text-secondary);"></iconify-icon> ${v.patient ? v.patient.phone : '—'}</div>
-                        <div style="font-size: 0.8rem; color: var(--text-secondary); max-width: 180px; display: flex; align-items: flex-start; gap: 4px; margin-top: 4px;"><iconify-icon icon="mdi:map-marker-outline" style="margin-top: 2px;"></iconify-icon> <span style="line-height: 1.3;">${v.patient && v.patient.address ? v.patient.address.village : '—'}</span></div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); max-width: 180px; display: flex; align-items: flex-start; gap: 4px; margin-top: 4px;"><iconify-icon icon="mdi:map-marker-outline" style="margin-top: 2px;"></iconify-icon> <span style="line-height: 1.3;">${v.patient && v.patient.address ? (v.patient.address.street || v.patient.address.village || '—') : '—'}</span></div>
                     </td>
                     <td style="padding: 16px;">
                         <div style="font-size: 0.9rem; color: var(--text-primary);">${v.submittedBy ? v.submittedBy.name : '—'}</div>
