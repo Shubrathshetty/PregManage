@@ -20,6 +20,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// Request logger
+app.use((req, res, next) => {
+    console.log(`[${req.method}] ${req.url}`);
+    next();
+});
+
+
 // Ensure uploads directory exists
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
@@ -35,6 +42,8 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 app.use('/api/patients', require('./routes/patientRoutes'));
 app.use('/api/questionnaires', require('./routes/questionnaireRoutes'));
+app.use('/api/reports', require('./routes/reportRoutes')); // Feedback/Reports
+
 
 // Serve frontend pages
 app.get('/', (req, res) => {
@@ -42,8 +51,12 @@ app.get('/', (req, res) => {
 });
 
 // Catch-all: serve index.html for SPA-style navigation
-app.get('{*path}', (req, res) => {
+app.get(/^(?!\/api).+/, (req, res) => {
     // If it's an API route that wasn't matched, return 404
+
+
+
+
     if (req.path.startsWith('/api/')) {
         return res.status(404).json({ success: false, message: 'API endpoint not found.' });
     }

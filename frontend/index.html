@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Welcome — PregManage</title>
-    
+
     <!-- Design System -->
     <link rel="stylesheet" href="/css/style.css">
-    
+
     <!-- Iconify Framework -->
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 </head>
+
 <body>
 
     <!-- Professional App Header -->
@@ -25,11 +28,12 @@
 
     <!-- Main Content -->
     <main class="container flex-col gap-lg" style="margin-top: 20px;">
-        
+
         <!-- Hero / Welcome Card -->
         <section class="card-hero text-center">
-            <h1 style="font-size: 1.6rem; margin-bottom: 8px;">Healthy Journeys.</h1>
-            <p style="font-size: 0.95rem; opacity: 0.95;">Empowering safe pregnancies through modern, connected care.</p>
+            <h1 style="font-size: 1.6rem; margin-bottom: 8px;">PREGMANAGE</h1>
+            <p style="font-size: 0.95rem; opacity: 0.95;">Empowering safe pregnancies through modern, connected care.
+            </p>
         </section>
 
         <!-- Role Selection Text -->
@@ -40,9 +44,6 @@
 
         <!-- Role Selection Grid -->
         <div class="flex-col gap-md">
-            
-            <!-- Expectant Mother card removed as per requirements -->
-
             <!-- Healthcare Worker Card -->
             <a href="/worker-login.html" class="card-role">
                 <div class="role-icon-wrapper">
@@ -57,18 +58,254 @@
                 <iconify-icon icon="mdi:shield-account"></iconify-icon>
                 Administrator Login
             </a>
-
         </div>
 
+        <!-- How it Helps Section -->
+        <section style="margin-top: var(--space-xl);">
+            <div class="text-center" style="margin-bottom: var(--space-lg);">
+                <h2 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 4px;">How PregManage Helps</h2>
+                <div
+                    style="width: 40px; height: 3px; background: var(--primary); margin: 8px auto; border-radius: 2px;">
+                </div>
+            </div>
+
+            <div class="flex-col gap-md">
+                <div class="card"
+                    style="padding: var(--space-md); display: flex; align-items: flex-start; gap: var(--space-md);">
+                    <div
+                        style="background: var(--primary-light); color: var(--primary); padding: 10px; border-radius: 10px; font-size: 1.5rem;">
+                        <iconify-icon icon="mdi:link-variant"></iconify-icon>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 0.95rem; margin-bottom: 2px;">Connected Care</h4>
+                        <p style="font-size: 0.8rem;">Seamlessly linking mothers with anganwadi workers for continuous
+                            support.</p>
+                    </div>
+                </div>
+
+                <div class="card"
+                    style="padding: var(--space-md); display: flex; align-items: flex-start; gap: var(--space-md);">
+                    <div
+                        style="background: var(--accent-light); color: var(--accent); padding: 10px; border-radius: 10px; font-size: 1.5rem;">
+                        <iconify-icon icon="mdi:chart-timeline-variant"></iconify-icon>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 0.95rem; margin-bottom: 2px;">Real-time Monitoring</h4>
+                        <p style="font-size: 0.8rem;">Immediate visibility into critical health markers to prevent
+                            complications.</p>
+                    </div>
+                </div>
+
+                <div class="card"
+                    style="padding: var(--space-md); display: flex; align-items: flex-start; gap: var(--space-md);">
+                    <div
+                        style="background: var(--success-light); color: #047857; padding: 10px; border-radius: 10px; font-size: 1.5rem;">
+                        <iconify-icon icon="mdi:shield-check"></iconify-icon>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 0.95rem; margin-bottom: 2px;">Secure Data</h4>
+                        <p style="font-size: 0.8rem;">Your medical data is protected with industry-standard security and
+                            privacy.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Us Card -->
+        <section class="card"
+            style="margin-top: var(--space-lg); background: var(--bg-main); border: 2px dashed var(--border-color); text-align: center;">
+            <div style="font-size: 2rem; color: var(--primary); margin-bottom: 12px;">
+                <iconify-icon icon="mdi:message-draw"></iconify-icon>
+            </div>
+            <h3 style="font-size: 1.1rem; margin-bottom: 8px;">Report Us</h3>
+            <p style="font-size: 0.85rem; margin-bottom: var(--space-md);">We're here to help! Report issues or share
+                your experience with us.</p>
+
+            <div class="flex-row justify-center gap-md">
+                <button class="btn btn-secondary" onclick="openReportModal()"
+                    style="min-height: 40px; font-size: 0.85rem; width: auto; padding: 0 20px;">
+                    <iconify-icon icon="mdi:alert-circle-outline"></iconify-icon> Report
+                </button>
+            </div>
+        </section>
+
     </main>
+
+    <!-- Report Modal -->
+    <div id="report-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Report an Issue</h3>
+                <button class="close-btn" onclick="closeReportModal()">&times;</button>
+            </div>
+            <form id="report-form" class="flex-col gap-md">
+                <div class="form-group">
+                    <label class="form-label">Email / Phone</label>
+                    <input type="text" id="report-identifier" class="form-input" placeholder="How can we reach you?"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Subject</label>
+                    <input type="text" id="report-subject" class="form-input" placeholder="Briefly describe the topic"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea id="report-description" class="form-input" style="min-height: 120px;"
+                        placeholder="Tell us more about the issue or feedback..." required></textarea>
+                </div>
+                <button type="submit" id="submit-report-btn" class="btn btn-primary">Submit Report</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Feedback Message -->
+    <div id="toast" class="toast hidden"></div>
+
+    <style>
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: var(--space-md);
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            padding: var(--space-lg);
+            border-radius: var(--radius-card);
+            width: 100%;
+            max-width: 400px;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Toast Styles */
+        .toast {
+            position: fixed;
+            bottom: var(--space-lg);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-primary);
+            color: #fff;
+            padding: var(--space-md) var(--space-lg);
+            border-radius: var(--radius-full);
+            font-size: 0.9rem;
+            z-index: 1001;
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Global style for textareas since it's missing in style.css */
+        textarea.form-input {
+            resize: vertical;
+        }
+    </style>
+
+    <script>
+        function openReportModal() {
+            document.getElementById('report-modal').style.display = 'flex';
+        }
+
+        function closeReportModal() {
+            document.getElementById('report-modal').style.display = 'none';
+            document.getElementById('report-form').reset();
+        }
+
+        function showToast(message, duration = 3000) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), duration);
+        }
+
+        document.getElementById('report-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-report-btn');
+            const originalText = btn.textContent;
+
+            btn.disabled = true;
+            btn.textContent = 'Submitting...';
+
+            const payload = {
+                identifier: document.getElementById('report-identifier').value,
+                subject: document.getElementById('report-subject').value,
+                description: document.getElementById('report-description').value
+            };
+
+            try {
+                const res = await fetch('/api/reports', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    showToast(data.message);
+                    closeReportModal();
+                } else {
+                    showToast(data.message || 'Submission failed. Please try again.');
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Server error. Please check your connection.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        });
+
+        // Close modal on outside click
+        window.onclick = function (event) {
+            const modal = document.getElementById('report-modal');
+            if (event.target == modal) closeReportModal();
+        }
+    </script>
 
     <!-- Medical Disclaimer Footer -->
     <footer class="app-footer">
         <p class="disclaimer-text">
-            <iconify-icon icon="mdi:information-outline" style="font-size: 1.1rem; color: var(--primary);"></iconify-icon>
+            <iconify-icon icon="mdi:information-outline"
+                style="font-size: 1.1rem; color: var(--primary);"></iconify-icon>
             Always consult your healthcare provider.
         </p>
     </footer>
 
 </body>
+
 </html>
