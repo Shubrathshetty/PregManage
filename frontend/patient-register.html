@@ -155,15 +155,15 @@
     <!-- Main Content -->
     <main class="container flex-col gap-lg">
 
-        <a href="/worker-dashboard.html" onclick="history.back(); return false;" class="btn btn-secondary"
+        <button onclick="goBack()" class="btn btn-secondary"
             style="width: auto; align-self: flex-start; padding: 0 12px; min-height: 40px; border-radius: var(--radius-full);">
             <iconify-icon icon="mdi:arrow-left"></iconify-icon>
-        </a>
+        </button>
 
         <div>
-            <h1 style="font-size: 1.4rem; color: var(--text-primary);">New Patient Registration</h1>
-            <p style="font-size: 0.9rem; color: var(--text-secondary);">Register an expectant mother for care tracking.
-            </p>
+            <h1 id="page-title" style="font-size: 1.4rem; color: var(--text-primary);">New Patient Registration</h1>
+            <p id="page-desc" style="font-size: 0.9rem; color: var(--text-secondary);">Register an expectant mother for
+                care tracking.</p>
         </div>
 
         <div class="card">
@@ -255,7 +255,8 @@
                 <div class="form-group">
                     <label class="form-label" for="husbandName">Husband's Name / ಗಂಡನ ಹೆಸರು <span
                             style="color: var(--error);">*</span></label>
-                    <input type="text" id="husbandName" class="form-input" placeholder="Enter husband's name" required minlength="3">
+                    <input type="text" id="husbandName" class="form-input" placeholder="Enter husband's name" required
+                        minlength="3">
                 </div>
 
                 <div class="form-group">
@@ -477,6 +478,24 @@
             window.location.href = '/';
         }
 
+        function goBack() {
+            if (document.referrer.includes('worker-dashboard.html')) {
+                window.location.href = '/worker-dashboard.html';
+            } else {
+                history.back();
+            }
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const editPatientId = urlParams.get('id');
+        let isEditing = !!editPatientId;
+
+        // Mode Toggles
+        if (isEditing) {
+            document.getElementById('page-title').textContent = 'Edit Patient Profile';
+            document.getElementById('page-desc').textContent = 'Update details for ' + (urlParams.get('name') || 'the patient');
+            document.getElementById('submit-btn').innerHTML = '<iconify-icon icon="mdi:content-save" style="margin-right: 8px; font-size: 1.2rem;"></iconify-icon> Update Profile / ಪ್ರೊಫೈಲ್ ನವೀಕರಿಸಿ';
+        }
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -722,10 +741,64 @@
                     edd.setDate(edd.getDate() + 280);
                     // Update EDD field via flatpickr instance
                     eddPicker.setDate(edd);
-                    document.getElementById('edd-hint').textContent = 'Auto-calculated (LMP + 280 days) / ಸ್ವಯಂ ಚಾಲಿತವಾಗಿ ಲೆಕ್ಕಹಾಕಲಾಗಿದೆ (LMP + 280 ದಿನಗಳು)';
+                    // document.getElementById('edd-hint').textContent = '';
                 }
             }
         });
+
+        // Load patient data if editing
+        if (isEditing) {
+            (async () => {
+                try {
+                    const res = await fetch(`/api/patients/${editPatientId}`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        const p = data.patient;
+                        document.getElementById('fullName').value = p.fullName;
+                        document.getElementById('husbandName').value = p.husbandName;
+                        document.getElementById('phone').value = p.phone;
+                        document.getElementById('addressStreet').value = p.address.street;
+                        document.getElementById('addressTaluk').value = p.address.taluk;
+                        document.getElementById('addressDistrict').value = p.address.district;
+                        document.getElementById('addressState').value = p.address.state;
+                        document.getElementById('addressPincode').value = p.address.pincode;
+                        document.getElementById('aadhaar').value = p.aadhaar.replace(/(\d{4})/g, '$1 ').trim();
+                        document.getElementById('bloodGroup').value = p.bloodGroup;
+                        document.getElementById('gravida').value = p.gravida;
+                        document.getElementById('para').value = p.para;
+
+                        // Set dates in Flatpickr
+                        const dobDate = new Date(p.dateOfBirth);
+                        document.querySelector('#dob')._flatpickr.setDate(dobDate);
+
+                        const lmpDateObj = new Date(p.lmpDate);
+                        document.querySelector('#lmpDate')._flatpickr.setDate(lmpDateObj);
+
+                        // Age calculation
+                        const today = new Date();
+                        let age = today.getFullYear() - dobDate.getFullYear();
+                        if (today.getMonth() < dobDate.getMonth() || (today.getMonth() === dobDate.getMonth() && today.getDate() < dobDate.getDate())) age--;
+                        document.getElementById('age').value = age;
+
+                        // Photo preview if exists
+                        if (p.photo) {
+                            capturedPreview.src = p.photo;
+                            cameraFeedWrapper.style.display = 'none';
+                            capturedPreviewWrapper.style.display = 'block';
+                            captureBtn.style.display = 'none';
+                            retakeBtn.style.display = 'inline-flex';
+                            switchCameraBtn.style.display = 'none';
+                            cameraStatus.textContent = 'Existing photo loaded.';
+                        }
+                    }
+                } catch (e) {
+                    console.error('Error fetching patient:', e);
+                    showToast('Failed to load patient data', 'error');
+                }
+            })();
+        }
 
         // Form submission
         document.getElementById('register-form').addEventListener('submit', async (e) => {
@@ -765,7 +838,7 @@
 
             const submitBtn = document.getElementById('submit-btn');
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<div class="spinner"></div> Registering...';
+            submitBtn.innerHTML = isEditing ? '<div class="spinner"></div> Updating...' : '<div class="spinner"></div> Registering...';
 
             const formData = new FormData();
             formData.append('fullName', document.getElementById('fullName').value.trim());
@@ -790,8 +863,11 @@
             }
 
             try {
-                const res = await fetch('/api/patients', {
-                    method: 'POST',
+                const url = isEditing ? `/api/patients/${editPatientId}` : '/api/patients';
+                const method = isEditing ? 'PUT' : 'POST';
+
+                const res = await fetch(url, {
+                    method: method,
                     headers: { 'Authorization': `Bearer ${token}` },
                     body: formData
                 });
@@ -799,9 +875,13 @@
                 const data = await res.json();
 
                 if (data.success) {
-                    showToast('Patient registered! Redirecting...');
+                    showToast(isEditing ? 'Profile updated!' : 'Patient registered!');
                     setTimeout(() => {
-                        window.location.href = `/questionnaire.html?patientId=${data.patient._id}&patientName=${encodeURIComponent(data.patient.fullName)}`;
+                        if (isEditing) {
+                            window.location.href = '/worker-dashboard.html';
+                        } else {
+                            window.location.href = `/questionnaire.html?patientId=${data.patient._id}&patientName=${encodeURIComponent(data.patient.fullName)}`;
+                        }
                     }, 1500);
                 } else {
                     formError.textContent = data.message;
@@ -814,7 +894,7 @@
                 showToast('Server error', 'error');
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = 'Register Patient';
+                submitBtn.innerHTML = isEditing ? 'Update Profile' : 'Register Patient';
             }
         });
     </script>

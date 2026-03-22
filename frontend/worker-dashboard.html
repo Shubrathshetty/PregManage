@@ -716,6 +716,14 @@
                             <div class="bio-item"><div class="bio-label">${t('gravida')} / ${t('para')}</div><div class="bio-value">${p.gravida ?? '—'} / ${p.para ?? '—'}</div></div>
                             <div class="bio-item" style="grid-column: 1 / -1;"><div class="bio-label">${t('address')}</div><div class="bio-value">${addr}</div></div>
                         </div>
+                        <div style="margin-top: 12px; display: flex; gap: 8px;">
+                            <button onclick="editPatient('${p._id}')" class="btn btn-secondary" style="font-size: 0.75rem; flex: 1; min-height: 36px;">
+                                <iconify-icon icon="mdi:pencil-outline" style="margin-right: 4px;"></iconify-icon> Edit Profile
+                            </button>
+                            <a href="/questionnaire.html?patientId=${p._id}&patientName=${encodeURIComponent(p.fullName)}" class="btn btn-primary" style="font-size: 0.75rem; flex: 1; min-height: 36px; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                                <iconify-icon icon="mdi:clipboard-pulse" style="margin-right: 4px;"></iconify-icon> Start Assessment
+                            </a>
+                        </div>
                     </div>
                 </div>
             `}).join('');
@@ -813,6 +821,28 @@
                     </tbody>
                 </table>`;
         }
+
+        function editPatient(id) {
+            localStorage.setItem('return_to_modal', 'patients-modal');
+            window.location.href = `/patient-register.html?id=${id}&name=${encodeURIComponent(document.getElementById('user-name').textContent)}`;
+        }
+
+        // Handle auto-opening modal on return
+        window.addEventListener('load', () => {
+            const autoOpen = localStorage.getItem('return_to_modal');
+            if (autoOpen) {
+                localStorage.removeItem('return_to_modal');
+                if (autoOpen === 'patients-modal') {
+                    // Wait for data load
+                    const checkInterval = setInterval(() => {
+                        if (allPatients.length > 0) {
+                            openMyPatientsModal();
+                            clearInterval(checkInterval);
+                        }
+                    }, 500);
+                }
+            }
+        });
     </script>
 </body>
 

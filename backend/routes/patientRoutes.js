@@ -131,4 +131,65 @@ router.get('/:id', verifyToken, requireWorker, async (req, res) => {
     }
 });
 
+// Update a patient
+router.put('/:id', verifyToken, requireWorker, upload.single('photo'), validate(patientSchema), async (req, res) => {
+    try {
+        const { id } = req.params;
+        const {
+            fullName, dateOfBirth, age, husbandName, phone,
+            address, // Reconstructed by validate middleware
+            aadhaar, lmpDate, edd, bloodGroup, gravida, para
+        } = req.body;
+
+        const patient = await Patient.findOne({ _id: id, registeredBy: req.user.id });
+        if (!patient) {
+            return res.status(404).json({ success: false, message: 'Patient not found.' });
+        }
+
+        // Check for duplicate Aadhaar (excluding itself)
+        const duplicateAadhaar = await Patient.findOne({ aadhaar, _id: { $ne: id } });
+        if (duplicateAadhaar) {
+            return res.status(400).json({ success: false, message: 'Another patient with this Aadhaar number already exists.' });
+        }
+
+        // Update fields
+        patient.fullName = fullName;
+        patient.dateOfBirth = new Date(dateOfBirth);
+        patient.age = parseInt(age);
+        patient.husbandName = husbandName;
+        patient.phone = phone;
+        patient.address = {
+            street: address.street,
+            taluk: address.taluk,
+            district: address.district,
+            state: address.state,
+            pincode: address.pincode
+        };
+        patient.aadhaar = aadhaar;
+        patient.lmpDate = new Date(lmpDate);
+        patient.edd = new Date(edd);
+        patient.bloodGroup = bloodGroup;
+        patient.gravida = parseInt(gravida);
+        patient.para = parseInt(para);
+
+        if (req.file) {
+            // Delete old photo if it exists
+            if (patient.photo) {
+                const fs = require('fs');
+                const oldPath = path.join(__dirname, '..', patient.photo);
+                if (fs.existsSync(oldPath)) {
+                    fs.unlinkSync(oldPath);
+                }
+            }
+            patient.photo = `/uploads/${req.file.filename}`;
+        }
+
+        await patient.save();
+        res.json({ success: true, message: 'Patient updated successfully.', patient });
+    } catch (error) {
+        console.error('Update patient error:', error);
+        res.status(500).json({ success: false, message: error.message || 'Server error.' });
+    }
+});
+
 module.exports = router;
