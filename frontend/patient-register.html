@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="description" content="New Patient Registration - PregManage">
     <meta name="theme-color" content="#1e3a5f">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -11,6 +12,96 @@
     <link rel="stylesheet" href="/css/style.css">
     <!-- Iconify Framework -->
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <!-- Flatpickr Datepicker -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <style>
+        /* Modernized Flatpickr UI */
+        .flatpickr-calendar {
+            background: #ffffff;
+            border: none !important;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15) !important;
+            border-radius: 16px !important;
+            padding: 12px !important;
+            font-family: 'Inter', sans-serif !important;
+        }
+
+        .flatpickr-day.selected,
+        .flatpickr-day.selected:hover {
+            background: var(--primary) !important;
+            border-color: var(--primary) !important;
+            font-weight: 600;
+        }
+
+        .flatpickr-day:hover,
+        .flatpickr-day.prevMonthDay:hover,
+        .flatpickr-day.nextMonthDay:hover {
+            background: #f0f4f8 !important;
+            border-color: #f0f4f8 !important;
+        }
+
+        .flatpickr-months .flatpickr-month {
+            margin-bottom: 8px;
+            fill: var(--primary) !important;
+            color: var(--text-primary) !important;
+        }
+
+        .flatpickr-months .flatpickr-prev-month:hover svg,
+        .flatpickr-months .flatpickr-next-month:hover svg {
+            fill: var(--primary) !important;
+        }
+
+        .flatpickr-current-month .flatpickr-monthDropdown-months,
+        .flatpickr-current-month .numInputWrapper span.arrowUp:after,
+        .flatpickr-current-month .numInputWrapper span.arrowDown:after {
+            background: transparent !important;
+            color: var(--text-primary) !important;
+            font-weight: 600;
+        }
+
+        /* Native-feeling icon styling */
+        .input-with-icon {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-with-icon input {
+            padding-right: 42px !important;
+            background-color: #ffffff;
+        }
+
+        .input-with-icon iconify-icon {
+            position: absolute;
+            right: 14px;
+            color: var(--primary);
+            font-size: 1.4rem;
+            pointer-events: none;
+            /* Allows clicking the input behind it */
+        }
+
+        /* Mobile Popup Centering */
+        @media (max-width: 800px) {
+            .flatpickr-calendar.open {
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                right: auto !important;
+                bottom: auto !important;
+                transform: translate(-50%, -50%) !important;
+                z-index: 99999 !important;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+            }
+
+            .input-with-icon iconify-icon {
+                font-size: 1.2rem;
+            }
+
+            .form-group {
+                min-width: 0;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -24,16 +115,23 @@
         </div>
         <div style="display: flex; align-items: center; gap: 12px;">
             <div style="text-align: right; display: none;" id="user-info-desktop">
-                <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary);" id="user-name">Worker</div>
+                <div style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary);" id="user-name">Worker
+                </div>
                 <div style="font-size: 0.7rem; color: var(--text-secondary);">Anganwadi Worker</div>
             </div>
-            <button class="btn btn-secondary" onclick="logout()" style="min-height: 36px; padding: 0 12px; font-size: 0.8rem; border-radius: var(--radius-full);">
+            <button class="btn btn-secondary" onclick="logout()"
+                style="min-height: 36px; padding: 0 12px; font-size: 0.8rem; border-radius: var(--radius-full);">
                 Logout
             </button>
         </div>
     </header>
     <style>
-        @media (min-width: 360px) { #user-info-desktop { display: block !important; } }
+        @media (min-width: 360px) {
+            #user-info-desktop {
+                display: block !important;
+            }
+        }
+
         .section-header {
             display: flex;
             align-items: center;
@@ -42,10 +140,12 @@
             padding-bottom: 8px;
             border-bottom: 1px solid var(--border-color);
         }
+
         .section-header h2 {
             font-size: 1.1rem;
             color: var(--primary);
         }
+
         .section-icon {
             font-size: 1.4rem;
             color: var(--primary);
@@ -54,53 +154,66 @@
 
     <!-- Main Content -->
     <main class="container flex-col gap-lg">
-        
-        <a href="/worker-dashboard.html" onclick="history.back(); return false;" class="btn btn-secondary" style="width: auto; align-self: flex-start; padding: 0 12px; min-height: 40px; border-radius: var(--radius-full);">
-            <iconify-icon icon="mdi:arrow-left"></iconify-icon> Back
+
+        <a href="/worker-dashboard.html" onclick="history.back(); return false;" class="btn btn-secondary"
+            style="width: auto; align-self: flex-start; padding: 0 12px; min-height: 40px; border-radius: var(--radius-full);">
+            <iconify-icon icon="mdi:arrow-left"></iconify-icon>
         </a>
 
         <div>
             <h1 style="font-size: 1.4rem; color: var(--text-primary);">New Patient Registration</h1>
-            <p style="font-size: 0.9rem; color: var(--text-secondary);">Register an expectant mother for care tracking.</p>
+            <p style="font-size: 0.9rem; color: var(--text-secondary);">Register an expectant mother for care tracking.
+            </p>
         </div>
 
         <div class="card">
             <form id="register-form">
-                
+
                 <!-- Camera Capture -->
                 <div class="form-group" style="margin-bottom: var(--space-xl);">
-                    <label class="form-label">Patient Photo / ರೋಗಿಯ ಫೋಟೋ <span style="color: var(--error);">*</span></label>
-                    <div id="camera-container" style="background: var(--bg-main); border: 2px dashed var(--border-color); border-radius: var(--radius-card); padding: var(--space-md); text-align: center;">
-                        
+                    <label class="form-label">Patient Photo / ರೋಗಿಯ ಫೋಟೋ <span
+                            style="color: var(--error);">*</span></label>
+                    <div id="camera-container"
+                        style="background: var(--bg-main); border: 2px dashed var(--border-color); border-radius: var(--radius-card); padding: var(--space-md); text-align: center;">
+
                         <!-- Camera Feed -->
-                        <div id="camera-feed-wrapper" style="position: relative; width: 100%; max-width: 320px; aspect-ratio: 4/3; margin: 0 auto; background: #000; border-radius: var(--radius-btn); overflow: hidden;">
-                            <video id="camera-feed" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
-                            <div id="camera-loading" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.7); color: white; display: none;">
-                                <iconify-icon icon="mdi:loading" class="spin" style="font-size: 2rem; margin-bottom: 8px;"></iconify-icon>
+                        <div id="camera-feed-wrapper"
+                            style="position: relative; width: 100%; max-width: 320px; aspect-ratio: 4/3; margin: 0 auto; background: #000; border-radius: var(--radius-btn); overflow: hidden;">
+                            <video id="camera-feed" autoplay playsinline
+                                style="width: 100%; height: 100%; object-fit: cover;"></video>
+                            <div id="camera-loading"
+                                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(0,0,0,0.7); color: white; display: none;">
+                                <iconify-icon icon="mdi:loading" class="spin"
+                                    style="font-size: 2rem; margin-bottom: 8px;"></iconify-icon>
                                 <span>Starting camera...</span>
                             </div>
                         </div>
 
                         <!-- Captured Photo Preview -->
-                        <div id="captured-preview-wrapper" style="position: relative; width: 100%; max-width: 320px; aspect-ratio: 4/3; margin: 0 auto; border-radius: var(--radius-btn); overflow: hidden; display: none;">
-                            <img id="captured-preview" alt="Captured photo" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div id="captured-preview-wrapper"
+                            style="position: relative; width: 100%; max-width: 320px; aspect-ratio: 4/3; margin: 0 auto; border-radius: var(--radius-btn); overflow: hidden; display: none;">
+                            <img id="captured-preview" alt="Captured photo"
+                                style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
 
                         <canvas id="capture-canvas" style="display: none;"></canvas>
 
                         <!-- Camera Controls -->
                         <div style="margin-top: var(--space-md); display: flex; justify-content: center; gap: 8px;">
-                            <button type="button" class="btn btn-primary" id="capture-btn" onclick="capturePhoto()" style="min-height: 40px;">
-                                <iconify-icon icon="mdi:camera-iris" style="margin-right: 6px;"></iconify-icon> Capture / ಫೋಟೋ ತೆಗೆಯಿರಿ
+                            <button type="button" class="btn btn-primary" id="capture-btn" onclick="capturePhoto()"
+                                style="min-height: 40px;">
+                                <iconify-icon icon="mdi:camera-iris" style="margin-right: 6px;"></iconify-icon> Capture
                             </button>
-                            <button type="button" class="btn btn-secondary" id="retake-btn" onclick="retakePhoto()" style="min-height: 40px; display: none;">
-                                <iconify-icon icon="mdi:camera-retake" style="margin-right: 6px;"></iconify-icon> Retake / ಮರುಪಡೆಯಿರಿ
+                            <button type="button" class="btn btn-secondary" id="retake-btn" onclick="retakePhoto()"
+                                style="min-height: 40px; display: none;">
+                                <iconify-icon icon="mdi:camera-retake" style="margin-right: 6px;"></iconify-icon> Retake
                             </button>
-                            <button type="button" class="btn btn-secondary" id="switch-camera-btn" onclick="switchCamera()" style="min-height: 40px; display: none;">
-                                <iconify-icon icon="mdi:camera-flip" style="margin-right: 6px;"></iconify-icon> Switch / ಬದಲಾಯಿಸಿ
+                            <button type="button" class="btn btn-secondary" id="switch-camera-btn"
+                                onclick="switchCamera()" style="min-height: 40px; display: none;">
+                                <iconify-icon icon="mdi:camera-flip" style="margin-right: 6px;"></iconify-icon> Switch
                             </button>
                         </div>
-                        
+
                         <p id="camera-status" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">
                             Position the patient and tap Capture / ರೋಗಿಯನ್ನು ಸರಿಯಾಗಿ ನಿಲ್ಲಿಸಿ ಫೋಟೋ ತೆಗೆಯಿರಿ
                         </p>
@@ -114,36 +227,51 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="fullName">Full Name / ಪೂರ್ಣ ಹೆಸರು <span style="color: var(--error);">*</span></label>
-                    <input type="text" id="fullName" class="form-input" placeholder="Enter full name as per Aadhaar / ಆಧಾರ್ ಪ್ರಕಾರ ಪೂರ್ಣ ಹೆಸರನ್ನು ನಮೂದಿಸಿ" required minlength="3">
+                    <label class="form-label" for="fullName">Full Name / ಪೂರ್ಣ ಹೆಸರು <span
+                            style="color: var(--error);">*</span></label>
+                    <input type="text" id="fullName" class="form-input"
+                        placeholder="Enter full name as per Aadhaar / ಆಧಾರ್ ಪ್ರಕಾರ ಪೂರ್ಣ ಹೆಸರನ್ನು ನಮೂದಿಸಿ" required
+                        minlength="3">
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
                     <div class="form-group">
-                        <label class="form-label" for="dob">Date of Birth / ಹುಟ್ಟಿದ ದಿನಾಂಕ <span style="color: var(--error);">*</span></label>
-                        <input type="date" id="dob" class="form-input" required>
+                        <label class="form-label" for="dob">Date of Birth / ಹುಟ್ಟಿದ ದಿನಾಂಕ <span
+                                style="color: var(--error);">*</span></label>
+                        <div class="input-with-icon">
+                            <input type="text" id="dob" class="form-input flatpickr-date"
+                                placeholder="Select Date / ದಿನಾಂಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ" required>
+                            <iconify-icon icon="mdi:calendar"></iconify-icon>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="age">Age (Auto) / ವಯಸ್ಸು (ಸ್ವಯಂ ಚಾಲಿತ)</label>
-                        <input type="number" id="age" class="form-input" placeholder="—" readonly style="background: var(--bg-main); color: var(--text-muted);">
+                        <label class="form-label" for="age">Age / ವಯಸ್ಸು</label>
+                        <input type="number" id="age" class="form-input" placeholder="—" readonly
+                            style="background: var(--bg-main); color: var(--text-muted);">
                         <p id="age-hint" style="font-size: 0.75rem; margin-top: 4px;"></p>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="husbandName">Partner's Name / ಗಂಡನ ಹೆಸರು <span style="color: var(--error);">*</span></label>
-                    <input type="text" id="husbandName" class="form-input" placeholder="Enter partner's name / ಗಂಡನ ಹೆಸರನ್ನು ನಮೂದಿಸಿ" required minlength="3">
+                    <label class="form-label" for="husbandName">Husband's Name / ಗಂಡನ ಹೆಸರು <span
+                            style="color: var(--error);">*</span></label>
+                    <input type="text" id="husbandName" class="form-input" placeholder="Enter husband's name" required minlength="3">
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="phone">Phone Number / ಫೋನ್ ಸಂಖ್ಯೆ <span style="color: var(--error);">*</span></label>
-                    <div style="display: flex; gap: 0; align-items: stretch; border-radius: var(--radius-btn); overflow: hidden; border: 1px solid var(--border-color);">
-                        <div style="background: var(--bg-main); display: flex; align-items: center; padding: 0 12px; border-right: 1px solid var(--border-color); color: var(--text-secondary); font-weight: 600; font-size: 0.9rem;">
+                    <label class="form-label" for="phone">Phone Number / ಫೋನ್ ಸಂಖ್ಯೆ <span
+                            style="color: var(--error);">*</span></label>
+                    <div
+                        style="display: flex; gap: 0; align-items: stretch; border-radius: var(--radius-btn); overflow: hidden; border: 1px solid var(--border-color);">
+                        <div
+                            style="background: var(--bg-main); display: flex; align-items: center; padding: 0 12px; border-right: 1px solid var(--border-color); color: var(--text-secondary); font-weight: 600; font-size: 0.9rem;">
                             +91
                         </div>
-                        <input type="tel" id="phone" class="form-input" style="border: none; border-radius: 0; flex: 1;" placeholder="9876543210" maxlength="10" required>
+                        <input type="tel" id="phone" class="form-input" style="border: none; border-radius: 0; flex: 1;"
+                            placeholder="" maxlength="10" required>
                     </div>
-                    <p id="phone-hint" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">10-digit Indian mobile number / 10-ಅಂಕಿಯ ಭಾರತೀಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ</p>
+                    <!--  <p id="phone-hint" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">10-digit
+                        Indian mobile number / 10-ಅಂಕಿಯ ಭಾರತೀಯ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ</p> -->
                 </div>
 
                 <!-- Address Details -->
@@ -154,22 +282,27 @@
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
                     <div class="form-group">
-                        <label class="form-label" for="addressStreet">Street / Area / ರಸ್ತೆ / ಪ್ರದೇಶ <span style="color: var(--error);">*</span></label>
+                        <label class="form-label" for="addressStreet">Street / Area / ರಸ್ತೆ / ಪ್ರದೇಶ <span
+                                style="color: var(--error);">*</span></label>
                         <input type="text" id="addressStreet" class="form-input" placeholder="e.g., MG Road" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="addressTaluk">Taluk / ತಾಲೂಕು <span style="color: var(--error);">*</span></label>
+                        <label class="form-label" for="addressTaluk">Taluk / ತಾಲೂಕು <span
+                                style="color: var(--error);">*</span></label>
                         <input type="text" id="addressTaluk" class="form-input" placeholder="e.g., Mangalore" required>
                     </div>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
                     <div class="form-group">
-                        <label class="form-label" for="addressDistrict">District / ಜಿಲ್ಲೆ <span style="color: var(--error);">*</span></label>
-                        <input type="text" id="addressDistrict" class="form-input" placeholder="e.g., Dakshina Kannada" required>
+                        <label class="form-label" for="addressDistrict">District / ಜಿಲ್ಲೆ <span
+                                style="color: var(--error);">*</span></label>
+                        <input type="text" id="addressDistrict" class="form-input" placeholder="e.g., Dakshina Kannada"
+                            required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="addressState">State / ರಾಜ್ಯ <span style="color: var(--error);">*</span></label>
+                        <label class="form-label" for="addressState">State / ರಾಜ್ಯ <span
+                                style="color: var(--error);">*</span></label>
                         <select id="addressState" class="form-select" required style="background-color: #FFFFFF;">
                             <option value="">Select State / ರಾಜ್ಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ</option>
                             <option value="Andhra Pradesh">Andhra Pradesh</option>
@@ -202,7 +335,8 @@
                             <option value="West Bengal">West Bengal</option>
                             <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
                             <option value="Chandigarh">Chandigarh</option>
-                            <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                            <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman
+                                and Diu</option>
                             <option value="Delhi">Delhi</option>
                             <option value="Jammu and Kashmir">Jammu and Kashmir</option>
                             <option value="Ladakh">Ladakh</option>
@@ -213,16 +347,22 @@
                 </div>
 
                 <div class="form-group" style="width: 50%;">
-                    <label class="form-label" for="addressPincode">Pincode / ಪಿನ್ ಕೋಡ್ <span style="color: var(--error);">*</span></label>
-                    <input type="text" id="addressPincode" class="form-input" placeholder="e.g., 575001" maxlength="6" required>
-                    <p id="pincode-hint" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">6-digit postal code / 6-ಅಂಕಿಯ ಅಂಚೆ ಕೋಡ್</p>
+                    <label class="form-label" for="addressPincode">Pincode / ಪಿನ್ ಕೋಡ್ <span
+                            style="color: var(--error);">*</span></label>
+                    <input type="text" id="addressPincode" class="form-input" placeholder="e.g., 575001" maxlength="6"
+                        required>
+                    <p id="pincode-hint" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">6-digit
+                        postal code / 6-ಅಂಕಿಯ ಅಂಚೆ ಕೋಡ್</p>
                 </div>
 
                 <!-- Aadhaar -->
                 <div class="form-group">
-                    <label class="form-label" for="aadhaar">Aadhaar Number / ಆಧಾರ್ ಸಂಖ್ಯೆ <span style="color: var(--error);">*</span></label>
-                    <input type="text" id="aadhaar" class="form-input" placeholder="e.g., 2345 6789 0123" maxlength="14" required>
-                    <p id="aadhaar-hint" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">12-digit Aadhaar number (cannot start with 0 or 1) / 12-ಅಂಕಿಯ ಆಧಾರ್ ಸಂಖ್ಯೆ (0 ಅಥವಾ 1 ರಿಂದ ಪ್ರಾರಂಭವಾಗುವಂತಿಲ್ಲ)</p>
+                    <label class="form-label" for="aadhaar">Aadhaar Number / ಆಧಾರ್ ಸಂಖ್ಯೆ <span
+                            style="color: var(--error);">*</span></label>
+                    <input type="text" id="aadhaar" class="form-input" placeholder="" maxlength="14" required>
+                    <p id="aadhaar-hint" style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">12-digit
+                        Aadhaar number (cannot start with 0 or 1) / 12-ಅಂಕಿಯ ಆಧಾರ್ ಸಂಖ್ಯೆ (0 ಅಥವಾ 1 ರಿಂದ
+                        ಪ್ರಾರಂಭವಾಗುವಂತಿಲ್ಲ)</p>
                 </div>
 
                 <!-- Medical Info -->
@@ -233,20 +373,31 @@
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
                     <div class="form-group">
-                        <label class="form-label" for="lmpDate">LMP Date / ಕೊನೆಯ ಮುಟ್ಟಿನ ದಿನಾಂಕ <span style="color: var(--error);">*</span></label>
-                        <input type="date" id="lmpDate" class="form-input" required>
+                        <label class="form-label" for="lmpDate">LMP Date / ಕೊನೆಯ ಮುಟ್ಟಿನ ದಿನಾಂಕ <span
+                                style="color: var(--error);">*</span></label>
+                        <div class="input-with-icon">
+                            <input type="text" id="lmpDate" class="form-input flatpickr-date"
+                                placeholder="Select Date / ದಿನಾಂಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ" required>
+                            <iconify-icon icon="mdi:calendar"></iconify-icon>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="edd">EDD / ನಿರೀಕ್ಷಿತ ಹೆರಿಗೆ ದಿನಾಂಕ <span style="color: var(--error);">*</span></label>
-                        <input type="date" id="edd" class="form-input" required>
+                        <label class="form-label" for="edd">EDD / ನಿರೀಕ್ಷಿತ ಹೆರಿಗೆ ದಿನಾಂಕ <span
+                                style="color: var(--error);">*</span></label>
+                        <div class="input-with-icon">
+                            <input type="text" id="edd" class="form-input"
+                                placeholder="Select Date / ದಿನಾಂಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ" required>
+                            <iconify-icon icon="mdi:calendar"></iconify-icon>
+                        </div>
                         <p id="edd-hint" style="font-size: 0.75rem; margin-top: 4px;"></p>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label" for="bloodGroup">Blood Group / ರಕ್ತದ ಗುಂಪು <span style="color: var(--error);">*</span></label>
+                    <label class="form-label" for="bloodGroup">Blood Group / ರಕ್ತದ ಗುಂಪು <span
+                            style="color: var(--error);">*</span></label>
                     <select id="bloodGroup" class="form-select" required style="background-color: #FFFFFF;">
-                        <option value="">Select blood group / ರಕ್ತದ ಗುಂಪನ್ನು ಆಯ್ಕೆಮಾಡಿ</option>
+                        <option value="">Select Blood Group</option>
                         <option value="A+">A+</option>
                         <option value="A-">A-</option>
                         <option value="B+">B+</option>
@@ -260,21 +411,28 @@
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md);">
                     <div class="form-group">
-                        <label class="form-label" for="gravida">Gravida / ಗ್ರಾವಿಡ <span style="color: var(--error);">*</span></label>
+                        <label class="form-label" for="gravida">Gravida / ಗ್ರಾವಿಡ <span
+                                style="color: var(--error);">*</span></label>
                         <input type="number" id="gravida" class="form-input" placeholder="e.g., 1" min="1" required>
-                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">No. of Pregnancies / ಗರ್ಭಧಾರಣೆಯ ಸಂಖ್ಯೆ</p>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">No. of Pregnancies /
+                            ಗರ್ಭಧಾರಣೆಯ ಸಂಖ್ಯೆ</p>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="para">Para / ಪ್ಯಾರ <span style="color: var(--error);">*</span></label>
+                        <label class="form-label" for="para">Para / ಪ್ಯಾರ <span
+                                style="color: var(--error);">*</span></label>
                         <input type="number" id="para" class="form-input" placeholder="e.g., 0" min="0" required>
-                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">No. of Deliveries / ಹೆರಿಗೆಗಳ ಸಂಖ್ಯೆ</p>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">No. of Deliveries /
+                            ಹೆರಿಗೆಗಳ ಸಂಖ್ಯೆ</p>
                     </div>
                 </div>
 
-                <div id="form-error" style="display: none; color: var(--error); text-align: center; font-weight: 500; margin-bottom: 16px;"></div>
+                <div id="form-error"
+                    style="display: none; color: var(--error); text-align: center; font-weight: 500; margin-bottom: 16px;">
+                </div>
 
                 <button type="submit" class="btn btn-primary" id="submit-btn" style="margin-top: var(--space-md);">
-                    <iconify-icon icon="mdi:check-circle" style="margin-right: 8px; font-size: 1.2rem;"></iconify-icon> Register Patient / ರೋಗಿಯನ್ನು ನೋಂದಾಯಿಸಿ
+                    <iconify-icon icon="mdi:check-circle" style="margin-right: 8px; font-size: 1.2rem;"></iconify-icon>
+                    Register Patient / ರೋಗಿಯನ್ನು ನೋಂದಾಯಿಸಿ
                 </button>
             </form>
         </div>
@@ -283,7 +441,8 @@
     <!-- Medical Disclaimer Footer -->
     <footer class="app-footer">
         <p class="disclaimer-text">
-            <iconify-icon icon="mdi:information-outline" style="font-size: 1.1rem; color: var(--primary);"></iconify-icon>
+            <iconify-icon icon="mdi:information-outline"
+                style="font-size: 1.1rem; color: var(--primary);"></iconify-icon>
             Always consult your healthcare provider.
         </p>
     </footer>
@@ -364,8 +523,8 @@
                 video.srcObject = currentStream;
 
                 video.onloadedmetadata = () => {
-                    cameraLoading.classList.add('hidden');
-                    switchCameraBtn.classList.remove('hidden');
+                    cameraLoading.style.display = 'none';
+                    switchCameraBtn.style.display = 'inline-flex';
                 };
 
                 cameraStatus.textContent = 'Position the patient and tap Capture';
@@ -393,15 +552,15 @@
                 capturedBlob = blob;
 
                 capturedPreview.src = URL.createObjectURL(blob);
-                cameraFeedWrapper.classList.add('hidden');
-                capturedPreviewWrapper.classList.remove('hidden');
+                cameraFeedWrapper.style.display = 'none';
+                capturedPreviewWrapper.style.display = 'block';
 
-                captureBtn.classList.add('hidden');
-                retakeBtn.classList.remove('hidden');
-                switchCameraBtn.classList.add('hidden');
+                captureBtn.style.display = 'none';
+                retakeBtn.style.display = 'inline-flex';
+                switchCameraBtn.style.display = 'none';
 
                 cameraContainer.classList.add('has-photo');
-                cameraStatus.textContent = '✅ Photo captured! You can retake if needed.';
+                cameraStatus.textContent = 'Photo captured! You can retake if needed.';
                 cameraStatus.style.color = 'var(--green-500)';
 
                 currentStream.getTracks().forEach(t => t.stop());
@@ -413,11 +572,11 @@
         function retakePhoto() {
             capturedBlob = null;
 
-            capturedPreviewWrapper.classList.add('hidden');
-            cameraFeedWrapper.classList.remove('hidden');
+            capturedPreviewWrapper.style.display = 'none';
+            cameraFeedWrapper.style.display = 'block';
 
-            captureBtn.classList.remove('hidden');
-            retakeBtn.classList.add('hidden');
+            captureBtn.style.display = 'inline-flex';
+            retakeBtn.style.display = 'none';
 
             cameraContainer.classList.remove('has-photo');
             cameraStatus.textContent = 'Position the patient and tap Capture';
@@ -453,7 +612,9 @@
 
         // ---- DOB → Auto-calculate Age ----
         document.getElementById('dob').addEventListener('change', (e) => {
-            const dob = new Date(e.target.value);
+            const val = e.target.value;
+            if (!val) return;
+            const dob = new Date(val);
             if (!isNaN(dob)) {
                 const today = new Date();
                 let age = today.getFullYear() - dob.getFullYear();
@@ -533,14 +694,36 @@
             }
         });
 
-        // Auto-calculate EDD from LMP
-        document.getElementById('lmpDate').addEventListener('change', (e) => {
-            const lmp = new Date(e.target.value);
-            if (!isNaN(lmp)) {
-                const edd = new Date(lmp);
-                edd.setDate(edd.getDate() + 280);
-                document.getElementById('edd').value = edd.toISOString().split('T')[0];
-                document.getElementById('edd-hint').textContent = 'Auto-calculated (LMP + 280 days) / ಸ್ವಯಂ ಚಾಲಿತವಾಗಿ ಲೆಕ್ಕಹಾಕಲಾಗಿದೆ (LMP + 280 ದಿನಗಳು)';
+        // ---- Calendar JS (Flatpickr) Integration ----
+        const flatpickrConfig = {
+            dateFormat: "Y-m-d",
+            altInput: true,
+            altFormat: "d-M-Y",
+            allowInput: true,
+            disableMobile: true,
+            position: "below"
+        };
+
+        flatpickr("#dob", {
+            ...flatpickrConfig,
+            maxDate: "today"
+        });
+
+        const eddPicker = flatpickr("#edd", flatpickrConfig);
+
+        flatpickr("#lmpDate", {
+            ...flatpickrConfig,
+            maxDate: "today",
+            onChange: function (selectedDates, dateStr, instance) {
+                if (selectedDates.length > 0) {
+                    // Auto-calculate EDD from LMP
+                    const lmp = selectedDates[0];
+                    const edd = new Date(lmp);
+                    edd.setDate(edd.getDate() + 280);
+                    // Update EDD field via flatpickr instance
+                    eddPicker.setDate(edd);
+                    document.getElementById('edd-hint').textContent = 'Auto-calculated (LMP + 280 days) / ಸ್ವಯಂ ಚಾಲಿತವಾಗಿ ಲೆಕ್ಕಹಾಕಲಾಗಿದೆ (LMP + 280 ದಿನಗಳು)';
+                }
             }
         });
 

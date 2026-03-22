@@ -1,3 +1,10 @@
 node_modules/
 .env
-uploads/
+
+# Ignore all files inside the uploads folder
+uploads/*
+backend/uploads/*
+
+# But DO NOT ignore the empty .gitkeep marker
+!uploads/.gitkeep
+!backend/uploads/.gitkeep

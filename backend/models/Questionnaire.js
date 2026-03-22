@@ -12,43 +12,39 @@ const questionnaireSchema = new mongoose.Schema({
         required: true
     },
     answers: {
-        q1_bleeding: {
+        q1_pain_tooth: {
             type: Boolean,
             required: true
         },
-        q2_headache_vision: {
+        q2_food_lodgement: {
             type: Boolean,
             required: true
         },
-        q3_swelling: {
+        q3_bleeding_gums: {
             type: Boolean,
             required: true
         },
-        q4_nausea_vomiting: {
+        q4_bad_breath: {
             type: Boolean,
             required: true
         },
-        q5_fetal_movement: {
+        q5_burning_sensation: {
             type: Boolean,
             required: true
         },
-        q6_abdominal_pain: {
+        q6_ulcers: {
             type: Boolean,
             required: true
         },
-        q7_fever_chills: {
+        q7_difficulty_opening_mouth: {
             type: Boolean,
             required: true
         },
-        q8_breathing_chest: {
+        q8_malaigned_teeth: {
             type: Boolean,
             required: true
         },
-        q9_supplements: {
-            type: Boolean,
-            required: true
-        },
-        q10_checkup: {
+        q9_missing_teeth: {
             type: Boolean,
             required: true
         }

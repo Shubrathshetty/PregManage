@@ -130,7 +130,7 @@
 
         <div style="background: var(--primary-light); color: var(--primary); padding: var(--space-md); border-radius: var(--radius-card); display: flex; gap: 12px; align-items: flex-start; font-size: 0.85rem; line-height: 1.5;">
             <iconify-icon icon="mdi:information-outline" style="font-size: 1.4rem; flex-shrink: 0; margin-top: 2px;"></iconify-icon>
-            <div>Please answer all 10 questions by selecting <strong>Yes</strong> or <strong>No</strong> for each. This helps assess the patient's current health status.</div>
+            <div>Please answer all 9 questions by selecting <strong>Yes / ಹೌದು</strong> or <strong>No / ಇಲ್ಲ</strong> for each. This helps assess the patient's current health status.</div>
         </div>
 
         <form id="questionnaire-form" style="margin-top: 8px;">
@@ -138,11 +138,11 @@
             <div class="question-card fade-in" style="animation-delay: 0.05s;">
                 <div class="question-header">
                     <div class="question-number">1</div>
-                    <div class="question-text">Any <strong>bleeding or spotting</strong>?</div>
+                    <div class="question-text">I HAVE PAIN IN MY TOOTH / ನನಗೆ ಹಲ್ಲು ನೋವು ಇದೆ</div>
                 </div>
-                <div class="toggle-group" data-question="q1_bleeding">
-                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes</button>
-                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No</button>
+                <div class="toggle-group" data-question="q1_pain_tooth">
+                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes / ಹೌದು</button>
+                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No / ಇಲ್ಲ</button>
                 </div>
             </div>
 
@@ -150,11 +150,11 @@
             <div class="question-card fade-in" style="animation-delay: 0.1s;">
                 <div class="question-header">
                     <div class="question-number">2</div>
-                    <div class="question-text"><strong>Severe headaches or blurred vision</strong>?</div>
+                    <div class="question-text">I HAVE FOOD LODGEMENT / ನನ್ನ ಹಲ್ಲುಗಳಲ್ಲಿ ಆಹಾರ ಸಿಕ್ಕಿಹಾಕಿಕೊಳ್ಳುತ್ತದೆ</div>
                 </div>
-                <div class="toggle-group" data-question="q2_headache_vision">
-                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes</button>
-                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No</button>
+                <div class="toggle-group" data-question="q2_food_lodgement">
+                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes / ಹೌದು</button>
+                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No / ಇಲ್ಲ</button>
                 </div>
             </div>
 
@@ -162,11 +162,11 @@
             <div class="question-card fade-in" style="animation-delay: 0.15s;">
                 <div class="question-header">
                     <div class="question-number">3</div>
-                    <div class="question-text"><strong>Swelling</strong> in hands, feet, or face?</div>
+                    <div class="question-text">I HAVE BLEEDING GUMS / ನನಗೆ ಒಸಡುಗಳಲ್ಲಿ ರಕ್ತಸ್ರಾವವಾಗುತ್ತದೆ</div>
                 </div>
-                <div class="toggle-group" data-question="q3_swelling">
-                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes</button>
-                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No</button>
+                <div class="toggle-group" data-question="q3_bleeding_gums">
+                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes / ಹೌದು</button>
+                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No / ಇಲ್ಲ</button>
                 </div>
             </div>
 
@@ -174,11 +174,11 @@
             <div class="question-card fade-in" style="animation-delay: 0.2s;">
                 <div class="question-header">
                     <div class="question-number">4</div>
-                    <div class="question-text"><strong>Persistent nausea or vomiting</strong>?</div>
+                    <div class="question-text">I HAVE BAD BREATH / ನನಗೆ ಬಾಯಿಯಲ್ಲಿ ದುರ್ವಾಸನೆ ಬರುತ್ತದೆ</div>
                 </div>
-                <div class="toggle-group" data-question="q4_nausea_vomiting">
-                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes</button>
-                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No</button>
+                <div class="toggle-group" data-question="q4_bad_breath">
+                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes / ಹೌದು</button>
+                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No / ಇಲ್ಲ</button>
                 </div>
             </div>
 
@@ -186,11 +186,11 @@
             <div class="question-card fade-in" style="animation-delay: 0.25s;">
                 <div class="question-header">
                     <div class="question-number">5</div>
-                    <div class="question-text"><strong>Reduced or no fetal movement</strong>?</div>
+                    <div class="question-text">I HAVE BURNING SENSATION IN MY MOUTH / ನನಗೆ ಬಾಯಿಯಲ್ಲಿ ಉರಿಯುವ ಸಂವೇದನೆ ಇದೆ</div>
                 </div>
-                <div class="toggle-group" data-question="q5_fetal_movement">
-                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes</button>
-                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No</button>
+                <div class="toggle-group" data-question="q5_burning_sensation">
+                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes / ಹೌದು</button>
+                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No / ಇಲ್ಲ</button>
                 </div>
             </div>
 
@@ -198,11 +198,11 @@
             <div class="question-card fade-in" style="animation-delay: 0.3s;">
                 <div class="question-header">
                     <div class="question-number">6</div>
-                    <div class="question-text"><strong>Abdominal pain or cramping</strong>?</div>
+                    <div class="question-text">I HAVE ULCERS IN MY MOUTH / ನನಗೆ ಬಾಯಿಯಲ್ಲಿ ಹುಣ್ಣುಗಳಿವೆ</div>
                 </div>
-                <div class="toggle-group" data-question="q6_abdominal_pain">
-                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes</button>
-                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No</button>
+                <div class="toggle-group" data-question="q6_ulcers">
+                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes / ಹೌದು</button>
+                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No / ಇಲ್ಲ</button>
                 </div>
             </div>
 
@@ -210,11 +210,11 @@
             <div class="question-card fade-in" style="animation-delay: 0.35s;">
                 <div class="question-header">
                     <div class="question-number">7</div>
-                    <div class="question-text"><strong>Fever or chills</strong>?</div>
+                    <div class="question-text">I HAVE DIFFICULTY IN OPENING MY MOUTH / ನನಗೆ ಬಾಯಿ ತೆರೆಯಲು ಕಷ್ಟವಾಗುತ್ತದೆ</div>
                 </div>
-                <div class="toggle-group" data-question="q7_fever_chills">
-                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes</button>
-                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No</button>
+                <div class="toggle-group" data-question="q7_difficulty_opening_mouth">
+                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes / ಹೌದು</button>
+                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No / ಇಲ್ಲ</button>
                 </div>
             </div>
 
@@ -222,11 +222,11 @@
             <div class="question-card fade-in" style="animation-delay: 0.4s;">
                 <div class="question-header">
                     <div class="question-number">8</div>
-                    <div class="question-text"><strong>Difficulty breathing or chest pain</strong>?</div>
+                    <div class="question-text">I HAVE MALAIGNED TEETH / ನನ್ನ ಹಲ್ಲುಗಳು ವಕ್ರವಾಗಿವೆ/ಒರೆಕೋರೆಯಾಗಿವೆ</div>
                 </div>
-                <div class="toggle-group" data-question="q8_breathing_chest">
-                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes</button>
-                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No</button>
+                <div class="toggle-group" data-question="q8_malaigned_teeth">
+                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes / ಹೌದು</button>
+                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No / ಇಲ್ಲ</button>
                 </div>
             </div>
 
@@ -234,23 +234,11 @@
             <div class="question-card fade-in" style="animation-delay: 0.45s;">
                 <div class="question-header">
                     <div class="question-number">9</div>
-                    <div class="question-text">Taking <strong>iron/folic acid supplements</strong>?</div>
+                    <div class="question-text">I HAVE MISSING TEETH / ನನಗೆ ಬಾಯಿಯಲ್ಲಿ ಕೆಲವೊಂದು ಹಲ್ಲುಗಳು/ಎಲ್ಲಾ ಹಲ್ಲುಗಳು ಕಳೆದು ಹೋಗಿವೆ</div>
                 </div>
-                <div class="toggle-group" data-question="q9_supplements">
-                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes</button>
-                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No</button>
-                </div>
-            </div>
-
-            <!-- Question 10 -->
-            <div class="question-card fade-in" style="animation-delay: 0.5s;">
-                <div class="question-header">
-                    <div class="question-number">10</div>
-                    <div class="question-text">Attended <strong>last antenatal checkup</strong>?</div>
-                </div>
-                <div class="toggle-group" data-question="q10_checkup">
-                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes</button>
-                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No</button>
+                <div class="toggle-group" data-question="q9_missing_teeth">
+                    <button type="button" class="toggle-btn" data-value="true" onclick="toggleAnswer(this)">Yes / ಹೌದು</button>
+                    <button type="button" class="toggle-btn" data-value="false" onclick="toggleAnswer(this)">No / ಇಲ್ಲ</button>
                 </div>
             </div>
 
@@ -340,11 +328,11 @@
             e.preventDefault();
             const formError = document.getElementById('form-error');
 
-            // Validate all 10 questions answered
+            // Validate all 9 questions answered
             const requiredQuestions = [
-                'q1_bleeding', 'q2_headache_vision', 'q3_swelling',
-                'q4_nausea_vomiting', 'q5_fetal_movement', 'q6_abdominal_pain',
-                'q7_fever_chills', 'q8_breathing_chest', 'q9_supplements', 'q10_checkup'
+                'q1_pain_tooth', 'q2_food_lodgement', 'q3_bleeding_gums',
+                'q4_bad_breath', 'q5_burning_sensation', 'q6_ulcers',
+                'q7_difficulty_opening_mouth', 'q8_malaigned_teeth', 'q9_missing_teeth'
             ];
 
             const unanswered = requiredQuestions.filter(q => answers[q] === undefined);
