@@ -71,7 +71,7 @@ router.get('/:id', verifyToken, requireWorker, async (req, res) => {
 // Update doctor consultation for a questionnaire
 router.put('/:id/consultation', verifyToken, requireWorker, async (req, res) => {
     try {
-        const { doctorConsultation, consultationType, hospitalVisitDetails } = req.body;
+        const { doctorConsultation, consultationType, hospitalVisitDetails, homeVisitDetails, whatsappNumber } = req.body;
 
         const questionnaire = await Questionnaire.findOne({
             _id: req.params.id,
@@ -83,14 +83,43 @@ router.put('/:id/consultation', verifyToken, requireWorker, async (req, res) => 
         }
 
         questionnaire.doctorConsultation = doctorConsultation;
+
         if (doctorConsultation && consultationType) {
             questionnaire.consultationType = consultationType;
+
             if (consultationType === 'hospital' && hospitalVisitDetails) {
-                questionnaire.hospitalVisitDetails = hospitalVisitDetails;
+                questionnaire.hospitalVisitDetails = {
+                    date: hospitalVisitDetails.date || null,
+                    time: hospitalVisitDetails.time || null,
+                    hospitalName: hospitalVisitDetails.hospitalName || null,
+                    location: hospitalVisitDetails.location || null
+                };
+                questionnaire.homeVisitDetails = { date: null, time: null, location: null };
+            } else if (consultationType === 'home' && homeVisitDetails) {
+                questionnaire.homeVisitDetails = {
+                    date: homeVisitDetails.date || null,
+                    time: homeVisitDetails.time || null,
+                    location: homeVisitDetails.location || null
+                };
+                questionnaire.hospitalVisitDetails = { date: null, time: null, hospitalName: null, location: null };
+            }
+
+            // Save WhatsApp number if provided
+            if (whatsappNumber) {
+                questionnaire.whatsappNumber = whatsappNumber;
             }
         } else {
             questionnaire.consultationType = null;
             questionnaire.hospitalVisitDetails = { date: null, time: null, hospitalName: null, location: null };
+            questionnaire.homeVisitDetails = { date: null, time: null, location: null };
+        }
+
+        // Set scheduledAt based on visit date
+        const visitDate = questionnaire.consultationType === 'hospital'
+            ? questionnaire.hospitalVisitDetails?.date
+            : questionnaire.homeVisitDetails?.date;
+        if (visitDate) {
+            questionnaire.scheduledAt = new Date(visitDate);
         }
 
         await questionnaire.save();
@@ -100,6 +129,7 @@ router.put('/:id/consultation', verifyToken, requireWorker, async (req, res) => 
         res.status(500).json({ success: false, message: 'Server error.' });
     }
 });
+
 
 // Get all consultations submitted by this worker
 router.get('/worker/consultations', verifyToken, requireWorker, async (req, res) => {

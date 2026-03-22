@@ -172,22 +172,26 @@ router.get('/consultations', verifyToken, requireAdmin, async (req, res) => {
 router.put('/consultations/:id/status', verifyToken, requireAdmin, async (req, res) => {
     try {
         const { status } = req.body;
-        const questionnaire = await Questionnaire.findById(req.params.id);
 
-        if (!questionnaire) {
+        if (status !== 'Completed' && status !== 'Pending') {
+            return res.status(400).json({ success: false, message: 'Invalid status.' });
+        }
+
+        const updateData = {
+            consultationStatus: status,
+            completedAt: status === 'Completed' ? new Date() : null
+        };
+
+        const result = await Questionnaire.updateOne(
+            { _id: req.params.id },
+            { $set: updateData }
+        );
+
+        if (result.matchedCount === 0) {
             return res.status(404).json({ success: false, message: 'Consultation record not found.' });
         }
 
-        if (status === 'Completed' || status === 'Pending') {
-            questionnaire.consultationStatus = status;
-            if (status === 'Completed') {
-                questionnaire.completedAt = new Date();
-            } else {
-                questionnaire.completedAt = null;
-            }
-            await questionnaire.save();
-            return res.json({ success: true, message: `Consultation marked as ${status}.` });
-        }
+        return res.json({ success: true, message: `Consultation marked as ${status}.` });
 
         res.status(400).json({ success: false, message: 'Invalid status.' });
     } catch (error) {

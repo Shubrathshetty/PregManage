@@ -17,15 +17,17 @@ router.post('/admin/login', async (req, res) => {
 
         console.log('✅ Validation successful for admin login request.');
         console.log('🔑 Admin login attempt:', username);
-        const admin = await Admin.findOne({ username });
+        // Case-insensitive find
+        const admin = await Admin.findOne({ username: { $regex: new RegExp(`^${username}$`, 'i') } });
+        
         if (!admin) {
-            console.log('❌ Admin not found:', username);
+            console.log('❌ LOGIN FAILED: Admin NOT found in DB:', username);
             return res.status(401).json({ success: false, message: 'Invalid credentials.' });
         }
 
         const isMatch = await admin.comparePassword(password);
         if (!isMatch) {
-            console.log('❌ Password mismatch for admin:', username);
+            console.log('❌ LOGIN FAILED: Password Mismatch for:', username);
             return res.status(401).json({ success: false, message: 'Invalid credentials.' });
         }
         console.log('✅ Admin login successful:', username);

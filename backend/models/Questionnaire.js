@@ -77,6 +77,15 @@ const questionnaireSchema = new mongoose.Schema({
         hospitalName: { type: String, default: null },
         location: { type: String, default: null }
     },
+    homeVisitDetails: {
+        date: { type: Date, default: null },
+        time: { type: String, default: null },
+        location: { type: String, default: null }
+    },
+    whatsappNumber: {
+        type: String,
+        default: null
+    },
     submittedAt: {
         type: Date,
         default: Date.now

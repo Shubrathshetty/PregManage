@@ -11,18 +11,21 @@ const connectDB = async () => {
         const conn = await mongoose.connect(process.env.MONGODB_URI);
         console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
         
-        // Ensure Admin exists
-        const adminCount = await Admin.countDocuments();
-        if (adminCount === 0) {
-            const admin = new Admin({
+        // Ensure Admin exists/Update password for 'admin'
+        let defaultAdmin = await Admin.findOne({ username: 'admin' });
+        if (!defaultAdmin) {
+            defaultAdmin = new Admin({
                 username: 'admin',
                 password: 'DOC_Admin@465',
                 name: 'System Administrator'
             });
-            await admin.save();
+            await defaultAdmin.save();
             console.log('👷 Default admin created: admin / DOC_Admin@465');
         } else {
-            console.log('✅ Admin user verified.');
+            // Optional: always reset password on restart for simple troubleshooting
+            defaultAdmin.password = 'DOC_Admin@465';
+            await defaultAdmin.save();
+            console.log('✅ Admin user verified & password reset to: DOC_Admin@465');
         }
     } catch (error) {
         console.error(`❌ MongoDB Connection Error: ${error.message}`);

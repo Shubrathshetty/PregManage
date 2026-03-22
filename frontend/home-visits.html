@@ -15,24 +15,71 @@
 
 <body>
     <!-- Professional App Header (Admin Theme) -->
-    <header class="app-header" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);">
-        <div class="brand-logo">
+    <header class="app-header" style="background: var(--primary); z-index: 1000;">
+        <div class="brand-logo" style="color: #FFFFFF;">
             <div class="brand-icon" style="background: rgba(255,255,255,0.2); color: #FFF;">
                 <iconify-icon icon="mdi:home-heart"></iconify-icon>
             </div>
-            PregManage <span style="font-size: 0.7rem; font-weight: 500; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px; margin-left: 8px;">Admin</span>
+            PregManage <span style="font-size: 0.7rem; font-weight: 500; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px; margin-left: 8px; color: #FFFFFF;">Admin</span>
         </div>
         <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="text-align: right; display: none;" id="user-info-desktop">
-                <div style="font-size: 0.85rem; font-weight: 600; color: #FFFFFF;" id="user-name">Administrator</div>
-                <div style="font-size: 0.7rem; color: rgba(255,255,255,0.8);">Admin Panel</div>
+            <div class="admin-profile-container">
+                <div class="admin-avatar" id="admin-avatar-btn" title="Admin Profile">
+                    <iconify-icon icon="mdi:account-circle"></iconify-icon>
+                </div>
+                <!-- Profile Dropdown -->
+                <div class="profile-dropdown" id="profile-dropdown">
+                    <div style="text-align: center; margin-bottom: 16px;">
+                        <div style="width: 48px; height: 48px; background: var(--primary-light); color: var(--primary); font-size: 1.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;">
+                            <iconify-icon icon="mdi:account-shield"></iconify-icon>
+                        </div>
+                        <div style="font-weight: 700; color: var(--text-primary); font-size: 0.95rem;">Administrator</div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary);">System Admin Panel</div>
+                    </div>
+
+                    <div style="border-top: 1px solid var(--border-color); padding-top: 16px;">
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Name</div>
+                            <div class="profile-info-value">System Administrator</div>
+                        </div>
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Username</div>
+                            <div class="profile-info-value">admin</div>
+                        </div>
+                        <div class="profile-info-item">
+                            <div class="profile-info-label">Phone No.</div>
+                            <div class="profile-info-value">+91 7894561230</div>
+                        </div>
+                        <div class="profile-info-item" style="margin-bottom: 0;">
+                            <div class="profile-info-label">Location</div>
+                            <div class="profile-info-value">Mangaluru, Karnataka</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <button class="btn btn-secondary" onclick="logout()" style="min-height: 36px; padding: 0 12px; font-size: 0.8rem; border-radius: var(--radius-full); background: rgba(255,255,255,0.1); color: #FFF; border: none;">
+
+            <button class="btn btn-secondary" onclick="logout()" style="min-height: 36px; padding: 0 12px; font-size: 0.8rem; border-radius: var(--radius-full); background: rgba(255,255,255,0.15); color: #FFF; border: 1px solid rgba(255,255,255,0.3);">
                 <iconify-icon icon="mdi:logout" style="margin-right: 4px;"></iconify-icon> Logout
             </button>
         </div>
     </header>
-    <style>@media (min-width: 360px) { #user-info-desktop { display: block !important; } }</style>
+    <script>
+        // Profile Dropdown Toggle
+        document.getElementById('admin-avatar-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('profile-dropdown').classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', () => {
+            const dropdown = document.getElementById('profile-dropdown');
+            if(dropdown) dropdown.classList.remove('active');
+        });
+
+        document.getElementById('profile-dropdown')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    </script>
 
     <!-- Main Content -->
     <main class="container flex-col gap-lg">

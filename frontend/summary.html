@@ -274,6 +274,11 @@
         <!-- ====== STEP 2: Doctor Consultation Question ====== -->
         <div id="step-consultation" class="hidden">
             <div class="consultation-section step-content">
+                <div style="display: flex; align-items: center; justify-content: flex-start; margin-bottom: 16px;">
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('step-consultation').classList.add('hidden'); document.getElementById('step-results').classList.remove('hidden');" style="width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                        <iconify-icon icon="mdi:arrow-left" style="font-size: 1.4rem;"></iconify-icon>
+                    </button>
+                </div>
                 <div class="step-indicator">
                     <div class="step-dot completed"></div>
                     <div class="step-dot active"></div>
@@ -304,6 +309,11 @@
         <!-- ====== STEP 3: Service Type Selection ====== -->
         <div id="step-service-type" class="hidden">
             <div class="consultation-section step-content">
+                <div style="display: flex; align-items: center; justify-content: flex-start; margin-bottom: 16px;">
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('step-service-type').classList.add('hidden'); document.getElementById('step-consultation').classList.remove('hidden');" style="width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                        <iconify-icon icon="mdi:arrow-left" style="font-size: 1.4rem;"></iconify-icon>
+                    </button>
+                </div>
                 <div class="step-indicator">
                     <div class="step-dot completed"></div>
                     <div class="step-dot completed"></div>
@@ -328,12 +338,6 @@
                             <div class="service-option-desc">Doctor visits the patient</div>
                         </div>
                     </div>
-
-                    <div style="margin-top: 24px; display: flex; gap: 16px;">
-                        <button type="button" class="btn btn-secondary" style="flex: 1;"
-                            onclick="document.getElementById('step-service-type').classList.add('hidden'); document.getElementById('step-consultation').classList.remove('hidden');">Back</button>
-                        <div style="flex: 2;"></div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -341,6 +345,11 @@
         <!-- ====== STEP 3.5: Hospital Details Form ====== -->
         <div id="step-hospital-form" class="hidden">
             <div class="consultation-section step-content">
+                <div style="display: flex; align-items: center; justify-content: flex-start; margin-bottom: 16px;">
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('step-hospital-form').classList.add('hidden'); document.getElementById('step-service-type').classList.remove('hidden');" style="width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                        <iconify-icon icon="mdi:arrow-left" style="font-size: 1.4rem;"></iconify-icon>
+                    </button>
+                </div>
                 <div class="step-indicator">
                     <div class="step-dot completed"></div>
                     <div class="step-dot completed"></div>
@@ -375,12 +384,85 @@
                             <textarea id="h-location" class="form-input" placeholder="Enter full address" required style="height: 80px; resize: none;"></textarea>
                         </div>
 
-                        <div style="display: flex; gap: 16px; margin-top: 24px;">
-                            <button type="button" class="btn btn-secondary" style="flex: 1;"
-                                onclick="document.getElementById('step-hospital-form').classList.add('hidden'); document.getElementById('step-service-type').classList.remove('hidden');">Back</button>
-                            <button type="submit" class="btn btn-primary" style="flex: 2;" id="h-submit-btn">Schedule Visit</button>
+                        <div style="display: flex; justify-content: flex-end; margin-top: 24px;">
+                            <button type="submit" class="btn btn-primary" style="flex: 1;" id="h-submit-btn">Schedule Visit</button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== STEP 3.6: Home Visit Form ====== -->
+        <div id="step-home-form" class="hidden">
+            <div class="consultation-section step-content">
+                <div style="display: flex; align-items: center; justify-content: flex-start; margin-bottom: 16px;">
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('step-home-form').classList.add('hidden'); document.getElementById('step-service-type').classList.remove('hidden');" style="width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                        <iconify-icon icon="mdi:arrow-left" style="font-size: 1.4rem;"></iconify-icon>
+                    </button>
+                </div>
+                <div class="step-indicator">
+                    <div class="step-dot completed"></div>
+                    <div class="step-dot completed"></div>
+                    <div class="step-dot completed"></div>
+                    <div class="step-dot active"></div>
+                </div>
+
+                <div class="card consultation-card" style="text-align: left; padding: 24px;">
+                    <div style="text-align: center; margin-bottom: 24px;">
+                        <iconify-icon icon="mdi:home-heart" class="consultation-card-icon" style="color: var(--primary);"></iconify-icon>
+                        <h2>Schedule Home Visit</h2>
+                        <p>Enter the home visit appointment details</p>
+                    </div>
+
+                    <form id="home-form">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <div class="form-group">
+                                <label class="form-label">Date <span style="color: var(--error);">*</span></label>
+                                <input type="date" id="hm-date" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Time <span style="color: var(--error);">*</span></label>
+                                <input type="time" id="hm-time" class="form-input" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Location / Address <span style="color: var(--error);">*</span></label>
+                            <textarea id="hm-location" class="form-input" placeholder="Patient's home address" required style="height: 80px; resize: none;"></textarea>
+                        </div>
+
+                        <div style="display: flex; justify-content: flex-end; margin-top: 24px;">
+                            <button type="submit" class="btn btn-primary" style="flex: 1;" id="hm-submit-btn">Schedule Visit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== WhatsApp Confirmation Modal ====== -->
+        <div id="whatsapp-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; padding: 24px;">
+            <div class="card" style="width: 100%; max-width: 400px; padding: 28px; border-radius: 20px;">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <iconify-icon icon="mdi:whatsapp" style="font-size: 3rem; color: #25D366;"></iconify-icon>
+                    <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin-top: 12px;">Confirm WhatsApp Number</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 6px;">We will send the appointment details to this number. Please confirm or update.</p>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">WhatsApp Number</label>
+                    <div style="display: flex; gap: 0; align-items: stretch; border-radius: var(--radius-btn); overflow: hidden; border: 1px solid var(--border-color);">
+                        <div style="background: #f0fdf4; display: flex; align-items: center; padding: 0 12px; border-right: 1px solid var(--border-color); color: #25D366; font-weight: 600; font-size: 0.9rem;">
+                            +91
+                        </div>
+                        <input type="tel" id="whatsapp-number" class="form-input" style="border: none; border-radius: 0; flex: 1;" placeholder="10-digit number" maxlength="10">
+                    </div>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Appointment details will be sent via WhatsApp</p>
+                </div>
+
+                <div style="display: flex; gap: 12px; margin-top: 8px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeWhatsappModal()" style="flex: 1;">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="confirmWhatsapp()" id="wa-confirm-btn" style="flex: 2; background: #25D366; border-color: #25D366;">
+                        <iconify-icon icon="mdi:whatsapp" style="margin-right: 6px;"></iconify-icon> Confirm &amp; Send
+                    </button>
                 </div>
             </div>
         </div>
@@ -591,18 +673,52 @@
                 document.getElementById('step-hospital-form').classList.remove('hidden');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
-                await saveConsultation(true, 'home');
-                showFinalStep(true, 'home');
+                document.getElementById('step-service-type').classList.add('hidden');
+                document.getElementById('step-home-form').classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
+        }
+
+        // ---- WhatsApp Modal Logic ----
+        let pendingSubmitCallback = null;
+
+        function showWhatsappModal(patientPhone, onConfirm) {
+            // Pre-fill with patient's registered phone
+            document.getElementById('whatsapp-number').value = patientPhone || '';
+            pendingSubmitCallback = onConfirm;
+            const modal = document.getElementById('whatsapp-modal');
+            modal.style.display = 'flex';
+        }
+
+        function closeWhatsappModal() {
+            document.getElementById('whatsapp-modal').style.display = 'none';
+            pendingSubmitCallback = null;
+        }
+
+        async function confirmWhatsapp() {
+            const number = document.getElementById('whatsapp-number').value.trim();
+            if (!/^[6-9]\d{9}$/.test(number)) {
+                showToast('Please enter a valid 10-digit WhatsApp number', 'error');
+                return;
+            }
+            const btn = document.getElementById('wa-confirm-btn');
+            btn.innerHTML = '<div class="spinner"></div> Saving...';
+            btn.disabled = true;
+
+            if (pendingSubmitCallback) {
+                await pendingSubmitCallback(number);
+            }
+
+            btn.innerHTML = '<iconify-icon icon="mdi:whatsapp" style="margin-right: 6px;"></iconify-icon> Confirm & Send';
+            btn.disabled = false;
+            closeWhatsappModal();
         }
 
         // Handle hospital form submission
         document.getElementById('hospital-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const btn = document.getElementById('h-submit-btn');
-            btn.innerHTML = '<div class="spinner"></div> Saving...';
-            btn.disabled = true;
 
+            const patientPhone = qData?.patientPhone || '';
             const hospitalData = {
                 date: document.getElementById('h-date').value,
                 time: document.getElementById('h-time').value,
@@ -610,21 +726,62 @@
                 location: document.getElementById('h-location').value.trim()
             };
 
-            await saveConsultation(true, 'hospital', hospitalData);
-            btn.innerHTML = 'Schedule';
-            btn.disabled = false;
+            showWhatsappModal(patientPhone, async (whatsappNumber) => {
+                const btn = document.getElementById('h-submit-btn');
+                btn.innerHTML = '<div class="spinner"></div> Saving...';
+                btn.disabled = true;
 
-            document.getElementById('step-hospital-form').classList.add('hidden');
-            showFinalStep(true, 'hospital');
+                await saveConsultation(true, 'hospital', { ...hospitalData, whatsappNumber });
+
+                btn.innerHTML = 'Schedule Visit';
+                btn.disabled = false;
+
+                document.getElementById('step-hospital-form').classList.add('hidden');
+                showFinalStep(true, 'hospital');
+            });
         });
 
-        async function saveConsultation(doctorConsultation, consultationType, hospitalVisitDetails = null) {
+        // Handle home form submission
+        document.getElementById('home-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const patientPhone = qData?.patientPhone || '';
+            const homeData = {
+                date: document.getElementById('hm-date').value,
+                time: document.getElementById('hm-time').value,
+                location: document.getElementById('hm-location').value.trim()
+            };
+
+            showWhatsappModal(patientPhone, async (whatsappNumber) => {
+                const btn = document.getElementById('hm-submit-btn');
+                btn.innerHTML = '<div class="spinner"></div> Saving...';
+                btn.disabled = true;
+
+                await saveConsultation(true, 'home', { ...homeData, whatsappNumber });
+
+                btn.innerHTML = 'Schedule Visit';
+                btn.disabled = false;
+
+                document.getElementById('step-home-form').classList.add('hidden');
+                showFinalStep(true, 'home');
+            });
+        });
+
+        async function saveConsultation(doctorConsultation, consultationType, visitDetails = null) {
             if (!questionnaireId) return;
 
             try {
                 const bodyPayload = { doctorConsultation, consultationType };
-                if (hospitalVisitDetails) {
-                    bodyPayload.hospitalVisitDetails = hospitalVisitDetails;
+
+                if (visitDetails) {
+                    const { whatsappNumber, ...rest } = visitDetails;
+                    if (whatsappNumber) bodyPayload.whatsappNumber = whatsappNumber;
+
+                    if (consultationType === 'hospital') {
+                        bodyPayload.hospitalVisitDetails = rest;
+                    } else if (consultationType === 'home') {
+                        bodyPayload.homeVisitDetails = rest;
+                    }
                 }
 
                 await fetch(`/api/questionnaires/${questionnaireId}/consultation`, {
