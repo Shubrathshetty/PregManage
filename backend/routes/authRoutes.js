@@ -95,10 +95,16 @@ router.post('/logout', (req, res) => {
 
 // Verify token
 router.get('/verify', (req, res) => {
-    const token = req.cookies?.token || req.headers.authorization?.split(' ')[1];
+    // Priority: Authorization header (sent by frontend) > Cookie
+    const authHeader = req.headers.authorization?.split(' ')[1];
+    const cookieToken = req.cookies?.token;
+    const token = authHeader || cookieToken;
+
     if (!token) {
         return res.status(401).json({ success: false, message: 'No token found.' });
     }
+
+    console.log(`🔍 Verification attempt: using ${authHeader ? 'Header' : 'Cookie'} token`);
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         res.json({ success: true, user: decoded });

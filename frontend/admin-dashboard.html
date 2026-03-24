@@ -193,7 +193,7 @@
                             style="width: 48px; height: 48px; background: var(--primary-light); color: var(--primary); font-size: 1.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;">
                             <iconify-icon icon="mdi:account-shield"></iconify-icon>
                         </div>
-                        <div style="font-weight: 700; color: var(--text-primary); font-size: 0.95rem;">Administrator</div>
+                        <div style="font-weight: 700; color: var(--text-primary); font-size: 0.95rem;" id="user-name">Administrator</div>
                         <div style="font-size: 0.75rem; color: var(--text-secondary);">System Admin Panel</div>
                     </div>
 
@@ -490,22 +490,37 @@
 
         // Auth check
         (async () => {
-            if (!token) { window.location.href = '/admin-login.html'; return; }
+            if (!token) { 
+                console.warn('No authentication token found. Redirecting to login.');
+                window.location.href = '/admin-login.html'; 
+                return; 
+            }
             try {
                 const res = await fetch(`${API_BASE}/auth/verify`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await res.json();
-                if (!data.success || data.user.role !== 'admin') {
+                if (!data.success) {
+                    console.error('Auth verification failed:', data.message);
                     localStorage.clear();
                     window.location.href = '/admin-login.html';
                     return;
                 }
+                
+                if (data.user.role !== 'admin') {
+                    console.error('Permission denied: invalid role', data.user.role);
+                    alert(`Access Denied: You are logged in as a ${data.user.role}, not an Admin.`);
+                    localStorage.clear();
+                    window.location.href = '/admin-login.html';
+                    return;
+                }
+
                 document.getElementById('user-name').textContent = data.user.name;
                 loadWorkers();
                 loadStats();
                 document.getElementById('profile-dropdown').classList.remove('active');
             } catch (e) {
+                console.error('Core Authentication Error:', e);
                 localStorage.clear();
                 window.location.href = '/admin-login.html';
             }
