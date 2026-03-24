@@ -37,6 +37,15 @@ if (!fs.existsSync(uploadsDir)) {
 app.use(express.static(path.join(__dirname, '..', 'frontend')));
 app.use('/uploads', express.static(uploadsDir));
 
+// Explicit route for HTML files to avoid tunnel issues
+app.get('/:page.html', (req, res) => {
+    const filePath = path.join(__dirname, '..', 'frontend', `${req.params.page}.html`);
+    if (fs.existsSync(filePath)) {
+        return res.sendFile(filePath);
+    }
+    res.status(404).sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
+});
+
 // API Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
@@ -45,28 +54,26 @@ app.use('/api/questionnaires', require('./routes/questionnaireRoutes'));
 app.use('/api/reports', require('./routes/reportRoutes')); // Feedback/Reports
 
 
-// Serve frontend pages
+// Serve frontend index
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
 });
 
-// Catch-all: serve index.html for SPA-style navigation
-app.get(/^(?!\/api).+/, (req, res) => {
-    // If it's an API route that wasn't matched, return 404
-
-
-
-
+// Catch-all: serve index.html for SPA-style navigation, excluding APIs
+app.get(/.*/, (req, res) => {
     if (req.path.startsWith('/api/')) {
         return res.status(404).json({ success: false, message: 'API endpoint not found.' });
     }
-    // Otherwise try to serve the file
-    const filePath = path.join(__dirname, '..', 'frontend', req.path);
-    res.sendFile(filePath, (err) => {
-        if (err) {
-            res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
-        }
-    });
+    
+    // Try to serve the exact file if it's not handled by express.static
+    const requestedPath = req.path === '/' ? 'index.html' : req.path;
+    const filePath = path.join(__dirname, '..', 'frontend', requestedPath);
+    
+    if (fs.existsSync(filePath) && fs.lstatSync(filePath).isFile()) {
+        res.sendFile(filePath);
+    } else {
+        res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
+    }
 });
 
 const PORT = process.env.PORT || 3000;
