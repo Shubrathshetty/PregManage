@@ -20,7 +20,7 @@
     "axios": "^1.6.2",
     "react-native-paper": "^5.11.4",
     "expo-linear-gradient": "~12.7.1",
-    "expo-vector-icons": "^14.0.0",
+    "@expo/vector-icons": "^14.0.0",
     "react-native-vector-icons": "^10.0.3"
   },
   "devDependencies": {
