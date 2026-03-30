@@ -982,7 +982,7 @@
 
             try {
                 if (editingWorker) {
-                    const body = { name, phone, address };
+                    const body = { name, username, phone, address };
                     if (password) body.password = password;
 
                     const res = await apiClient.fetch(`${API_BASE}/admin/workers/${editingWorker._id}`, {

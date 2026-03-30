@@ -4,7 +4,7 @@ const workerSchema = z.object({
   name: z.string()
     .min(3, "Name must be at least 3 characters")
     .regex(/^[a-zA-Z\s]+$/, "Name must only contain letters and spaces"),
-  username: z.string().min(3, "Username must be at least 3 characters"),
+  username: z.string().min(3, "Username must be at least 3 characters").optional(),
   password: z.string().min(6, "Password must be at least 6 characters").optional(),
   phone: z.string()
     .length(10, "Phone number must be exactly 10 digits")
