@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="/css/style.css">
     <!-- Iconify Framework -->
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link rel="stylesheet" href="/css/notifications.css">
+    <script src="/js/apiClient.js"></script>
 </head>
 
 <body>
@@ -271,7 +273,7 @@
         (async () => {
             if (!token) { window.location.href = '/worker-login.html'; return; }
             try {
-                const res = await fetch('/api/auth/verify', {
+                const res = await apiClient.fetch('/api/auth/verify', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await res.json();
@@ -360,7 +362,7 @@
             submitBtn.innerHTML = '<div class="spinner"></div> Submitting...';
 
             try {
-                const res = await fetch('/api/questionnaires?limit=1000', {
+                const res = await apiClient.fetch('/api/questionnaires?limit=1000', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

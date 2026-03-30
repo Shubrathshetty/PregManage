@@ -102,6 +102,8 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="/css/notifications.css">
+    <script src="/js/apiClient.js"></script>
 </head>
 
 <body>
@@ -457,7 +459,7 @@
         (async () => {
             if (!token) { window.location.href = '/worker-login.html'; return; }
             try {
-                const res = await fetch('/api/auth/verify', {
+                const res = await apiClient.fetch('/api/auth/verify', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await res.json();
@@ -750,7 +752,7 @@
         if (isEditing) {
             (async () => {
                 try {
-                    const res = await fetch(`/api/patients/${editPatientId}`, {
+                    const res = await apiClient.fetch(`/api/patients/${editPatientId}`, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
                     const data = await res.json();
@@ -866,7 +868,7 @@
                 const url = isEditing ? `/api/patients/${editPatientId}` : '/api/patients';
                 const method = isEditing ? 'PUT' : 'POST';
 
-                const res = await fetch(url, {
+                const res = await apiClient.fetch(url, {
                     method: method,
                     headers: { 'Authorization': `Bearer ${token}` },
                     body: formData

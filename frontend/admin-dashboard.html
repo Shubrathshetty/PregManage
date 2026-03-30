@@ -170,6 +170,8 @@
         }
 
     </style>
+    <link rel="stylesheet" href="/css/notifications.css">
+    <script src="/js/apiClient.js"></script>
 </head>
 
 <body>
@@ -496,7 +498,7 @@
                 return; 
             }
             try {
-                const res = await fetch(`${API_BASE}/auth/verify`, {
+                const res = await apiClient.fetch(`${API_BASE}/auth/verify`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await res.json();
@@ -557,7 +559,7 @@
 
         async function loadWorkers() {
             try {
-                const res = await fetch(`${API_BASE}/admin/workers`, {
+                const res = await apiClient.fetch(`${API_BASE}/admin/workers`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await res.json();
@@ -671,7 +673,7 @@
 
         async function loadStats() {
             try {
-                const resH = await fetch(`${API_BASE}/admin/hospital-visits`, {
+                const resH = await apiClient.fetch(`${API_BASE}/admin/hospital-visits`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const dataH = await resH.json();
@@ -679,7 +681,7 @@
                     document.getElementById('hospital-visits-count').textContent = dataH.visits.length;
                 }
 
-                const resV = await fetch(`${API_BASE}/admin/home-visits`, {
+                const resV = await apiClient.fetch(`${API_BASE}/admin/home-visits`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const dataV = await resV.json();
@@ -687,7 +689,7 @@
                     document.getElementById('home-visits-count').textContent = dataV.visits.length;
                 }
 
-                const resC = await fetch(`${API_BASE}/admin/consultations`, {
+                const resC = await apiClient.fetch(`${API_BASE}/admin/consultations`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const dataC = await resC.json();
@@ -867,7 +869,7 @@
 
         async function markConsultationComplete(id) {
             try {
-                const res = await fetch(`${API_BASE}/admin/consultations/${id}/status`, {
+                const res = await apiClient.fetch(`${API_BASE}/admin/consultations/${id}/status`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -901,7 +903,7 @@
 
         async function editWorker(id) {
             try {
-                const res = await fetch(`${API_BASE}/admin/workers/${id}`, {
+                const res = await apiClient.fetch(`${API_BASE}/admin/workers/${id}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await res.json();
@@ -960,7 +962,7 @@
                     const body = { name, phone, address };
                     if (password) body.password = password;
 
-                    const res = await fetch(`${API_BASE}/admin/workers/${editingWorker._id}`, {
+                    const res = await apiClient.fetch(`${API_BASE}/admin/workers/${editingWorker._id}`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -979,7 +981,7 @@
                 } else {
                     if (!username || !password) { showToast('Username and password are required', 'error'); btn.disabled = false; return; }
 
-                    const res = await fetch(`${API_BASE}/admin/workers`, {
+                    const res = await apiClient.fetch(`${API_BASE}/admin/workers`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -1007,7 +1009,7 @@
             if (!confirm(`Are you sure you want to delete worker "${name}"?`)) return;
 
             try {
-                const res = await fetch(`${API_BASE}/admin/workers/${id}`, {
+                const res = await apiClient.fetch(`${API_BASE}/admin/workers/${id}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });

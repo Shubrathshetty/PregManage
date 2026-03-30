@@ -42,6 +42,8 @@
             box-shadow: var(--shadow-hover);
         }
     </style>
+    <link rel="stylesheet" href="/css/notifications.css">
+    <script src="/js/apiClient.js"></script>
 </head>
 <body>
     <div class="page-center">
@@ -99,7 +101,7 @@
             loginBtn.innerHTML = 'Signing in...';
 
             try {
-                const res = await fetch('/api/auth/admin/login', {
+                const res = await apiClient.fetch('/api/auth/admin/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

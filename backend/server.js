@@ -22,31 +22,37 @@ connectDB();
 
 const app = express();
 
-// Fix #8: Security middleware — sanitize MongoDB queries
-const mongoSanitize = require('express-mongo-sanitize');
-
 // Middleware
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Compatibility workaround for Express 5: Make req.query writable
-// so legacy middleware like xss-clean and express-mongo-sanitize can mutate it.
+// Fix #8: Custom sanitizer for Express 5 compatibility.
+// express-mongo-sanitize and xss-clean crash on Express 5 because req.query is read-only.
+// This custom middleware sanitizes req.body and req.params only (req.query is already
+// safely parsed by Express 5's built-in qs parser).
+function sanitizeValue(val) {
+    if (typeof val === 'string') {
+        // Strip $ and . from keys (NoSQL injection), strip HTML tags (XSS)
+        return val.replace(/[<>]/g, '').replace(/\$/g, '').replace(/\.\./g, '');
+    }
+    if (val && typeof val === 'object') {
+        for (const key of Object.keys(val)) {
+            if (key.startsWith('$') || key.includes('.')) {
+                delete val[key];
+            } else {
+                val[key] = sanitizeValue(val[key]);
+            }
+        }
+    }
+    return val;
+}
 app.use((req, res, next) => {
-    Object.defineProperty(req, 'query', {
-        configurable: true,
-        enumerable: true,
-        writable: true,
-        value: req.query
-    });
+    if (req.body) req.body = sanitizeValue(req.body);
+    if (req.params) req.params = sanitizeValue(req.params);
     next();
 });
-
-// Fix #8: Sanitize request data to prevent NoSQL injection and XSS
-const xss = require('xss-clean');
-app.use(xss());
-app.use(mongoSanitize());
 // Fix #7: Request logger using winston (replaces console.log)
 app.use((req, res, next) => {
     logger.info(`[${req.method}] ${req.url}`, {

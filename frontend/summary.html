@@ -195,6 +195,8 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="/css/notifications.css">
+    <script src="/js/apiClient.js"></script>
 </head>
 
 <body>
@@ -519,7 +521,7 @@
         (async () => {
             if (!token) { window.location.href = '/worker-login.html'; return; }
             try {
-                const res = await fetch('/api/auth/verify', {
+                const res = await apiClient.fetch('/api/auth/verify', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await res.json();
@@ -784,7 +786,7 @@
                     }
                 }
 
-                await fetch(`/api/questionnaires/${questionnaireId}/consultation`, {
+                await apiClient.fetch(`/api/questionnaires/${questionnaireId}/consultation`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
