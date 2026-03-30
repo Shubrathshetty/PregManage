@@ -104,32 +104,11 @@ const I18n = {
                 el.textContent = this.t(key);
             }
         });
-
-        // Update toggle button text
-        const toggleBtn = document.getElementById('lang-toggle-btn');
-        if (toggleBtn) {
-            toggleBtn.textContent = this.currentLang === 'en' ? 'ಕನ್ನಡ' : 'English';
-        }
-    },
-
-    /**
-     * Inject a floating language toggle button into the page.
-     */
-    injectToggle: function() {
-        if (document.getElementById('lang-toggle-btn')) return;
-
-        const btn = document.createElement('button');
-        btn.id = 'lang-toggle-btn';
-        btn.textContent = this.currentLang === 'en' ? 'ಕನ್ನಡ' : 'English';
-        btn.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:9998;background:#4C8BF5;color:#fff;border:none;border-radius:24px;padding:8px 16px;font-size:0.85rem;font-weight:600;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.2);';
-        btn.addEventListener('click', () => this.toggle());
-        document.body.appendChild(btn);
     }
 };
 
 // Auto-initialize
 document.addEventListener('DOMContentLoaded', () => {
-    I18n.injectToggle();
     I18n.updateDOM();
 });
 

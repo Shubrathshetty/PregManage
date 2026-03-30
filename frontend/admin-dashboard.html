@@ -172,6 +172,9 @@
     </style>
     <link rel="stylesheet" href="/css/notifications.css">
     <script src="/js/apiClient.js"></script>
+    <script src="/js/validation.js"></script>
+    <script src="/js/ui-utils.js"></script>
+    <script src="/js/i18n.js"></script>
 </head>
 
 <body>
@@ -314,9 +317,14 @@
                 </table>
                 <div id="see-more-workers-container" class="hidden"
                     style="text-align: center; padding: var(--space-md); border-top: 1px solid var(--border-color);">
-                    <button class="btn btn-secondary" onclick="seeAllWorkers()"
+                    <button class="btn btn-secondary" id="see-all-btn" onclick="seeAllWorkers()"
                         style="font-size: 0.85rem; border-radius: var(--radius-full); padding: 6px 16px;">
                         See All Workers <iconify-icon icon="mdi:chevron-down"
+                            style="vertical-align: middle;"></iconify-icon>
+                    </button>
+                    <button class="btn btn-secondary hidden" id="see-less-btn" onclick="seeLessWorkers()"
+                        style="font-size: 0.85rem; border-radius: var(--radius-full); padding: 6px 16px;">
+                        See Less <iconify-icon icon="mdi:chevron-up"
                             style="vertical-align: middle;"></iconify-icon>
                     </button>
                 </div>
@@ -668,7 +676,22 @@
                 row.classList.remove('hidden');
                 row.style.display = '';
             });
-            document.getElementById('see-more-workers-container').classList.add('hidden');
+            document.getElementById('see-all-btn').classList.add('hidden');
+            document.getElementById('see-less-btn').classList.remove('hidden');
+        }
+
+        function seeLessWorkers() {
+            window.showingAllWorkers = false;
+            document.querySelectorAll('.worker-row').forEach((row, idx) => {
+                if (idx >= 3) {
+                    row.classList.add('hidden');
+                } else {
+                    row.classList.remove('hidden');
+                    row.style.display = '';
+                }
+            });
+            document.getElementById('see-all-btn').classList.remove('hidden');
+            document.getElementById('see-less-btn').classList.add('hidden');
         }
 
         async function loadStats() {
