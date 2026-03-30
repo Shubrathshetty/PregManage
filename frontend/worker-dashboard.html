@@ -621,7 +621,7 @@
         async function loadDashboardData() {
             try {
                 // Load patients
-                const pRes = await fetch('/api/patients', {
+                const pRes = await fetch('/api/patients?limit=1000', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const pData = await pRes.json();
@@ -631,7 +631,7 @@
                 }
 
                 // Load consultations
-                const cRes = await fetch('/api/questionnaires/worker/consultations', {
+                const cRes = await fetch('/api/questionnaires/worker/consultations?limit=1000', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const cData = await cRes.json();

@@ -2,17 +2,16 @@ const express = require('express');
 const Questionnaire = require('../models/Questionnaire');
 const Patient = require('../models/Patient');
 const { verifyToken, requireWorker } = require('../middleware/auth');
+const validate = require('../middleware/validate');
+const { questionnaireSchema, consultationSchema } = require('../validators/questionnaireSchema');
+const logger = require('../config/logger');
 
 const router = express.Router();
 
-// Submit a questionnaire
-router.post('/', verifyToken, requireWorker, async (req, res) => {
+// Submit a questionnaire (Fix #2: validated with questionnaireSchema)
+router.post('/', verifyToken, requireWorker, validate(questionnaireSchema), async (req, res) => {
     try {
         const { patientId, answers } = req.body;
-
-        if (!patientId || !answers) {
-            return res.status(400).json({ success: false, message: 'Patient ID and answers are required.' });
-        }
 
         // Verify patient exists and belongs to this worker
         const patient = await Patient.findOne({ _id: patientId, registeredBy: req.user.id });
@@ -27,24 +26,41 @@ router.post('/', verifyToken, requireWorker, async (req, res) => {
         });
 
         await questionnaire.save();
+        logger.info('Questionnaire submitted', { questionnaireId: questionnaire._id, patientId });
         res.status(201).json({ success: true, message: 'Questionnaire submitted successfully.', questionnaire });
     } catch (error) {
-        console.error('Submit questionnaire error:', error);
+        logger.error('Submit questionnaire error', { error: error.message });
         res.status(500).json({ success: false, message: 'Server error.' });
     }
 });
 
-// Get questionnaires for a patient
+// Fix #6: Get questionnaires for a patient with pagination
 router.get('/patient/:patientId', verifyToken, requireWorker, async (req, res) => {
     try {
-        const questionnaires = await Questionnaire.find({
+        const page = Math.max(1, parseInt(req.query.page) || 1);
+        const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+        const skip = (page - 1) * limit;
+
+        const filter = {
             patient: req.params.patientId,
             submittedBy: req.user.id
-        }).sort({ submittedAt: -1 });
+        };
 
-        res.json({ success: true, questionnaires });
+        const [questionnaires, totalCount] = await Promise.all([
+            Questionnaire.find(filter).sort({ submittedAt: -1 }).skip(skip).limit(limit),
+            Questionnaire.countDocuments(filter)
+        ]);
+
+        res.json({
+            success: true,
+            questionnaires,
+            page,
+            limit,
+            totalPages: Math.ceil(totalCount / limit),
+            totalCount
+        });
     } catch (error) {
-        console.error('Get questionnaires error:', error);
+        logger.error('Get questionnaires error', { error: error.message });
         res.status(500).json({ success: false, message: 'Server error.' });
     }
 });
@@ -63,13 +79,13 @@ router.get('/:id', verifyToken, requireWorker, async (req, res) => {
 
         res.json({ success: true, questionnaire });
     } catch (error) {
-        console.error('Get questionnaire error:', error);
+        logger.error('Get questionnaire error', { error: error.message });
         res.status(500).json({ success: false, message: 'Server error.' });
     }
 });
 
-// Update doctor consultation for a questionnaire
-router.put('/:id/consultation', verifyToken, requireWorker, async (req, res) => {
+// Update doctor consultation (Fix #2: validated with consultationSchema)
+router.put('/:id/consultation', verifyToken, requireWorker, validate(consultationSchema), async (req, res) => {
     try {
         const { doctorConsultation, consultationType, hospitalVisitDetails, homeVisitDetails, whatsappNumber } = req.body;
 
@@ -123,9 +139,10 @@ router.put('/:id/consultation', verifyToken, requireWorker, async (req, res) => 
         }
 
         await questionnaire.save();
+        logger.info('Consultation updated', { questionnaireId: req.params.id });
         res.json({ success: true, message: 'Consultation updated successfully.', questionnaire });
     } catch (error) {
-        console.error('Update consultation error:', error);
+        logger.error('Update consultation error', { error: error.message });
         res.status(500).json({ success: false, message: 'Server error.' });
     }
 });
@@ -143,7 +160,7 @@ router.get('/worker/consultations', verifyToken, requireWorker, async (req, res)
 
         res.json({ success: true, consultations });
     } catch (error) {
-        console.error('Get worker consultations error:', error);
+        logger.error('Get worker consultations error', { error: error.message });
         res.status(500).json({ success: false, message: 'Server error.' });
     }
 });

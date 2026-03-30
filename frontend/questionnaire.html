@@ -360,7 +360,7 @@
             submitBtn.innerHTML = '<div class="spinner"></div> Submitting...';
 
             try {
-                const res = await fetch('/api/questionnaires', {
+                const res = await fetch('/api/questionnaires?limit=1000', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

@@ -5,6 +5,7 @@ const Patient = require('../models/Patient');
 const { verifyToken, requireAdmin } = require('../middleware/auth');
 const { workerSchema } = require('../validators/workerSchema');
 const validate = require('../middleware/validate');
+const logger = require('../config/logger');
 
 const router = express.Router();
 
@@ -36,13 +37,14 @@ router.post('/workers', verifyToken, requireAdmin, validate(workerSchema), async
         });
 
         await worker.save();
+        logger.info('Worker created', { workerId: worker._id, createdBy: req.user.id });
         res.status(201).json({
             success: true,
             message: 'Worker created successfully.',
             worker: { id: worker._id, name: worker.name, username: worker.username, phone: worker.phone, address: worker.address, area: worker.area }
         });
     } catch (error) {
-        console.error('Create worker error:', error);
+        logger.error('Create worker error', { error: error.message });
         res.status(500).json({ success: false, message: 'Server error.' });
     }
 });
@@ -53,7 +55,7 @@ router.get('/workers', verifyToken, requireAdmin, async (req, res) => {
         const workers = await Worker.find({}, '-password').sort({ createdAt: -1 });
         res.json({ success: true, workers });
     } catch (error) {
-        console.error('Get workers error:', error);
+        logger.error('Get workers error', { error: error.message });
         res.status(500).json({ success: false, message: 'Server error.' });
     }
 });
@@ -67,7 +69,7 @@ router.get('/workers/:id', verifyToken, requireAdmin, async (req, res) => {
         }
         res.json({ success: true, worker });
     } catch (error) {
-        console.error('Get worker error:', error);
+        logger.error('Get worker error', { error: error.message });
         res.status(500).json({ success: false, message: 'Server error.' });
     }
 });
@@ -98,13 +100,14 @@ router.put('/workers/:id', verifyToken, requireAdmin, validate(workerSchema), as
         if (password) worker.password = password;
 
         await worker.save();
+        logger.info('Worker updated', { workerId: worker._id, updatedBy: req.user.id });
         res.json({
             success: true,
             message: 'Worker updated successfully.',
             worker: { id: worker._id, name: worker.name, username: worker.username, phone: worker.phone, address: worker.address, area: worker.area, isActive: worker.isActive }
         });
     } catch (error) {
-        console.error('Update worker error:', error);
+        logger.error('Update worker error', { error: error.message });
         res.status(500).json({ success: false, message: 'Server error.' });
     }
 });
@@ -116,9 +119,10 @@ router.delete('/workers/:id', verifyToken, requireAdmin, async (req, res) => {
         if (!worker) {
             return res.status(404).json({ success: false, message: 'Worker not found.' });
         }
+        logger.info('Worker deleted', { workerId: req.params.id, deletedBy: req.user.id });
         res.json({ success: true, message: 'Worker deleted successfully.' });
     } catch (error) {
-        console.error('Delete worker error:', error);
+        logger.error('Delete worker error', { error: error.message });
         res.status(500).json({ success: false, message: 'Server error.' });
     }
 });
@@ -133,7 +137,7 @@ router.get('/hospital-visits', verifyToken, requireAdmin, async (req, res) => {
 
         res.json({ success: true, visits });
     } catch (error) {
-        console.error('Get hospital visits error:', error);
+        logger.error('Get hospital visits error', { error: error.message });
         res.status(500).json({ success: false, message: 'Server error.' });
     }
 });
@@ -148,7 +152,7 @@ router.get('/home-visits', verifyToken, requireAdmin, async (req, res) => {
 
         res.json({ success: true, visits });
     } catch (error) {
-        console.error('Get home visits error:', error);
+        logger.error('Get home visits error', { error: error.message });
         res.status(500).json({ success: false, message: 'Server error.' });
     }
 });
@@ -157,13 +161,13 @@ router.get('/home-visits', verifyToken, requireAdmin, async (req, res) => {
 router.get('/consultations', verifyToken, requireAdmin, async (req, res) => {
     try {
         const consultations = await Questionnaire.find({ doctorConsultation: true })
-            .populate('patient') // Populate all patient fields for biodata view
+            .populate('patient')
             .populate('submittedBy', 'name')
             .sort({ submittedAt: 1 });
 
         res.json({ success: true, consultations });
     } catch (error) {
-        console.error('Get consultations error:', error);
+        logger.error('Get consultations error', { error: error.message });
         res.status(500).json({ success: false, message: 'Server error.' });
     }
 });
@@ -191,11 +195,10 @@ router.put('/consultations/:id/status', verifyToken, requireAdmin, async (req, r
             return res.status(404).json({ success: false, message: 'Consultation record not found.' });
         }
 
+        logger.info('Consultation status updated', { consultationId: req.params.id, status });
         return res.json({ success: true, message: `Consultation marked as ${status}.` });
-
-        res.status(400).json({ success: false, message: 'Invalid status.' });
     } catch (error) {
-        console.error('Update consultation status error:', error);
+        logger.error('Update consultation status error', { error: error.message });
         res.status(500).json({ success: false, message: 'Server error.' });
     }
 });

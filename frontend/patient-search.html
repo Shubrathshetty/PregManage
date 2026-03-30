@@ -371,7 +371,7 @@
 
         async function searchPatients(query) {
             try {
-                const res = await fetch(`/api/patients/search?query=${encodeURIComponent(query)}`, {
+                const res = await fetch(`/api/patients/search?query=${encodeURIComponent(query)}&limit=1000`), {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await res.json();
@@ -394,7 +394,7 @@
 
         async function loadAllPatients() {
             try {
-                const res = await fetch('/api/patients', {
+                const res = await fetch('/api/patients?limit=1000', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await res.json();

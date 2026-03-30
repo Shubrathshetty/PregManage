@@ -21,17 +21,20 @@ const validate = (schema) => (req, res, next) => {
     }
 
     const validatedData = schema.parse(dataToValidate);
-    console.log('✅ Validation successful for:', req.originalUrl);
     // Update req.body with validated/transformed data so subsequent handlers see it
     req.body = validatedData;
     next();
   } catch (error) {
-    if (error.errors) {
-      const errorMessages = error.errors.map((err) => ({
-        field: err.path.join('.'),
-        message: err.message
-      }));
-      return res.status(400).json({ success: false, message: 'Validation failed', errors: errorMessages });
+    if (error.name === 'ZodError' || error.errors) {
+      try {
+        const errorMessages = (error.errors || []).map((err) => ({
+          field: Array.isArray(err.path) ? err.path.join('.') : 'unknown',
+          message: err.message
+        }));
+        return res.status(400).json({ success: false, message: 'Validation failed', errors: errorMessages });
+      } catch (mappingError) {
+        return next(error);
+      }
     }
     next(error);
   }

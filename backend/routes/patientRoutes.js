@@ -5,10 +5,11 @@ const Patient = require('../models/Patient');
 const { verifyToken, requireWorker } = require('../middleware/auth');
 const { patientSchema } = require('../validators/patientSchema');
 const validate = require('../middleware/validate');
+const logger = require('../config/logger');
 
 const router = express.Router();
 
-// Configure multer for photo uploads
+// Configure multer for photo uploads (Fix #10: already has file type/size validation)
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, path.join(__dirname, '..', 'uploads'));
@@ -38,7 +39,7 @@ router.post('/', verifyToken, requireWorker, upload.single('photo'), validate(pa
     try {
         const {
             fullName, dateOfBirth, age, husbandName, phone,
-            address, // Reconstructed by validate middleware
+            address,
             aadhaar, lmpDate, edd, bloodGroup, gravida, para
         } = req.body;
 
@@ -72,9 +73,10 @@ router.post('/', verifyToken, requireWorker, upload.single('photo'), validate(pa
         });
 
         await patient.save();
+        logger.info('Patient registered', { patientId: patient._id, worker: req.user.id });
         res.status(201).json({ success: true, message: 'Patient registered successfully.', patient });
     } catch (error) {
-        console.error('Register patient error:', error);
+        logger.error('Register patient error', { error: error.message });
         if (error.code === 11000) {
             return res.status(400).json({ success: false, message: 'A patient with this Aadhaar number already exists.' });
         }
@@ -82,13 +84,29 @@ router.post('/', verifyToken, requireWorker, upload.single('photo'), validate(pa
     }
 });
 
-// Get all patients for the logged-in worker
+// Fix #6: Get all patients with pagination
 router.get('/', verifyToken, requireWorker, async (req, res) => {
     try {
-        const patients = await Patient.find({ registeredBy: req.user.id }).sort({ registeredAt: -1 });
-        res.json({ success: true, patients });
+        const page = Math.max(1, parseInt(req.query.page) || 1);
+        const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+        const skip = (page - 1) * limit;
+
+        const filter = { registeredBy: req.user.id };
+        const [patients, totalCount] = await Promise.all([
+            Patient.find(filter).sort({ registeredAt: -1 }).skip(skip).limit(limit),
+            Patient.countDocuments(filter)
+        ]);
+
+        res.json({
+            success: true,
+            patients,
+            page,
+            limit,
+            totalPages: Math.ceil(totalCount / limit),
+            totalCount
+        });
     } catch (error) {
-        console.error('Get patients error:', error);
+        logger.error('Get patients error', { error: error.message });
         res.status(500).json({ success: false, message: 'Server error.' });
     }
 });
@@ -101,18 +119,27 @@ router.get('/search', verifyToken, requireWorker, async (req, res) => {
             return res.status(400).json({ success: false, message: 'Search query is required.' });
         }
 
-        const patients = await Patient.find({
+        const page = Math.max(1, parseInt(req.query.page) || 1);
+        const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+        const skip = (page - 1) * limit;
+
+        const filter = {
             registeredBy: req.user.id,
             $or: [
                 { fullName: { $regex: query, $options: 'i' } },
                 { aadhaar: { $regex: query, $options: 'i' } },
                 { phone: { $regex: query, $options: 'i' } }
             ]
-        }).sort({ registeredAt: -1 });
+        };
 
-        res.json({ success: true, patients });
+        const [patients, totalCount] = await Promise.all([
+            Patient.find(filter).sort({ registeredAt: -1 }).skip(skip).limit(limit),
+            Patient.countDocuments(filter)
+        ]);
+
+        res.json({ success: true, patients, page, limit, totalPages: Math.ceil(totalCount / limit), totalCount });
     } catch (error) {
-        console.error('Search patients error:', error);
+        logger.error('Search patients error', { error: error.message });
         res.status(500).json({ success: false, message: 'Server error.' });
     }
 });
@@ -126,7 +153,7 @@ router.get('/:id', verifyToken, requireWorker, async (req, res) => {
         }
         res.json({ success: true, patient });
     } catch (error) {
-        console.error('Get patient error:', error);
+        logger.error('Get patient error', { error: error.message });
         res.status(500).json({ success: false, message: 'Server error.' });
     }
 });
@@ -137,7 +164,7 @@ router.put('/:id', verifyToken, requireWorker, upload.single('photo'), validate(
         const { id } = req.params;
         const {
             fullName, dateOfBirth, age, husbandName, phone,
-            address, // Reconstructed by validate middleware
+            address,
             aadhaar, lmpDate, edd, bloodGroup, gravida, para
         } = req.body;
 
@@ -185,9 +212,10 @@ router.put('/:id', verifyToken, requireWorker, upload.single('photo'), validate(
         }
 
         await patient.save();
+        logger.info('Patient updated', { patientId: id, worker: req.user.id });
         res.json({ success: true, message: 'Patient updated successfully.', patient });
     } catch (error) {
-        console.error('Update patient error:', error);
+        logger.error('Update patient error', { error: error.message });
         res.status(500).json({ success: false, message: error.message || 'Server error.' });
     }
 });
