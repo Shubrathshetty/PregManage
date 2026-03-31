@@ -27,4 +27,4 @@ if %errorlevel% neq 0 (
     echo.
     pause
 )
-::to start backend run: node database/seed.js
+::to start backend run: node backend/database/seed.js
