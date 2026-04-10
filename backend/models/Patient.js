@@ -14,11 +14,6 @@ const patientSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    husbandName: {
-        type: String,
-        required: true,
-        trim: true
-    },
     phone: {
         type: String,
         required: true,
@@ -47,18 +42,6 @@ const patientSchema = new mongoose.Schema({
             }
         }
     },
-    aadhaar: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true,
-        validate: {
-            validator: function (v) {
-                return /^[2-9]\d{11}$/.test(v);
-            },
-            message: 'Aadhaar must be a valid 12-digit number (cannot start with 0 or 1)'
-        }
-    },
     lmpDate: {
         type: Date,
         required: true
@@ -67,22 +50,11 @@ const patientSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
-    bloodGroup: {
-        type: String,
+    currentMonthOfPregnancy: {
+        type: Number,
         required: true,
-        enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
-    },
-    gravida: {
-        type: Number,
-        required: true
-    },
-    para: {
-        type: Number,
-        required: true
-    },
-    photo: {
-        type: String,
-        default: null
+        min: 1,
+        max: 9
     },
     registeredBy: {
         type: mongoose.Schema.Types.ObjectId,
