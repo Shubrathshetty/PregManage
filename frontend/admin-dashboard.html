@@ -253,8 +253,7 @@
                     <iconify-icon icon="mdi:hospital-building"></iconify-icon> Hospital Visits
                 </div>
             </div>
-            <div class="stat-card" style="cursor: pointer;" onclick="window.location.href='/home-visits.html'">
-                <div class="stat-card-value" id="home-visits-count" style="color: var(--success);">0</div>
+            
                 <div class="stat-card-label"
                     style="display: flex; align-items: center; gap: 6px; justify-content: center;">
                     <iconify-icon icon="mdi:home-heart"></iconify-icon> Home Visits
@@ -704,13 +703,7 @@
                     document.getElementById('hospital-visits-count').textContent = dataH.visits.length;
                 }
 
-                const resV = await apiClient.fetch(`${API_BASE}/admin/home-visits`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const dataV = await resV.json();
-                if (dataV.success) {
-                    document.getElementById('home-visits-count').textContent = dataV.visits.length;
-                }
+                
 
                 const resC = await apiClient.fetch(`${API_BASE}/admin/consultations`, {
                     headers: { 'Authorization': `Bearer ${token}` }

@@ -38,22 +38,15 @@ const upload = multer({
 router.post('/', verifyToken, requireWorker, upload.single('photo'), validate(patientSchema), async (req, res) => {
     try {
         const {
-            fullName, dateOfBirth, age, husbandName, phone,
-            address,
-            aadhaar, lmpDate, edd, bloodGroup, gravida, para
+            fullName, dateOfBirth, age, phone, address, lmpDate, edd, currentMonthOfPregnancy
         } = req.body;
 
-        // Check for duplicate Aadhaar
-        const existingPatient = await Patient.findOne({ aadhaar });
-        if (existingPatient) {
-            return res.status(400).json({ success: false, message: 'A patient with this Aadhaar number already exists.' });
-        }
+        
 
         const patient = new Patient({
             fullName,
             dateOfBirth: new Date(dateOfBirth),
             age: parseInt(age),
-            husbandName,
             phone,
             address: {
                 street: address.street,
@@ -62,12 +55,9 @@ router.post('/', verifyToken, requireWorker, upload.single('photo'), validate(pa
                 state: address.state,
                 pincode: address.pincode
             },
-            aadhaar,
             lmpDate: new Date(lmpDate),
             edd: new Date(edd),
-            bloodGroup,
-            gravida: parseInt(gravida),
-            para: parseInt(para),
+            currentMonthOfPregnancy: parseInt(currentMonthOfPregnancy),
             photo: req.file ? `/uploads/${req.file.filename}` : null,
             registeredBy: req.user.id
         });
@@ -77,9 +67,7 @@ router.post('/', verifyToken, requireWorker, upload.single('photo'), validate(pa
         res.status(201).json({ success: true, message: 'Patient registered successfully.', patient });
     } catch (error) {
         logger.error('Register patient error', { error: error.message });
-        if (error.code === 11000) {
-            return res.status(400).json({ success: false, message: 'A patient with this Aadhaar number already exists.' });
-        }
+        
         res.status(500).json({ success: false, message: error.message || 'Server error.' });
     }
 });
@@ -127,7 +115,7 @@ router.get('/search', verifyToken, requireWorker, async (req, res) => {
             registeredBy: req.user.id,
             $or: [
                 { fullName: { $regex: query, $options: 'i' } },
-                { aadhaar: { $regex: query, $options: 'i' } },
+                
                 { phone: { $regex: query, $options: 'i' } }
             ]
         };
@@ -163,9 +151,7 @@ router.put('/:id', verifyToken, requireWorker, upload.single('photo'), validate(
     try {
         const { id } = req.params;
         const {
-            fullName, dateOfBirth, age, husbandName, phone,
-            address,
-            aadhaar, lmpDate, edd, bloodGroup, gravida, para
+            fullName, dateOfBirth, age, phone, address, lmpDate, edd, currentMonthOfPregnancy
         } = req.body;
 
         const patient = await Patient.findOne({ _id: id, registeredBy: req.user.id });
@@ -173,17 +159,12 @@ router.put('/:id', verifyToken, requireWorker, upload.single('photo'), validate(
             return res.status(404).json({ success: false, message: 'Patient not found.' });
         }
 
-        // Check for duplicate Aadhaar (excluding itself)
-        const duplicateAadhaar = await Patient.findOne({ aadhaar, _id: { $ne: id } });
-        if (duplicateAadhaar) {
-            return res.status(400).json({ success: false, message: 'Another patient with this Aadhaar number already exists.' });
-        }
+        
 
         // Update fields
         patient.fullName = fullName;
         patient.dateOfBirth = new Date(dateOfBirth);
         patient.age = parseInt(age);
-        patient.husbandName = husbandName;
         patient.phone = phone;
         patient.address = {
             street: address.street,
@@ -192,13 +173,9 @@ router.put('/:id', verifyToken, requireWorker, upload.single('photo'), validate(
             state: address.state,
             pincode: address.pincode
         };
-        patient.aadhaar = aadhaar;
         patient.lmpDate = new Date(lmpDate);
         patient.edd = new Date(edd);
-        patient.bloodGroup = bloodGroup;
-        patient.gravida = parseInt(gravida);
-        patient.para = parseInt(para);
-
+        patient.currentMonthOfPregnancy = parseInt(currentMonthOfPregnancy);
         if (req.file) {
             // Delete old photo if it exists
             if (patient.photo) {

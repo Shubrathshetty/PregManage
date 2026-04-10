@@ -311,47 +311,11 @@
             </div>
         </div>
 
-        <!-- ====== STEP 3: Service Type Selection ====== -->
-        <div id="step-service-type" class="hidden">
-            <div class="consultation-section step-content">
-                <div style="display: flex; align-items: center; justify-content: flex-start; margin-bottom: 16px;">
-                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('step-service-type').classList.add('hidden'); document.getElementById('step-consultation').classList.remove('hidden');" style="width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                        <iconify-icon icon="mdi:arrow-left" style="font-size: 1.4rem;"></iconify-icon>
-                    </button>
-                </div>
-                <div class="step-indicator">
-                    <div class="step-dot completed"></div>
-                    <div class="step-dot completed"></div>
-                    <div class="step-dot active"></div>
-                    <div class="step-dot"></div>
-                </div>
-
-                <div class="card consultation-card">
-                    <iconify-icon icon="mdi:hospital-building" class="consultation-card-icon"></iconify-icon>
-                    <h2>Select Service Type</h2>
-                    <p>Where should the patient receive consultation?</p>
-
-                    <div class="service-options">
-                        <div class="service-option" onclick="selectServiceType('hospital')" id="service-hospital">
-                            <iconify-icon icon="mdi:hospital-box-outline" class="service-option-icon"></iconify-icon>
-                            <div class="service-option-title">Hospital</div>
-                            <div class="service-option-desc">Patient visits the hospital</div>
-                        </div>
-                        <div class="service-option" onclick="selectServiceType('home')" id="service-home">
-                            <iconify-icon icon="mdi:home-heart" class="service-option-icon"></iconify-icon>
-                            <div class="service-option-title">Home</div>
-                            <div class="service-option-desc">Doctor visits the patient</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- ====== STEP 3.5: Hospital Details Form ====== -->
         <div id="step-hospital-form" class="hidden">
             <div class="consultation-section step-content">
                 <div style="display: flex; align-items: center; justify-content: flex-start; margin-bottom: 16px;">
-                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('step-hospital-form').classList.add('hidden'); document.getElementById('step-service-type').classList.remove('hidden');" style="width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('step-hospital-form').classList.add('hidden'); document.getElementById('step-hospital-form').classList.remove('hidden');" style="width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
                         <iconify-icon icon="mdi:arrow-left" style="font-size: 1.4rem;"></iconify-icon>
                     </button>
                 </div>
@@ -391,52 +355,6 @@
 
                         <div style="display: flex; justify-content: flex-end; margin-top: 24px;">
                             <button type="submit" class="btn btn-primary" style="flex: 1;" id="h-submit-btn">Schedule Visit</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- ====== STEP 3.6: Home Visit Form ====== -->
-        <div id="step-home-form" class="hidden">
-            <div class="consultation-section step-content">
-                <div style="display: flex; align-items: center; justify-content: flex-start; margin-bottom: 16px;">
-                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('step-home-form').classList.add('hidden'); document.getElementById('step-service-type').classList.remove('hidden');" style="width: 40px; height: 40px; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
-                        <iconify-icon icon="mdi:arrow-left" style="font-size: 1.4rem;"></iconify-icon>
-                    </button>
-                </div>
-                <div class="step-indicator">
-                    <div class="step-dot completed"></div>
-                    <div class="step-dot completed"></div>
-                    <div class="step-dot completed"></div>
-                    <div class="step-dot active"></div>
-                </div>
-
-                <div class="card consultation-card" style="text-align: left; padding: 24px;">
-                    <div style="text-align: center; margin-bottom: 24px;">
-                        <iconify-icon icon="mdi:home-heart" class="consultation-card-icon" style="color: var(--primary);"></iconify-icon>
-                        <h2>Schedule Home Visit</h2>
-                        <p>Enter the home visit appointment details</p>
-                    </div>
-
-                    <form id="home-form">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                            <div class="form-group">
-                                <label class="form-label">Date <span style="color: var(--error);">*</span></label>
-                                <input type="date" id="hm-date" class="form-input" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Time <span style="color: var(--error);">*</span></label>
-                                <input type="time" id="hm-time" class="form-input" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Location / Address <span style="color: var(--error);">*</span></label>
-                            <textarea id="hm-location" class="form-input" placeholder="Patient's home address" required style="height: 80px; resize: none;"></textarea>
-                        </div>
-
-                        <div style="display: flex; justify-content: flex-end; margin-top: 24px;">
-                            <button type="submit" class="btn btn-primary" style="flex: 1;" id="hm-submit-btn">Schedule Visit</button>
                         </div>
                     </form>
                 </div>
@@ -666,10 +584,7 @@
             }
         }
 
-        async function selectServiceType(type) {
-            document.getElementById('service-hospital').classList.remove('selected');
-            document.getElementById('service-home').classList.remove('selected');
-            document.getElementById(`service-${type}`).classList.add('selected');
+        `).classList.add('selected');
 
             await new Promise(r => setTimeout(r, 400));
 
@@ -743,32 +658,6 @@
 
                 document.getElementById('step-hospital-form').classList.add('hidden');
                 showFinalStep(true, 'hospital');
-            });
-        });
-
-        // Handle home form submission
-        document.getElementById('home-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const patientPhone = qData?.patientPhone || '';
-            const homeData = {
-                date: document.getElementById('hm-date').value,
-                time: document.getElementById('hm-time').value,
-                location: document.getElementById('hm-location').value.trim()
-            };
-
-            showWhatsappModal(patientPhone, async (whatsappNumber) => {
-                const btn = document.getElementById('hm-submit-btn');
-                btn.innerHTML = '<div class="spinner"></div> Saving...';
-                btn.disabled = true;
-
-                await saveConsultation(true, 'home', { ...homeData, whatsappNumber });
-
-                btn.innerHTML = 'Schedule Visit';
-                btn.disabled = false;
-
-                document.getElementById('step-home-form').classList.add('hidden');
-                showFinalStep(true, 'home');
             });
         });
 
