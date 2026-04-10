@@ -9,7 +9,7 @@ const validPatient = {
     fullName: 'Lakshmi Devi',
     dateOfBirth: '1995-06-15',
     age: 28,
-    husbandName: 'Ramesh Kumar',
+    
     phone: '9876543210',
     address: {
         street: '123 Main Road',
@@ -18,12 +18,12 @@ const validPatient = {
         state: 'Karnataka',
         pincode: '576101'
     },
-    aadhaar: '234567890123',
+    
     lmpDate: '2026-01-01',
     edd: '2026-10-08',
-    bloodGroup: 'A+',
-    gravida: 1,
-    para: 0
+    currentMonthOfPregnancy: 5,
+    
+    
 };
 
 describe('Patient Schema Validation', () => {
@@ -59,29 +59,6 @@ describe('Patient Schema Validation', () => {
         expect(result.success).toBe(true); // Zod only checks length + digits
     });
 
-    test('should reject invalid Aadhaar (starts with 0)', () => {
-        const result = patientSchema.safeParse({ ...validPatient, aadhaar: '012345678901' });
-        expect(result.success).toBe(false);
-    });
-
-    test('should reject Aadhaar with wrong length', () => {
-        const result = patientSchema.safeParse({ ...validPatient, aadhaar: '1234567' });
-        expect(result.success).toBe(false);
-    });
-
-    test('should reject invalid blood group', () => {
-        const result = patientSchema.safeParse({ ...validPatient, bloodGroup: 'X+' });
-        expect(result.success).toBe(false);
-    });
-
-    test('should accept all valid blood groups', () => {
-        const validGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
-        for (const group of validGroups) {
-            const result = patientSchema.safeParse({ ...validPatient, bloodGroup: group });
-            expect(result.success).toBe(true);
-        }
-    });
-
     test('should reject invalid pincode', () => {
         const result = patientSchema.safeParse({
             ...validPatient,
@@ -99,31 +76,15 @@ describe('Patient Schema Validation', () => {
         expect(result.success).toBe(false);
     });
 
-    test('should reject negative gravida', () => {
-        const result = patientSchema.safeParse({ ...validPatient, gravida: 0 });
-        expect(result.success).toBe(false);
-    });
-
-    test('should accept gravida >= 1', () => {
-        const result = patientSchema.safeParse({ ...validPatient, gravida: 1 });
-        expect(result.success).toBe(true);
-    });
-
-    test('should accept para = 0', () => {
-        const result = patientSchema.safeParse({ ...validPatient, para: 0 });
-        expect(result.success).toBe(true);
-    });
-
-    test('should coerce string numbers for age, gravida, para', () => {
+    test('should coerce string numbers for age and current month', () => {
         const result = patientSchema.safeParse({
             ...validPatient,
             age: '28',
-            gravida: '2',
-            para: '1'
+            currentMonthOfPregnancy: '5'
         });
         expect(result.success).toBe(true);
         expect(result.data.age).toBe(28);
-        expect(result.data.gravida).toBe(2);
+        expect(result.data.currentMonthOfPregnancy).toBe(5);
     });
 
     test('should transform date strings', () => {

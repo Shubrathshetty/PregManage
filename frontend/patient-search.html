@@ -228,7 +228,7 @@
                 logout: 'Logout',
                 back: 'Back',
                 search_title: 'Search Patients',
-                search_subtitle: 'Search by name, phone, or Aadhaar number',
+                search_subtitle: 'Search by name or phone number',
                 search_placeholder: 'Search patients...',
                 search_for_patient: 'Search for a patient',
                 start_typing: 'Start typing to search your registered patients',
@@ -238,8 +238,7 @@
                 searching: 'Searching...',
                 all_registered: 'All Registered Patients',
                 no_registered: 'No patients registered',
-                register_first: 'Register your first patient to get started',
-                aadhaar: 'Aadhaar'
+                register_first: 'Register your first patient to get started'
             },
             kn: {
                 brand: 'ಪ್ರೆಗ್‌ಮ್ಯಾನೇಜ್',
@@ -247,7 +246,7 @@
                 logout: 'ಲಾಗ್ ಔಟ್',
                 back: 'ಹಿಂದೆ',
                 search_title: 'ರೋಗಿಗಳನ್ನು ಹುಡುಕಿ',
-                search_subtitle: 'ಹೆಸರು, ಫೋನ್ ಅಥವಾ ಆಧಾರ್ ಸಂಖ್ಯೆಯಿಂದ ಹುಡುಕಿ',
+                search_subtitle: 'ಹೆಸರು ಅಥವಾ ಫೋನ್ ಸಂಖ್ಯೆಯಿಂದ ಹುಡುಕಿ',
                 search_placeholder: 'ರೋಗಿಗಳನ್ನು ಹುಡುಕಿ...',
                 search_for_patient: 'ರೋಗಿಯನ್ನು ಹುಡುಕಿ',
                 start_typing: 'ನಿಮ್ಮ ನೋಂದಾಯಿತ ರೋಗಿಗಳನ್ನು ಹುಡುಕಲು ಟೈಪ್ ಮಾಡಲು ಪ್ರಾರಂಭಿಸಿ',
@@ -257,8 +256,7 @@
                 searching: 'ಹುಡುಕಲಾಗುತ್ತಿದೆ...',
                 all_registered: 'ಎಲ್ಲಾ ನೋಂದಾಯಿತ ರೋಗಿಗಳು',
                 no_registered: 'ಯಾವುದೇ ರೋಗಿಗಳು ನೋಂದಾಯಿಸಿಲ್ಲ',
-                register_first: 'ಪ್ರಾರಂಭಿಸಲು ನಿಮ್ಮ ಮೊದಲ ರೋಗಿಯನ್ನು ನೋಂದಾಯಿಸಿ',
-                aadhaar: 'ಆಧಾರ್'
+                register_first: 'ಪ್ರಾರಂಭಿಸಲು ನಿಮ್ಮ ಮೊದಲ ರೋಗಿಯನ್ನು ನೋಂದಾಯಿಸಿ'
             }
         };
 
@@ -296,7 +294,7 @@
             document.getElementById('lang-kn').className = currentLang === 'kn' ? 'lang-option active-lang' : 'lang-option';
             applyTranslations();
             
-            // Re-render patient list to translate "Aadhaar" keyword
+            // Re-render patient list
             const patientsListActive = !document.getElementById('patient-list').classList.contains('hidden');
             if (patientsListActive) {
                 // If we had a search term, trigger a search to re-render
@@ -376,7 +374,7 @@
 
         async function searchPatients(query) {
             try {
-                const res = await apiClient.fetch(`/api/patients/search?query=${encodeURIComponent(query)}&limit=1000`), {
+                const res = await apiClient.fetch(`/api/patients/search?query=${encodeURIComponent(query)}&limit=1000`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await res.json();
@@ -429,7 +427,7 @@
                         ${photoHtml}
                         <div class="patient-info">
                             <div class="patient-name">${p.fullName}</div>
-                            <div class="patient-meta"><iconify-icon icon="mdi:phone-outline" style="vertical-align: middle;"></iconify-icon> ${p.phone} • ${t('aadhaar')}: ${p.aadhaar.slice(-4).padStart(p.aadhaar.length, '•')}</div>
+                            <div class="patient-meta"><iconify-icon icon="mdi:phone-outline" style="vertical-align: middle;"></iconify-icon> ${p.phone}</div>
                         </div>
                         <div class="patient-arrow"><iconify-icon icon="mdi:chevron-right"></iconify-icon></div>
                     </div>
