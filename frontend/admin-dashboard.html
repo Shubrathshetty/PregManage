@@ -491,6 +491,55 @@
         </div>
     </div>
 
+    <!-- Schedule Hospital Visit Modal -->
+    <div class="modal-overlay" id="schedule-visit-modal" style="z-index: 1060;">
+        <div class="modal" style="max-width: 450px;">
+            <div class="modal-header">
+                <h3 style="font-size: 1.1rem; color: var(--text-primary);">Schedule Hospital Visit</h3>
+                <button onclick="closeScheduleVisitModal()"
+                    style="background: none; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer;">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="schedule-visit-form">
+                    <input type="hidden" id="sv-consultation-id">
+                    <input type="hidden" id="sv-patient-phone">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div class="form-group">
+                            <label class="form-label">Date <span style="color: var(--error);">*</span></label>
+                            <input type="date" id="sv-date" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Time <span style="color: var(--error);">*</span></label>
+                            <input type="time" id="sv-time" class="form-input" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Hospital Name <span style="color: var(--error);">*</span></label>
+                        <input type="text" id="sv-hospital-name" class="form-input" placeholder="e.g., City Gen Hospital" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Location / Address <span style="color: var(--error);">*</span></label>
+                        <textarea id="sv-location" class="form-input" placeholder="Enter full address" required style="height: 60px; resize: none;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">WhatsApp Number</label>
+                        <div style="display: flex; gap: 0; align-items: stretch; border-radius: var(--radius-btn); overflow: hidden; border: 1px solid var(--border-color);">
+                            <div style="background: #f0fdf4; display: flex; align-items: center; padding: 0 12px; border-right: 1px solid var(--border-color); color: #25D366; font-weight: 600; font-size: 0.9rem;">
+                                +91
+                            </div>
+                            <input type="tel" id="sv-whatsapp" class="form-input" style="border: none; border-radius: 0; flex: 1;" placeholder="10-digit number" maxlength="10">
+                        </div>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Appointment details will be sent via WhatsApp</p>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; margin-top: 16px; gap: 12px;">
+                        <button type="button" class="btn btn-secondary" onclick="closeScheduleVisitModal()" style="padding: 0 16px;">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="sv-submit-btn" style="padding: 0 16px;">Schedule Visit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="toast-container" id="toast-container"></div>
 
     <script>
@@ -776,7 +825,13 @@
                 tbody.innerHTML = list.map(c => {
                     const chosenAt = c.submittedAt ? new Date(c.submittedAt).toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'N/A';
                     const doneAt = c.completedAt ? new Date(c.completedAt).toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
-                    const scheduledAt = c.scheduledAt ? new Date(c.scheduledAt).toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
+                    
+                    const isScheduled = !!(c.hospitalVisitDetails && c.hospitalVisitDetails.date);
+                    const scheduledAtStr = isScheduled ? `${c.hospitalVisitDetails.date} ${c.hospitalVisitDetails.time}` : '—';
+                    
+                    const actionBtn = isScheduled 
+                        ? `<button class="btn btn-primary" style="min-height: 28px; padding: 4px 12px; font-size: 0.75rem; border-radius: var(--radius-full);" onclick="markConsultationComplete('${c._id}')">Mark Done</button>`
+                        : `<button class="btn btn-secondary" style="min-height: 28px; padding: 4px 12px; font-size: 0.75rem; border-radius: var(--radius-full); background: var(--accent); color: white;" onclick="openScheduleVisitModal('${c._id}', '${c.patient?.phone || ''}')">Schedule Visit</button>`;
 
                     return `
                     <tr>
@@ -791,13 +846,13 @@
                             <div style="font-size: 0.78rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px;"><iconify-icon icon="mdi:clock-outline"></iconify-icon> ${chosenAt}</div>
                         </td>
                         ${type === 'Pending' ? `<td>
-                            <div style="font-size: 0.78rem; color: var(--accent); display: flex; align-items: center; gap: 4px;"><iconify-icon icon="mdi:calendar-clock"></iconify-icon> ${scheduledAt}</div>
+                            <div style="font-size: 0.78rem; color: var(--accent); display: flex; align-items: center; gap: 4px;"><iconify-icon icon="mdi:calendar-clock"></iconify-icon> ${scheduledAtStr}</div>
                         </td>` : `<td>
                             <div style="font-size: 0.78rem; color: #047857; display: flex; align-items: center; gap: 4px;"><iconify-icon icon="mdi:check-circle-outline"></iconify-icon> ${doneAt}</div>
                         </td>`}
                         <td>
                             ${type === 'Pending'
-                            ? `<button class="btn btn-primary" style="min-height: 28px; padding: 4px 12px; font-size: 0.75rem; border-radius: var(--radius-full);" onclick="markConsultationComplete('${c._id}')">Mark Done</button>`
+                            ? actionBtn
                             : `<span class="badge ${c.consultationStatus === 'Completed' ? 'badge-success' : 'badge-primary'}">${c.consultationStatus}</span>`
                         }
                         </td>
@@ -902,10 +957,64 @@
                     showToast(data.message, 'error');
                 }
             } catch (error) {
-                showToast('Server error.', 'error');
+                showToast('Failed to complete consultation', 'error');
             }
         }
 
+        // ---- Schedule Visit Logic ----
+        function openScheduleVisitModal(consultationId, patientPhone) {
+            document.getElementById('sv-consultation-id').value = consultationId;
+            document.getElementById('sv-patient-phone').value = patientPhone || '';
+            document.getElementById('sv-whatsapp').value = patientPhone || '';
+            document.getElementById('schedule-visit-modal').classList.add('active');
+        }
+
+        function closeScheduleVisitModal() {
+            document.getElementById('schedule-visit-modal').classList.remove('active');
+            document.getElementById('schedule-visit-form').reset();
+        }
+
+        document.getElementById('schedule-visit-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('sv-consultation-id').value;
+            const btn = document.getElementById('sv-submit-btn');
+            
+            const payload = {
+                date: document.getElementById('sv-date').value,
+                time: document.getElementById('sv-time').value,
+                hospitalName: document.getElementById('sv-hospital-name').value.trim(),
+                location: document.getElementById('sv-location').value.trim(),
+                whatsappNumber: document.getElementById('sv-whatsapp').value.trim()
+            };
+
+            btn.innerHTML = '<div class="spinner"></div> Scheduling...';
+            btn.disabled = true;
+
+            try {
+                const res = await apiClient.fetch(`${API_BASE}/admin/consultations/${id}/schedule`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast('Hospital visit scheduled successfully!');
+                    closeScheduleVisitModal();
+                    await loadStats();
+                    openConsultationModal('Pending');
+                } else {
+                    showToast(data.message, 'error');
+                }
+            } catch (error) {
+                showToast('Scheduling failed', 'error');
+            } finally {
+                btn.innerHTML = 'Schedule Visit';
+                btn.disabled = false;
+            }
+        });
         function openAddModal() {
             editingWorker = null;
             document.getElementById('modal-title').textContent = 'Add New Worker';

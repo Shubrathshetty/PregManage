@@ -504,7 +504,57 @@
             altFormat: "d-M-Y",
             allowInput: true,
             disableMobile: true,
-            position: "below"
+            position: "below",
+            onReady: function(selectedDates, dateStr, instance) {
+                const yearInput = instance.currentYearElement;
+                if (!yearInput) return;
+                const parent = yearInput.parentNode;
+                
+                const select = document.createElement("select");
+                select.className = "flatpickr-monthDropdown-months"; // Re-use styling
+                select.style.width = "75px";
+                select.style.marginLeft = "8px";
+                select.style.backgroundColor = "transparent";
+                select.style.border = "none";
+                select.style.cursor = "pointer";
+                select.style.fontWeight = "bold";
+                select.style.color = "var(--text-primary)";
+                
+                const currentYear = new Date().getFullYear();
+                // Show years from next year down to 60 years ago
+                for (let i = currentYear + 1; i >= currentYear - 60; i--) {
+                    const opt = document.createElement("option");
+                    opt.value = i;
+                    opt.text = i;
+                    select.appendChild(opt);
+                }
+                
+                select.value = instance.currentYear;
+                
+                select.addEventListener("mousedown", function(e) {
+                    e.stopPropagation();
+                });
+                select.addEventListener("touchstart", function(e) {
+                    e.stopPropagation();
+                });
+                
+                select.addEventListener("change", function(e) {
+                    instance.changeYear(parseInt(e.target.value));
+                });
+                
+                // Hide default year interface
+                yearInput.style.display = "none";
+                if (parent.querySelector('.arrowUp')) parent.querySelector('.arrowUp').style.display = 'none';
+                if (parent.querySelector('.arrowDown')) parent.querySelector('.arrowDown').style.display = 'none';
+
+                parent.appendChild(select);
+            },
+            onYearChange: function(selectedDates, dateStr, instance) {
+                const select = instance.currentYearElement.parentNode.querySelector("select");
+                if (select) {
+                    select.value = instance.currentYear;
+                }
+            }
         };
 
         flatpickr("#dob", {
