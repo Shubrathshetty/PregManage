@@ -203,4 +203,35 @@ router.put('/consultations/:id/status', verifyToken, requireAdmin, async (req, r
     }
 });
 
+// Schedule hospital visit
+router.put('/consultations/:id/schedule', verifyToken, requireAdmin, async (req, res) => {
+    try {
+        const { date, time, hospitalName, location, whatsappNumber } = req.body;
+
+        const updateData = {
+            'hospitalVisitDetails.date': date,
+            'hospitalVisitDetails.time': time,
+            'hospitalVisitDetails.hospitalName': hospitalName,
+            'hospitalVisitDetails.location': location,
+            whatsappNumber: whatsappNumber,
+            consultationType: 'hospital'
+        };
+
+        const result = await Questionnaire.updateOne(
+            { _id: req.params.id },
+            { $set: updateData }
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ success: false, message: 'Consultation record not found.' });
+        }
+
+        logger.info('Consultation scheduled', { consultationId: req.params.id });
+        return res.json({ success: true, message: 'Consultation scheduled successfully.' });
+    } catch (error) {
+        logger.error('Schedule consultation error', { error: error.message });
+        res.status(500).json({ success: false, message: 'Server error.' });
+    }
+});
+
 module.exports = router;

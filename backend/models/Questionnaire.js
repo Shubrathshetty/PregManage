@@ -55,7 +55,7 @@ const questionnaireSchema = new mongoose.Schema({
     },
     consultationType: {
         type: String,
-        enum: ['hospital', 'home', null],
+        enum: ['hospital', null],
         default: null
     },
     consultationStatus: {
@@ -77,11 +77,6 @@ const questionnaireSchema = new mongoose.Schema({
         hospitalName: { type: String, default: null },
         location: { type: String, default: null }
     },
-    homeVisitDetails: {
-        date: { type: Date, default: null },
-        time: { type: String, default: null },
-        location: { type: String, default: null }
-    },
     whatsappNumber: {
         type: String,
         default: null
@@ -91,5 +86,9 @@ const questionnaireSchema = new mongoose.Schema({
         default: Date.now
     }
 });
+
+questionnaireSchema.index({ submittedBy: 1 });
+questionnaireSchema.index({ consultationType: 1 });
+questionnaireSchema.index({ consultationStatus: 1 });
 
 module.exports = mongoose.model('Questionnaire', questionnaireSchema);

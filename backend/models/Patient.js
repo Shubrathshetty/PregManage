@@ -67,4 +67,8 @@ const patientSchema = new mongoose.Schema({
     }
 });
 
+patientSchema.index({ fullName: 1 });
+patientSchema.index({ registeredBy: 1 });
+patientSchema.index({ phone: 1 });
+
 module.exports = mongoose.model('Patient', patientSchema);

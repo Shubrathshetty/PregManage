@@ -599,12 +599,6 @@
                 showToast('Invalid phone number', 'error');
                 return;
             }
-            if (!/^[2-9]\d{11}$/.test(aadhaarRaw)) {
-                formError.textContent = 'Invalid Aadhaar number.';
-                formError.style.display = 'block';
-                showToast('Invalid Aadhaar number', 'error');
-                return;
-            }
             if (!/^[1-9]\d{5}$/.test(pincode)) {
                 formError.textContent = 'Invalid pincode.';
                 formError.style.display = 'block';

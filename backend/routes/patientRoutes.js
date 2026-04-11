@@ -38,10 +38,8 @@ const upload = multer({
 router.post('/', verifyToken, requireWorker, upload.single('photo'), validate(patientSchema), async (req, res) => {
     try {
         const {
-            fullName, dateOfBirth, age, phone, address, lmpDate, edd, currentMonthOfPregnancy
+            fullName, dateOfBirth, age, phone, addressStreet, addressTaluk, addressDistrict, addressState, addressPincode, lmpDate, edd, currentMonthOfPregnancy
         } = req.body;
-
-        
 
         const patient = new Patient({
             fullName,
@@ -49,11 +47,11 @@ router.post('/', verifyToken, requireWorker, upload.single('photo'), validate(pa
             age: parseInt(age),
             phone,
             address: {
-                street: address.street,
-                taluk: address.taluk,
-                district: address.district,
-                state: address.state,
-                pincode: address.pincode
+                street: addressStreet,
+                taluk: addressTaluk,
+                district: addressDistrict,
+                state: addressState,
+                pincode: addressPincode
             },
             lmpDate: new Date(lmpDate),
             edd: new Date(edd),
@@ -151,7 +149,7 @@ router.put('/:id', verifyToken, requireWorker, upload.single('photo'), validate(
     try {
         const { id } = req.params;
         const {
-            fullName, dateOfBirth, age, phone, address, lmpDate, edd, currentMonthOfPregnancy
+            fullName, dateOfBirth, age, phone, addressStreet, addressTaluk, addressDistrict, addressState, addressPincode, lmpDate, edd, currentMonthOfPregnancy
         } = req.body;
 
         const patient = await Patient.findOne({ _id: id, registeredBy: req.user.id });
@@ -159,27 +157,25 @@ router.put('/:id', verifyToken, requireWorker, upload.single('photo'), validate(
             return res.status(404).json({ success: false, message: 'Patient not found.' });
         }
 
-        
-
-        // Update fields
         patient.fullName = fullName;
         patient.dateOfBirth = new Date(dateOfBirth);
         patient.age = parseInt(age);
         patient.phone = phone;
         patient.address = {
-            street: address.street,
-            taluk: address.taluk,
-            district: address.district,
-            state: address.state,
-            pincode: address.pincode
+            street: addressStreet,
+            taluk: addressTaluk,
+            district: addressDistrict,
+            state: addressState,
+            pincode: addressPincode
         };
         patient.lmpDate = new Date(lmpDate);
         patient.edd = new Date(edd);
         patient.currentMonthOfPregnancy = parseInt(currentMonthOfPregnancy);
+
         if (req.file) {
+            const fs = require('fs');
             // Delete old photo if it exists
             if (patient.photo) {
-                const fs = require('fs');
                 const oldPath = path.join(__dirname, '..', patient.photo);
                 if (fs.existsSync(oldPath)) {
                     fs.unlinkSync(oldPath);

@@ -94,8 +94,8 @@ app.get('/:page.html', (req, res) => {
     res.status(404).sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
 });
 
-// API Routes (Fix #5: rate limit on auth)
-app.use('/api/auth', authLimiter, require('./routes/authRoutes'));
+// API Routes
+app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 app.use('/api/patients', require('./routes/patientRoutes'));
 app.use('/api/questionnaires', require('./routes/questionnaireRoutes'));

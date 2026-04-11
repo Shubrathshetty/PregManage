@@ -8,8 +8,10 @@ const logger = require('../config/logger');
 
 const router = express.Router();
 
+const { authLimiter } = require('../middleware/rateLimiter');
+
 // Admin Login (Fix #2: validated with loginSchema)
-router.post('/admin/login', validate(loginSchema), async (req, res) => {
+router.post('/admin/login', authLimiter, validate(loginSchema), async (req, res) => {
     try {
         const { username, password } = req.body;
 
@@ -49,7 +51,7 @@ router.post('/admin/login', validate(loginSchema), async (req, res) => {
 });
 
 // Worker Login (Fix #2: validated with loginSchema)
-router.post('/worker/login', validate(loginSchema), async (req, res) => {
+router.post('/worker/login', authLimiter, validate(loginSchema), async (req, res) => {
     try {
         const { username, password } = req.body;
 
