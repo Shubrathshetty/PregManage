@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+</head>
+<body>
+    <input type="text" id="dob" placeholder="Select Date" required>
+    
+    <script>
+        const flatpickrConfig = {
+            dateFormat: "Y-m-d",
+            altInput: true,
+            altFormat: "d-M-Y",
+            allowInput: true,
+            disableMobile: true,
+            position: "below",
+            onReady: function(selectedDates, dateStr, instance) {
+                const yearInput = instance.currentYearElement;
+                if (!yearInput) return;
+                const parent = yearInput.parentNode;
+                
+                const select = document.createElement("select");
+                select.className = "flatpickr-monthDropdown-months"; // Re-use styling
+                select.style.width = "75px";
+                select.style.marginLeft = "8px";
+                select.style.backgroundColor = "white"; // "transparent" might hide it
+                select.style.border = "1px solid #ccc";  // Make it visible!
+                select.style.cursor = "pointer";
+                select.style.fontWeight = "bold";
+                select.style.color = "black";
+                
+                const currentYear = new Date().getFullYear();
+                for (let i = currentYear + 1; i >= currentYear - 60; i--) {
+                    const opt = document.createElement("option");
+                    opt.value = i;
+                    opt.text = i;
+                    select.appendChild(opt);
+                }
+                
+                select.value = instance.currentYear;
+                
+                select.addEventListener("mousedown", function(e) {
+                    e.stopPropagation();
+                });
+                select.addEventListener("touchstart", function(e) {
+                    e.stopPropagation();
+                });
+                
+                select.addEventListener("change", function(e) {
+                    instance.changeYear(parseInt(e.target.value));
+                });
+                
+                yearInput.style.display = "none";
+                if (parent.querySelector('.arrowUp')) parent.querySelector('.arrowUp').style.display = 'none';
+                if (parent.querySelector('.arrowDown')) parent.querySelector('.arrowDown').style.display = 'none';
+
+                parent.appendChild(select);
+            },
+            onYearChange: function(selectedDates, dateStr, instance) {
+                const select = instance.currentYearElement.parentNode.querySelector("select");
+                if (select) {
+                    select.value = instance.currentYear;
+                }
+            }
+        };
+
+        flatpickr("#dob", {
+            ...flatpickrConfig,
+            maxDate: "today"
+        });
+    </script>
+</body>
+</html>

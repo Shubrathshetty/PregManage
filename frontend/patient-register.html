@@ -12,96 +12,7 @@
     <link rel="stylesheet" href="/css/style.css">
     <!-- Iconify Framework -->
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
-    <!-- Flatpickr Datepicker -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <style>
-        /* Modernized Flatpickr UI */
-        .flatpickr-calendar {
-            background: #ffffff;
-            border: none !important;
-            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15) !important;
-            border-radius: 16px !important;
-            padding: 12px !important;
-            font-family: 'Inter', sans-serif !important;
-        }
-
-        .flatpickr-day.selected,
-        .flatpickr-day.selected:hover {
-            background: var(--primary) !important;
-            border-color: var(--primary) !important;
-            font-weight: 600;
-        }
-
-        .flatpickr-day:hover,
-        .flatpickr-day.prevMonthDay:hover,
-        .flatpickr-day.nextMonthDay:hover {
-            background: #f0f4f8 !important;
-            border-color: #f0f4f8 !important;
-        }
-
-        .flatpickr-months .flatpickr-month {
-            margin-bottom: 8px;
-            fill: var(--primary) !important;
-            color: var(--text-primary) !important;
-        }
-
-        .flatpickr-months .flatpickr-prev-month:hover svg,
-        .flatpickr-months .flatpickr-next-month:hover svg {
-            fill: var(--primary) !important;
-        }
-
-        .flatpickr-current-month .flatpickr-monthDropdown-months,
-        .flatpickr-current-month .numInputWrapper span.arrowUp:after,
-        .flatpickr-current-month .numInputWrapper span.arrowDown:after {
-            background: transparent !important;
-            color: var(--text-primary) !important;
-            font-weight: 600;
-        }
-
-        /* Native-feeling icon styling */
-        .input-with-icon {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .input-with-icon input {
-            padding-right: 42px !important;
-            background-color: #ffffff;
-        }
-
-        .input-with-icon iconify-icon {
-            position: absolute;
-            right: 14px;
-            color: var(--primary);
-            font-size: 1.4rem;
-            pointer-events: none;
-            /* Allows clicking the input behind it */
-        }
-
-        /* Mobile Popup Centering */
-        @media (max-width: 800px) {
-            .flatpickr-calendar.open {
-                position: fixed !important;
-                top: 50% !important;
-                left: 50% !important;
-                right: auto !important;
-                bottom: auto !important;
-                transform: translate(-50%, -50%) !important;
-                z-index: 99999 !important;
-                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
-            }
-
-            .input-with-icon iconify-icon {
-                font-size: 1.2rem;
-            }
-
-            .form-group {
-                min-width: 0;
-            }
-        }
-    </style>
+    
     <link rel="stylesheet" href="/css/notifications.css">
     <script src="/js/apiClient.js"></script>
     <script src="/js/validation.js"></script>
@@ -192,11 +103,7 @@
                     <div class="form-group">
                         <label class="form-label" for="dob">Date of Birth / ಹುಟ್ಟಿದ ದಿನಾಂಕ <span
                                 style="color: var(--error);">*</span></label>
-                        <div class="input-with-icon">
-                            <input type="text" id="dob" class="form-input flatpickr-date"
-                                placeholder="Select Date / ದಿನಾಂಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ" required>
-                            <iconify-icon icon="mdi:calendar"></iconify-icon>
-                        </div>
+                        <input type="date" id="dob" class="form-input" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="age">Age / ವಯಸ್ಸು</label>
@@ -315,20 +222,12 @@
                     <div class="form-group">
                         <label class="form-label" for="lmpDate">LMP Date / ಕೊನೆಯ ಮುಟ್ಟಿನ ದಿನಾಂಕ <span
                                 style="color: var(--error);">*</span></label>
-                        <div class="input-with-icon">
-                            <input type="text" id="lmpDate" class="form-input flatpickr-date"
-                                placeholder="Select Date / ದಿನಾಂಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ" required>
-                            <iconify-icon icon="mdi:calendar"></iconify-icon>
-                        </div>
+                        <input type="date" id="lmpDate" class="form-input" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="edd">EDD / ನಿರೀಕ್ಷಿತ ಹೆರಿಗೆ ದಿನಾಂಕ <span
                                 style="color: var(--error);">*</span></label>
-                        <div class="input-with-icon">
-                            <input type="text" id="edd" class="form-input"
-                                placeholder="Select Date / ದಿನಾಂಕವನ್ನು ಆಯ್ಕೆಮಾಡಿ" required>
-                            <iconify-icon icon="mdi:calendar"></iconify-icon>
-                        </div>
+                        <input type="date" id="edd" class="form-input" required>
                         <p id="edd-hint" style="font-size: 0.75rem; margin-top: 4px;"></p>
                     </div>
                 </div>
@@ -437,23 +336,7 @@
             });
         });
 
-        // ---- DOB → Auto-calculate Age ----
-        document.getElementById('dob').addEventListener('change', (e) => {
-            const val = e.target.value;
-            if (!val) return;
-            const dob = new Date(val);
-            if (!isNaN(dob)) {
-                const today = new Date();
-                let age = today.getFullYear() - dob.getFullYear();
-                const monthDiff = today.getMonth() - dob.getMonth();
-                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
-                    age--;
-                }
-                document.getElementById('age').value = age;
-                document.getElementById('age-hint').textContent = `${age} years old`;
-                document.getElementById('age-hint').style.color = 'var(--green-500)';
-            }
-        });
+        
 
         // ---- Real-time Phone Validation ----
         document.getElementById('phone').addEventListener('input', (e) => {
@@ -497,43 +380,21 @@
             }
         });
 
-        // ---- Calendar JS (Flatpickr) Integration ----
-        const flatpickrConfig = {
-            dateFormat: "Y-m-d",
-            altInput: true,
-            altFormat: "d-M-Y",
-            allowInput: true,
-            disableMobile: true,
-            position: "below",
-            onReady: function(selectedDates, dateStr, instance) {
-                const yearInput = instance.currentYearElement;
-                if (!yearInput) return;
-                const parent = yearInput.parentNode;
-                
-                const select = document.createElement("select");
-                select.className = "flatpickr-monthDropdown-months"; // Re-use styling
-                select.style.width = "75px";
-                select.style.marginLeft = "8px";
-                select.style.backgroundColor = "transparent";
-                select.style.border = "none";
-                select.style.cursor = "pointer";
-                select.style.fontWeight = "bold";
-                select.style.color = "var(--text-primary)";
-                
-                const currentYear = new Date().getFullYear();
-                // Show years from next year down to 60 years ago
-                for (let i = currentYear + 1; i >= currentYear - 60; i--) {
-                    const opt = document.createElement("option");
-                    opt.value = i;
-                    opt.text = i;
-                    select.appendChild(opt);
-                }
-                
-                select.value = instance.currentYear;
-                
-                select.addEventListener("mousedown", function(e) {
-                    e.stopPropagation();
-                });
+                // ---- Native Date Setup / Max Dates ----
+        const todayStr = new Date().toISOString().split('T')[0];
+        document.getElementById('dob').setAttribute('max', todayStr);
+        document.getElementById('lmpDate').setAttribute('max', todayStr);
+
+        // Auto-calculate EDD from LMP natively
+        document.getElementById('lmpDate').addEventListener('change', (e) => {
+            const val = e.target.value;
+            if (val) {
+                const edd = new Date(val);
+                edd.setDate(edd.getDate() + 280);
+                document.getElementById('edd').value = edd.toISOString().split('T')[0];
+            }
+        });
+
                 select.addEventListener("touchstart", function(e) {
                     e.stopPropagation();
                 });
@@ -603,12 +464,18 @@
                         
                         
 
-                        // Set dates in Flatpickr
-                        const dobDate = new Date(p.dateOfBirth);
-                        document.querySelector('#dob')._flatpickr.setDate(dobDate);
-
-                        const lmpDateObj = new Date(p.lmpDate);
-                        document.querySelector('#lmpDate')._flatpickr.setDate(lmpDateObj);
+                                                // Set dates natively
+                        if (p.dateOfBirth) {
+                            const dobDate = new Date(p.dateOfBirth);
+                            document.getElementById('dob').value = dobDate.toISOString().split('T')[0];
+                        }
+                        if (p.lmpDate) {
+                            const lmpDateObj = new Date(p.lmpDate);
+                            document.getElementById('lmpDate').value = lmpDateObj.toISOString().split('T')[0];
+                        }
+                        if (p.edd) {
+                            document.getElementById('edd').value = new Date(p.edd).toISOString().split('T')[0];
+                        }
 
                         // Age calculation
                         const today = new Date();
